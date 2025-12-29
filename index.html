@@ -2,192 +2,226 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Fórmula Momentum – Evaluación Estratégica</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fórmula Momentum — Evaluación Estratégica</title>
   <style>
     body {
       margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, Cantarell;
       background: #0a0a0a;
-      color: #e5e7eb;
+      color: #e5e5e5;
     }
     .container {
       max-width: 900px;
       margin: auto;
-      padding: 40px 20px;
+      padding: 40px 20px 80px;
     }
     h1, h2, h3 {
       color: #facc15;
-      text-transform: uppercase;
+      margin-bottom: 12px;
     }
-    .card {
+    p {
+      color: #cbd5e1;
+      line-height: 1.6;
+    }
+    .intro {
+      margin-bottom: 50px;
+    }
+    .question {
       background: #000;
       border: 1px solid #222;
-      border-radius: 24px;
+      border-radius: 20px;
       padding: 24px;
       margin-bottom: 24px;
     }
-    .option {
-      padding: 16px;
-      border-radius: 18px;
+    .question small {
+      color: #64748b;
+    }
+    .options button {
+      display: block;
+      width: 100%;
+      text-align: left;
+      margin-top: 10px;
+      padding: 14px 18px;
+      border-radius: 14px;
       border: 1px solid #222;
-      margin-top: 12px;
+      background: #050505;
+      color: #e5e5e5;
       cursor: pointer;
       transition: all .2s ease;
     }
-    .option:hover {
+    .options button:hover {
       border-color: #facc15;
     }
-    .option.selected {
+    .options button.selected {
       background: #facc15;
       color: #000;
-      font-weight: bold;
+      font-weight: 700;
     }
     .nav {
       display: flex;
       justify-content: space-between;
       margin-top: 40px;
     }
-    button {
-      padding: 14px 24px;
-      border-radius: 20px;
+    .nav button {
+      padding: 14px 26px;
+      border-radius: 30px;
+      font-weight: 800;
       border: none;
-      font-weight: bold;
       cursor: pointer;
     }
-    button.primary {
-      background: #facc15;
+    .prev {
+      background: #111;
+      color: #94a3b8;
+    }
+    .next {
+      background: #fff;
       color: #000;
     }
-    button.secondary {
-      background: #111;
-      color: #888;
+    .next:disabled {
+      background: #333;
+      color: #555;
+      cursor: not-allowed;
+    }
+    .final {
+      margin-top: 40px;
+      background: #000;
+      border: 1px solid #222;
+      border-radius: 24px;
+      padding: 32px;
     }
     input {
       width: 100%;
-      padding: 14px;
-      border-radius: 18px;
-      border: 1px solid #222;
-      background: #000;
-      color: #fff;
+      padding: 16px 18px;
       margin-top: 10px;
+      border-radius: 14px;
+      border: 1px solid #222;
+      background: #050505;
+      color: #fff;
+      font-weight: 600;
     }
-    .hidden {
-      display: none;
+    .submit {
+      margin-top: 30px;
+      width: 100%;
+      padding: 18px;
+      border-radius: 30px;
+      background: #facc15;
+      color: #000;
+      font-weight: 900;
+      border: none;
+      cursor: pointer;
+    }
+    footer {
+      margin-top: 80px;
+      text-align: center;
+      color: #475569;
+      font-size: 14px;
     }
   </style>
 </head>
-
 <body>
   <div class="container">
-    <h1>Fórmula Momentum</h1>
-    <p>
-      Esta evaluación no está pensada para curiosos.
-      Busca ubicarte con claridad respecto a tu nivel de compromiso,
-      resiliencia y criterio profesional.
-    </p>
+    <div class="intro">
+      <h1>fórmula. momentum</h1>
+      <p>
+        La Fórmula Momentum no está pensada para todos los momentos ni para todas las personas.
+        Se apoya en lo que realmente sostiene los resultados: <b>hambre por avanzar</b>,
+        <b>resiliencia frente a los obstáculos</b> y <b>compromiso real para sostener un proceso</b>.
+      </p>
+      <p>
+        No se improvisa. No se persiguen efectos inmediatos. El avance se construye a partir de
+        estrategia, proceso y ajuste continuo.
+      </p>
+      <p>
+        La evaluación que sigue es honesta. Su objetivo es ubicarte con claridad.
+      </p>
+    </div>
 
     <div id="quiz"></div>
 
     <div class="nav">
-      <button class="secondary" onclick="prevStep()">Regresar</button>
-      <button class="primary" onclick="nextStep()">Continuar</button>
+      <button class="prev" onclick="prevStep()">Regresar</button>
+      <button class="next" id="nextBtn" onclick="nextStep()">Siguiente bloque</button>
     </div>
+
+    <div class="final" id="finalForm" style="display:none;">
+      <h2>Finalizar evaluación</h2>
+      <p>Introduce tus datos para que el experto procese tu ubicación Momentum.</p>
+      <label>Nombre completo</label>
+      <input id="nombre" placeholder="Ej: Juan Pérez" />
+      <label>Email principal</label>
+      <input id="email" placeholder="Ej: contacto@email.com" />
+      <button class="submit" onclick="submitForm()">Enviar evaluación</button>
+      <p id="warn" style="color:#f87171; display:none;">Debes completar todas las preguntas.</p>
+    </div>
+
+    <footer>Fórmula Momentum © 2024 — Sistema de Ubicación de Criterio</footer>
   </div>
 
-<script>
-const questions = [
-  {
-    q: "¿Qué tan incómoda es tu situación actual?",
-    opts: [
-      "Estoy cómodo",
-      "Podría mejorar",
-      "Necesito cambiar pronto",
-      "Es innegociable avanzar"
-    ]
-  },
-  {
-    q: "Cuando el proceso se complica, vos:",
-    opts: [
-      "Abandonás",
-      "Dudás",
-      "Seguís con fricción",
-      "Ajustás y continuás"
-    ]
-  },
-  {
-    q: "Este proceso para vos es:",
-    opts: [
-      "Curiosidad",
-      "Opcional",
-      "Importante",
-      "Prioridad absoluta"
-    ]
-  }
-];
+  <script>
+    const questions = [
+      { q: "¿Qué tanto te incomoda tu situación actual?", opts: [1,4,7,10] },
+      { q: "Si el proceso requiere ajustes, ¿cómo reaccionas?", opts: [1,4,7,10] },
+      { q: "¿Qué lugar ocupa este avance en tu día a día?", opts: [2,5,8,10] },
+      { q: "¿Cuánto tiempo estás dispuesto a sostener el proceso?", opts: [1,4,7,10] },
+      { q: "¿Buscas atajos o sistemas predecibles?", opts: [1,4,7,10] },
+      { q: "¿Qué tan constante eres cuando no hay resultados inmediatos?", opts: [2,4,7,10] },
+      { q: "¿Cómo manejas la crítica externa?", opts: [1,4,7,10] },
+      { q: "¿Aceptas cambiar hábitos que hoy consideras correctos?", opts: [1,4,7,10] },
+      { q: "¿Qué tan responsable eres de tus propios resultados?", opts: [1,3,6,10] },
+      { q: "¿Estás listo para ver tu realidad sin filtros?", opts: [2,5,8,10] }
+    ];
 
-let step = 0;
-let answers = {};
+    let step = 0;
+    const answers = {};
 
-function render() {
-  const quiz = document.getElementById("quiz");
-  quiz.innerHTML = "";
+    function render() {
+      const quiz = document.getElementById('quiz');
+      quiz.innerHTML = '';
+      const q = questions[step];
+      const div = document.createElement('div');
+      div.className = 'question';
+      div.innerHTML = `<h3>${q.q}</h3>`;
+      const opts = document.createElement('div');
+      opts.className = 'options';
+      q.opts.forEach(v => {
+        const b = document.createElement('button');
+        b.textContent = v;
+        if (answers[step] === v) b.classList.add('selected');
+        b.onclick = () => { answers[step] = v; render(); };
+        opts.appendChild(b);
+      });
+      div.appendChild(opts);
+      quiz.appendChild(div);
+      document.getElementById('nextBtn').disabled = answers[step] == null;
+    }
 
-  if (step < questions.length) {
-    const q = questions[step];
-    const card = document.createElement("div");
-    card.className = "card";
-
-    card.innerHTML = `<h3>${q.q}</h3>`;
-
-    q.opts.forEach((opt, i) => {
-      const div = document.createElement("div");
-      div.className = "option" + (answers[step] === i ? " selected" : "");
-      div.innerText = opt;
-      div.onclick = () => {
-        answers[step] = i;
+    function nextStep() {
+      if (step < questions.length - 1) {
+        step++;
         render();
-      };
-      card.appendChild(div);
-    });
+      } else {
+        document.querySelector('.nav').style.display = 'none';
+        document.getElementById('finalForm').style.display = 'block';
+      }
+    }
 
-    quiz.appendChild(card);
-  } else {
-    quiz.innerHTML = `
-      <div class="card">
-        <h2>Finalizar Evaluación</h2>
-        <input id="nombre" placeholder="Nombre completo" />
-        <input id="email" placeholder="Email" />
-        <button class="primary" onclick="send()">Enviar evaluación</button>
-      </div>
-    `;
-  }
-}
+    function prevStep() {
+      if (step > 0) {
+        step--;
+        render();
+      }
+    }
 
-function nextStep() {
-  if (step < questions.length) step++;
-  render();
-}
+    function submitForm() {
+      if (Object.keys(answers).length < questions.length) {
+        document.getElementById('warn').style.display = 'block';
+        return;
+      }
+      alert('Evaluación enviada. El experto se pondrá en contacto contigo.');
+    }
 
-function prevStep() {
-  if (step > 0) step--;
-  render();
-}
-
-function send() {
-  const nombre = document.getElementById("nombre").value;
-  const email = document.getElementById("email").value;
-
-  if (!nombre || !email) {
-    alert("Completá nombre y email");
-    return;
-  }
-
-  alert("Evaluación enviada correctamente");
-}
-
-render();
-</script>
-
+    render();
+  </script>
 </body>
 </html>
