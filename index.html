@@ -9,6 +9,14 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        input::placeholder { font-style: italic; }
+        @keyframes fade-in { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-in { animation: fade-in 0.8s ease-out forwards; }
+        body { background-color: black; margin: 0; padding: 0; overflow-x: hidden; }
+        [data-lucide] { width: 1.25rem; height: 1.25rem; }
+        .text-gradient { background: linear-gradient(to right, #fff, #eab308); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    </style>
 </head>
 <body>
     <div id="root"></div>
@@ -16,7 +24,6 @@
     <script type="text/babel">
         const { useState, useMemo, useEffect } = React;
         
-        // Iconos de Lucide adaptados para React Standalone
         const ShieldCheck = () => <i data-lucide="shield-check"></i>;
         const Send = () => <i data-lucide="send"></i>;
         const Compass = () => <i data-lucide="compass"></i>;
@@ -35,8 +42,9 @@
             const [submitted, setSubmitted] = useState(false);
             const [currentStep, setCurrentStep] = useState(0);
 
-            // Refrescar iconos cada vez que cambia el paso
             useEffect(() => { lucide.createIcons(); });
+
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbyTdQtXsDwOYin27Y-qc-9dP-OXJDHv9vx2qPLdiiyHgAVZPmvnjsZ9BHOyTV3fCh8H/exec';
 
             const questions = useMemo(() => [
                 { id: 1, cat:"Hambre de Avanzar", ref:"Deseo y Ambición", q:"¿Qué tanto te incomoda tu situación actual en una escala del 1 al 10?", opts: [{ t:"1-3: Estoy cómodo, solo busco curiosidad", s: 1}, { t: "4-6: Podría mejorar, pero no es vital", s: 4}, { t:"7-8: Necesito un cambio real pronto", s:7 },{ t:"9-10: Es innegociable avanzar hoy mismo", s:10 }]},
@@ -87,33 +95,15 @@
             const handleSubmit = async () => {
                 if (!nombre.trim() || !email.trim()) return;
                 setSending(true);
-
-                const scriptURL = 'https://script.google.com/macros/s/AKfycbyTdQtXsDwOYin27Y-qc-9dP-OXJDHv9vx2qPLdiiyHgAVZPmvnjsZ9BHOyTV3fCh8H/exec';
-
-                // Formateamos las respuestas como una lista de texto legible para la columna "Resultado"
-                const resumenRespuestas = Object.keys(answers).map(id => {
-                    const q = questions.find(item => item.id === parseInt(id));
-                    return `P${id}: ${answers[id]}`;
-                }).join(" | ");
-
-                const dataToSend = {
-                    nombre: nombre,
-                    email: email,
-                    fecha: new Date().toLocaleString('es-AR'),
-                    resultado: resumenRespuestas
-                };
+                const resumenRespuestas = Object.keys(answers).map(id => `P${id}:${answers[id]}`).join(" | ");
+                const dataToSend = { nombre, email, fecha: new Date().toLocaleString('es-AR'), resultado: resumenRespuestas };
 
                 try {
-                    await fetch(scriptURL, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(dataToSend)
-                    });
+                    await fetch(scriptURL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dataToSend) });
                     setSubmitted(true);
+                    window.scrollTo(0, 0);
                 } catch (error) {
-                    console.error('Error:', error);
-                    alert("Error al enviar los datos. Revisa tu conexión.");
+                    alert("Error al enviar. Revisa tu conexión.");
                 } finally {
                     setSending(false);
                 }
@@ -124,20 +114,52 @@
 
             if (submitted) {
                 return (
-                    <div className="min-h-screen bg-black flex items-center justify-center p-6 text-white font-sans">
-                        <div className={`max-w-2xl w-full p-12 rounded-[40px] ${neuCard} text-center border-yellow-500/20`}>
-                            <div className="w-24 h-24 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-[0_0_30px_#eab308]">
+                    <div className="min-h-screen bg-black flex items-center justify-center p-6 md:p-12 text-white font-sans animate-in">
+                        <div className={`max-w-4xl w-full p-8 md:p-16 rounded-[50px] ${neuCard} text-center border-yellow-500/30`}>
+                            {/* LOGO EN GRANDE */}
+                            <h1 className="text-5xl md:text-8xl font-black tracking-tighter italic uppercase mb-4 leading-none">
+                                <span className="block text-white">fórmula.</span>
+                                <span className="block text-yellow-500 -mt-2">momentum</span>
+                            </h1>
+
+                            <div className="w-20 h-20 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-10 shadow-[0_0_40px_rgba(234,179,8,0.4)]">
                                 <ShieldCheck />
                             </div>
-                            <h1 className="text-4xl font-black mb-6 tracking-tighter italic uppercase">Análisis en Proceso</h1>
-                            <p className="text-slate-400 mb-8 leading-relaxed text-lg">
-                                Gracias, <strong className="text-white">{nombre}</strong>. <br/>
-                                Tus datos han sido enviados al experto. Recibirás tu evaluación honesta y ubicación de criterio en el email proporcionado.
-                            </p>
-                            <div className="p-6 bg-yellow-500/5 rounded-2xl border border-yellow-500/10 mb-8 italic text-sm text-yellow-500/80">
-                                "La claridad es el primer paso hacia los resultados previsibles."
+
+                            <div className="space-y-8 text-slate-300 text-lg md:text-xl leading-relaxed max-w-3xl mx-auto font-medium">
+                                <h2 className="text-2xl md:text-3xl font-bold text-white italic uppercase tracking-tight underline decoration-yellow-500 decoration-2 underline-offset-8 mb-10">
+                                    Tus resultados fueron enviados correctamente.
+                                </h2>
+
+                                <p>Completar este formulario no garantiza nada.</p>
+                                
+                                <p>Solo marca el punto en el que algunas personas deciden dejar de improvisar y empezar a construir con <span className="text-white font-bold italic">criterio</span>.</p>
+                                
+                                <p>Los resultados consistentes no aparecen por motivación ni por promesas atractivas.</p>
+
+                                <p className="bg-yellow-500/5 p-6 rounded-3xl border border-yellow-500/10">
+                                    Se desarrollan cuando hay una <span className="text-yellow-500 font-black tracking-widest">ESTRUCTURA</span>, un <span className="text-yellow-500 font-black tracking-widest">PROCESO</span> claro y acciones que pueden <span className="text-white font-bold">MEDIRSE</span> y <span className="text-white font-bold">COMPROBARSE</span> en el tiempo.
+                                </p>
+
+                                <p>En breve vas a recibir un email con el <span className="text-white font-bold uppercase tracking-widest">ESTADO y NIVEL DE APROBACIÓN</span> de tu solicitud.</p>
+
+                                <p>Si cumplís con los requisitos, vas a poder acceder a un proyecto diseñado para trabajar sobre esa base: método, ejecución y lectura constante de resultados.</p>
+
+                                <p className="text-white font-bold">Acá el avance depende de <span className="text-yellow-500">DECISIÓN, VOLUNTAD y RESILIENCIA</span>.</p>
+
+                                <p className="text-slate-500 text-base italic">
+                                    Por eso son pocos los que llegan lejos: sostener el proceso cuando deja de ser cómodo es lo que separa a los que avanzan de los que se quedan en intención.
+                                </p>
+
+                                <div className="pt-10 border-t border-white/5 mt-10">
+                                    <p className="text-sm uppercase tracking-[0.4em] text-slate-500 mb-4">Si estás acá, es porque aceptás una verdad simple:</p>
+                                    <h3 className="text-3xl md:text-5xl font-black italic tracking-tighter text-white flex flex-col gap-2">
+                                        <span>LOS RESULTADOS EXTRAORDINARIOS</span>
+                                        <span className="text-yellow-500">SE CONSTRUYEN,</span>
+                                        <span className="text-white">NO SE ESPERAN.</span>
+                                    </h3>
+                                </div>
                             </div>
-                            <p className="text-[10px] text-slate-700 uppercase tracking-widest">Sincronización Momentum finalizada con éxito</p>
                         </div>
                     </div>
                 );
@@ -154,42 +176,22 @@
                                     <span className="text-yellow-500 -mt-2">momentum</span>
                                 </h1>
                             </div>
-
                             <div className={`p-8 md:p-12 rounded-[32px] ${neuCard} text-left relative overflow-hidden group`}>
-                                <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                                    <Compass />
-                                </div>
+                                <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><Compass /></div>
                                 <div className="max-w-3xl space-y-4 text-slate-300 leading-relaxed font-medium">
-                                    <p className="text-xl md:text-2xl text-white font-bold italic mb-4">
-                                        La fórmula Momentum no está pensada para todos los momentos ni para todas las personas —
-                                    </p>
-                                    <p>
-                                        se apoya en lo que realmente sostiene los resultados: 
-                                        <span className="text-yellow-500 font-bold"> HAMBRE POR AVANZAR, RESILIENCIA FRENTE A LOS OBSTÁCULOS</span> y 
-                                        <span className="text-white font-bold"> COMPROMISO REAL PARA LLEVAR UN PROCESO HASTA EL FINAL.</span>
-                                    </p>
-                                    <p>
-                                        Lo que sigue es una <span className="text-yellow-500 font-bold uppercase underline decoration-2 underline-offset-4">evaluación honesta</span> para que puedas ubicarte con claridad.
-                                    </p>
+                                    <p className="text-xl md:text-2xl text-white font-bold italic mb-4">La fórmula Momentum no está pensada para todos los momentos ni para todas las personas —</p>
+                                    <p>se apoya en lo que realmente sostiene los resultados: <span className="text-yellow-500 font-bold uppercase">hambre por avanzar, resiliencia y compromiso real</span>.</p>
                                 </div>
                             </div>
                         </header>
 
-                        <div className="mb-12">
-                            <div className="flex justify-between items-end mb-4 px-4">
-                                <div className="flex items-center gap-3">
-                                    <Activity />
-                                    <span className="text-xs font-black tracking-[0.3em] uppercase text-slate-500">Nivel de Carga del Sistema</span>
-                                </div>
-                                <div className="text-right">
-                                    <span className="text-3xl font-black italic text-yellow-500 leading-none">{Math.round(progress)}%</span>
-                                </div>
+                        <div className="mb-12 px-4">
+                            <div className="flex justify-between items-end mb-4">
+                                <div className="flex items-center gap-3"><Activity /><span className="text-xs font-black tracking-[0.3em] uppercase text-slate-500">Nivel de Carga</span></div>
+                                <div className="text-right"><span className="text-3xl font-black italic text-yellow-500 leading-none">{Math.round(progress)}%</span></div>
                             </div>
                             <div className={`h-4 w-full rounded-full ${neuInner} p-1 bg-black overflow-hidden`}>
-                                <div 
-                                    className="h-full bg-gradient-to-r from-yellow-600 via-yellow-400 to-white rounded-full transition-all duration-1000 ease-out shadow-[0_0_15px_#eab308]"
-                                    style={{ width: `${progress}%` }}
-                                ></div>
+                                <div className="h-full bg-gradient-to-r from-yellow-600 to-white rounded-full transition-all duration-1000 shadow-[0_0_15px_#eab308]" style={{ width: `${progress}%` }}></div>
                             </div>
                         </div>
 
@@ -199,28 +201,15 @@
                                     <div className="flex flex-col md:flex-row gap-6">
                                         <div className="md:w-48 flex-shrink-0">
                                             <div className="text-[10px] font-black text-yellow-500 tracking-widest uppercase mb-1">{q.cat}</div>
-                                            <div className="text-[9px] font-bold text-slate-600 uppercase mb-4 italic">Ref: {q.ref}</div>
-                                            <div className={`w-12 h-12 rounded-2xl ${neuInner} flex items-center justify-center text-xl font-black italic border border-white/5`}>
-                                                {q.id}
-                                            </div>
+                                            <div className={`w-12 h-12 rounded-2xl ${neuInner} flex items-center justify-center text-xl font-black italic border border-white/5`}>{q.id}</div>
                                         </div>
                                         <div className="flex-1">
                                             <h3 className="text-2xl md:text-3xl font-bold text-white mb-8 tracking-tight leading-tight">{q.q}</h3>
                                             <div className="grid grid-cols-1 gap-4">
                                                 {q.opts.map((o, idx) => (
-                                                    <button 
-                                                        key={idx}
-                                                        onClick={() => setAnswers(p => ({ ...p, [q.id]: o.s }))}
-                                                        className={`group text-left p-6 rounded-3xl border transition-all duration-300 ${
-                                                            answers[q.id] === o.s 
-                                                            ? 'bg-yellow-500 border-yellow-500 text-black shadow-[0_0_20px_rgba(234,179,8,0.3)]' 
-                                                            : 'bg-black border-[#222] text-slate-400 hover:border-yellow-500/50 hover:text-white'
-                                                        }`}
-                                                    >
+                                                    <button key={idx} onClick={() => setAnswers(p => ({ ...p, [q.id]: o.s }))} className={`group text-left p-6 rounded-3xl border transition-all duration-300 ${answers[q.id] === o.s ? 'bg-yellow-500 border-yellow-500 text-black shadow-[0_0_20px_rgba(234,179,8,0.3)]' : 'bg-black border-[#222] text-slate-400 hover:border-yellow-500/50 hover:text-white'}`}>
                                                         <div className="flex items-center gap-4">
-                                                            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${answers[q.id] === o.s ? 'border-black' : 'border-slate-800'}`}>
-                                                                {answers[q.id] === o.s && <div className="w-2 h-2 rounded-full bg-black"></div>}
-                                                            </div>
+                                                            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${answers[q.id] === o.s ? 'border-black' : 'border-slate-800'}`}>{answers[q.id] === o.s && <div className="w-2 h-2 rounded-full bg-black"></div>}</div>
                                                             <span className="text-lg font-bold italic">{o.t}</span>
                                                         </div>
                                                     </button>
@@ -232,73 +221,34 @@
                             ))}
 
                             {currentStep === 7 && (
-                                <div className={`p-10 md:p-16 rounded-[50px] ${neuCard} text-center space-y-10 animate-in fade-in slide-in-from-bottom-10 duration-700`}>
-                                    <div>
-                                        <h3 className="text-3xl md:text-4xl font-black italic text-white uppercase tracking-tighter mb-4">Finalizar Evaluación</h3>
-                                        <p className="text-slate-400 max-w-xl mx-auto italic">Introduce tus credenciales para que el experto pueda procesar tu ubicación Momentum.</p>
-                                    </div>
+                                <div className={`p-10 md:p-16 rounded-[50px] ${neuCard} text-center space-y-10 animate-in`}>
+                                    <h3 className="text-3xl md:text-4xl font-black italic text-white uppercase tracking-tighter">Finalizar Evaluación</h3>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left max-w-3xl mx-auto">
                                         <div className="space-y-3">
-                                            <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-4 flex items-center gap-2"><User /> Tu Nombre Completo</label>
-                                            <input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Ej: Juan Pérez" className={`w-full px-8 py-5 rounded-3xl ${neuInner} bg-black outline-none font-bold text-white border border-transparent focus:border-yellow-500/50 transition-all`} />
+                                            <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-4 flex items-center gap-2"><User /> Nombre Completo</label>
+                                            <input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Juan Pérez" className={`w-full px-8 py-5 rounded-3xl ${neuInner} bg-black outline-none font-bold text-white border border-transparent focus:border-yellow-500/50 transition-all`} />
                                         </div>
                                         <div className="space-y-3">
-                                            <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-4 flex items-center gap-2"><Mail /> Email más usado</label>
-                                            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Ej: contacto@empresa.com" className={`w-full px-8 py-5 rounded-3xl ${neuInner} bg-black outline-none font-bold text-white border border-transparent focus:border-yellow-500/50 transition-all`} />
+                                            <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-4 flex items-center gap-2"><Mail /> Email</label>
+                                            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="contacto@empresa.com" className={`w-full px-8 py-5 rounded-3xl ${neuInner} bg-black outline-none font-bold text-white border border-transparent focus:border-yellow-500/50 transition-all`} />
                                         </div>
                                     </div>
-                                    <div className="flex flex-col items-center gap-4">
-                                        <button 
-                                            onClick={handleSubmit}
-                                            disabled={!nombre.trim() || !email.includes('@') || sending || Object.keys(answers).length < 40}
-                                            className={`group relative px-16 py-8 rounded-[35px] font-black text-2xl italic tracking-tight transition-all shadow-2xl ${
-                                                nombre.trim() && email.includes('@') && !sending && Object.keys(answers).length === 40
-                                                ? 'bg-yellow-500 text-black hover:scale-105 shadow-yellow-500/20'
-                                                : 'bg-slate-900 text-slate-700 opacity-50 cursor-not-allowed'
-                                            }`}
-                                        >
-                                            <span className="flex items-center gap-4 relative z-10">
-                                                {sending ? 'TRANSMITIENDO...' : <>ENVIAR EVALUACIÓN <Send /></>}
-                                            </span>
-                                        </button>
-                                        {Object.keys(answers).length < 40 && <p className="text-red-500/70 text-[10px] uppercase font-bold tracking-widest">* Debes responder las 40 preguntas antes de enviar</p>}
-                                    </div>
+                                    <button onClick={handleSubmit} disabled={!nombre.trim() || !email.includes('@') || sending || Object.keys(answers).length < 40} className={`group relative px-16 py-8 rounded-[35px] font-black text-2xl italic tracking-tight transition-all ${nombre.trim() && email.includes('@') && !sending && Object.keys(answers).length === 40 ? 'bg-yellow-500 text-black hover:scale-105 shadow-yellow-500/20' : 'bg-slate-900 text-slate-700 opacity-50 cursor-not-allowed'}`}>
+                                        <span className="flex items-center gap-4 relative z-10">{sending ? 'TRANSMITIENDO...' : <>ENVIAR EVALUACIÓN <Send /></>}</span>
+                                    </button>
                                 </div>
                             )}
 
                             <div className="flex flex-col md:flex-row items-center justify-between gap-8 pt-10 pb-20">
-                                <button disabled={currentStep === 0} onClick={() => setCurrentStep(s => s - 1)} className={`flex items-center gap-2 px-8 py-5 rounded-3xl font-black uppercase tracking-widest transition-all ${currentStep === 0 ? 'opacity-0 pointer-events-none' : `${neuCard} text-slate-400 hover:text-white`}`}>
-                                    <ChevronLeft /> Regresar
-                                </button>
-                                <div className="flex items-center gap-2">
-                                    {[...Array(8)].map((_, i) => (
-                                        <div key={i} className={`w-2 h-2 rounded-full transition-all ${currentStep === i ? 'bg-yellow-500 w-8' : 'bg-slate-800'}`}></div>
-                                    ))}
-                                </div>
+                                <button disabled={currentStep === 0} onClick={() => setCurrentStep(s => s - 1)} className={`flex items-center gap-2 px-8 py-5 rounded-3xl font-black uppercase tracking-widest transition-all ${currentStep === 0 ? 'opacity-0' : `${neuCard} text-slate-400 hover:text-white`}`}><ChevronLeft /> Regresar</button>
+                                <div className="flex gap-2">{[...Array(8)].map((_, i) => <div key={i} className={`w-2 h-2 rounded-full transition-all ${currentStep === i ? 'bg-yellow-500 w-8' : 'bg-slate-800'}`}></div>)}</div>
                                 {currentStep < 7 ? (
-                                    <button 
-                                        disabled={Object.keys(answers).filter(id => id > currentStep * 5 && id <= (currentStep + 1) * 5).length < 5}
-                                        onClick={() => setCurrentStep(s => s + 1)}
-                                        className={`flex items-center gap-3 px-10 py-5 rounded-3xl font-black uppercase tracking-widest shadow-xl transition-all ${
-                                            Object.keys(answers).filter(id => id > currentStep * 5 && id <= (currentStep + 1) * 5).length < 5
-                                            ? 'bg-slate-900 text-slate-700 opacity-50'
-                                            : 'bg-white text-black hover:scale-105 hover:bg-yellow-500'
-                                        }`}
-                                    >
-                                        Siguiente Bloque <ChevronRight />
-                                    </button>
-                                ) : <div className="w-48 invisible"></div>}
+                                    <button disabled={Object.keys(answers).filter(id => id > currentStep * 5 && id <= (currentStep + 1) * 5).length < 5} onClick={() => setCurrentStep(s => s + 1)} className={`flex items-center gap-3 px-10 py-5 rounded-3xl font-black uppercase tracking-widest shadow-xl transition-all ${Object.keys(answers).filter(id => id > currentStep * 5 && id <= (currentStep + 1) * 5).length < 5 ? 'bg-slate-900 text-slate-700' : 'bg-white text-black hover:bg-yellow-500 hover:scale-105'}`}>Siguiente Bloque <ChevronRight /></button>
+                                ) : <div className="w-48"></div>}
                             </div>
                         </div>
 
-                        <footer className="text-center py-10 opacity-30">
-                            <div className="flex items-center justify-center gap-4 text-slate-800 mb-6">
-                                <div className="h-[1px] w-12 bg-slate-900"></div>
-                                <CircleDot />
-                                <div className="h-[1px] w-12 bg-slate-900"></div>
-                            </div>
-                            <p className="text-slate-700 text-[10px] font-black tracking-[0.6em] uppercase">Fórmula Momentum ©2024 — Sistema de Ubicación de Criterio</p>
-                        </footer>
+                        <footer className="text-center py-10 opacity-30 text-slate-700 text-[10px] font-black tracking-[0.6em] uppercase">Fórmula Momentum ©2024 — Ubicación de Criterio</footer>
                     </div>
                 </div>
             );
@@ -307,13 +257,5 @@
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
-
-    <style>
-        input::placeholder { font-style: italic; }
-        @keyframes fade-in { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-in { animation: fade-in 0.6s ease-out forwards; }
-        body { background-color: black; margin: 0; padding: 0; }
-        [data-lucide] { width: 1.25rem; height: 1.25rem; }
-    </style>
 </body>
 </html>
