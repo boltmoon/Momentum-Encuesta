@@ -9,21 +9,18 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
-        body { background-color: black; color: white; margin: 0; font-family: 'Inter', sans-serif; }
-        .neu-card { background: #0a0a0a; border: 1px solid #1a1a1a; box-shadow: 15px 15px 30px #050505; }
+        body { background-color: black; color: white; margin: 0; font-family: sans-serif; }
+        .neu-card { background: #0a0a0a; border: 1px solid #1a1a1a; box-shadow: 10px 10px 20px #050505; }
+        .animate-in { animation: fadeIn 0.5s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .text-yellow { color: #eab308; }
-        .border-yellow { border-color: #eab308; }
-        .animate-fade { animation: fadeIn 0.8s ease-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .line-height-relaxed { line-height: 1.8; }
     </style>
 </head>
 <body>
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useMemo, useEffect } = React;
+        const { useState, useMemo } = React;
 
         const App = () => {
             const [currentStep, setCurrentStep] = useState(0);
@@ -36,75 +33,93 @@
             const scriptURL = 'TU_URL_DE_GOOGLE_SCRIPT_AQUÍ';
 
             const scrollToTop = () => {
-                window.scrollTo(0, 0);
-                document.documentElement.scrollTop = 0;
+                window.scrollTo({ top: 0, behavior: 'instant' });
             };
 
-            // Estructura de preguntas (Aquí van tus 40 preguntas)
             const questions = useMemo(() => [
-                { id: 1, cat:"Hambre de Avanzar", q:"¿Qué tanto te incomoda tu situación actual (1-10)?", opts: [{ t:"1-3: Cómodo", s: 1}, { t: "4-6: Podría mejorar", s: 4}, { t:"7-8: Necesito un cambio", s:7 },{ t:"9-10: Innegociable", s:10 }]},
-                { id: 2, cat:"Resiliencia", q:"¿Ajustas la estrategia si no hay resultados inmediatos?", opts:[ { t:"Abandono", s:1 },{ t:"Cuestiono", s:4 }, { t:"Ajusto con dudas", s:7 },{ t:"Acepto el ajuste", s:10 }]},
+                // BLOQUE 1
+                { id: 1, cat:"Mentalidad", q:"¿Qué tanto te incomoda tu situación actual (1-10)?", opts: [{ t:"1-3: Cómodo", s: 1}, { t: "4-6: Podría mejorar", s: 4}, { t:"7-8: Cambio urgente", s:7 },{ t:"9-10: Innegociable", s:10 }]},
+                { id: 2, cat:"Resiliencia", q:"¿Ajustas la estrategia si no hay resultados?", opts:[ { t:"Abandono", s:1 },{ t:"Cuestiono", s:4 }, { t:"Ajusto", s:7 },{ t:"Persisto", s:10 }]},
                 { id: 3, cat:"Compromiso", q:"¿Qué prioridad tiene este avance hoy?", opts: [ { t:"Pasatiempo", s:2 },{ t:"Si hay tiempo", s:5 }, { t:"Secundaria", s:8 },{ t:"Eje central", s: 10}]},
                 { id: 4, cat:"Estrategia", q:"¿Ves obstáculos como errores o como datos?", opts: [ { t:"Errores", s:2 },{ t:"Frustración", s:4 }, { t:"Inseguridad", s:7 },{ t:"Datos puros", s:10 }]},
-                { id: 5, cat:"Sostenibilidad", q:"¿Tiempo dispuesto a invertir antes del retorno?", opts: [ { t:"15 días", s:1 },{ t:"2 meses", s:4 }, { t:"6 meses", s:7 },{ t:"El que sea necesario", s: 10}]}
-                // ... replicar para completar las 40 preguntas
+                { id: 5, cat:"Sostenibilidad", q:"¿Tiempo dispuesto a invertir antes del retorno?", opts: [ { t:"15 días", s:1 },{ t:"2 meses", s:4 }, { t:"6 meses", s:7 },{ t:"Indefinido", s: 10}]},
+                // BLOQUE 2
+                { id: 6, cat:"Enfoque", q:"¿Cómo manejas las distracciones externas?", opts:[{t:"Me distraigo", s:2}, {t:"Lucho", s:5}, {t:"Filtro", s:8}, {t:"Enfoque total", s:10}]},
+                { id: 7, cat:"Acción", q:"¿Cuánto tardas en ejecutar una idea?", opts:[{t:"Meses", s:2}, {t:"Semanas", s:5}, {t:"Días", s:8}, {t:"Horas", s:10}]},
+                { id: 8, cat:"Inversión", q:"¿Estás dispuesto a invertir en conocimiento?", opts:[{t:"No", s:1}, {t:"Dudo", s:4}, {t:"Si es barato", s:7}, {t:"Sin dudar", s:10}]},
+                { id: 9, cat:"Liderazgo", q:"¿Asumes la responsabilidad de tus fallos?", opts:[{t:"Culpo a otros", s:1}, {t:"Me justifico", s:4}, {t:"Lo acepto", s:8}, {t:"Analizo y corrijo", s:10}]},
+                { id: 10, cat:"Disciplina", q:"¿Cumples tus propios horarios?", opts:[{t:"Nunca", s:2}, {t:"A veces", s:5}, {t:"Casi siempre", s:8}, {t:"Religiosamente", s:10}]},
+                // BLOQUE 3 a 8 (Continuación de las 40 preguntas...)
+                { id: 11, cat:"Criterio", q:"¿Buscas soluciones rápidas o procesos sólidos?", opts:[{t:"Rápido", s:2}, {t:"Proceso", s:10}]},
+                { id: 12, cat:"Mentalidad", q:"¿Te detiene el miedo al fracaso?", opts:[{t:"Sí", s:2}, {t:"No", s:10}]},
+                { id: 13, cat:"Visión", q:"¿Dónde te ves en 12 meses?", opts:[{t:"Igual", s:2}, {t:"Mejor", s:10}]},
+                { id: 14, cat:"Hábito", q:"¿Lees o te formas a diario?", opts:[{t:"No", s:2}, {t:"Sí", s:10}]},
+                { id: 15, cat:"Entorno", q:"¿Tu entorno te apoya o te frena?", opts:[{t:"Frena", s:2}, {t:"Apoya", s:10}]},
+                { id: 16, cat:"Finanzas", q:"¿Reviertes tus ganancias en el proyecto?", opts:[{t:"No", s:2}, {t:"Sí", s:10}]},
+                { id: 17, cat:"Salud", q:"¿Cuidas tu energía física para rendir?", opts:[{t:"No", s:2}, {t:"Sí", s:10}]},
+                { id: 18, cat:"Delegación", q:"¿Sueles querer controlar todo?", opts:[{t:"Sí", s:2}, {t:"No", s:10}]},
+                { id: 19, cat:"Paciencia", q:"¿Toleras la falta de resultados al inicio?", opts:[{t:"No", s:2}, {t:"Sí", s:10}]},
+                { id: 20, cat:"Análisis", q:"¿Mides tus métricas semanalmente?", opts:[{t:"No", s:2}, {t:"Sí", s:10}]},
+                { id: 21, cat:"Mentalidad", q:"¿Te comparas con otros constantemente?", opts:[{t:"Sí", s:2}, {t:"No", s:10}]},
+                { id: 22, cat:"Riesgo", q:"¿Te asusta invertir dinero sin garantía?", opts:[{t:"Sí", s:2}, {t:"No", s:10}]},
+                { id: 23, cat:"Foco", q:"¿Haces más de 3 proyectos a la vez?", opts:[{t:"Sí", s:2}, {t:"No", s:10}]},
+                { id: 24, cat:"Adaptación", q:"¿Te resistes a los cambios de mercado?", opts:[{t:"Sí", s:2}, {t:"No", s:10}]},
+                { id: 25, cat:"Redes", q:"¿Consumes más contenido del que creas?", opts:[{t:"Sí", s:2}, {t:"No", s:10}]},
+                { id: 26, cat:"Sistemas", q:"¿Tienes procesos escritos?", opts:[{t:"No", s:2}, {t:"Sí", s:10}]},
+                { id: 27, cat:"Ventas", q:"¿Te incomoda vender tu servicio?", opts:[{t:"Sí", s:2}, {t:"No", s:10}]},
+                { id: 28, cat:"Persistencia", q:"¿Has abandonado proyectos antes?", opts:[{t:"Sí", s:2}, {t:"No", s:10}]},
+                { id: 29, cat:"Mentoría", q:"¿Escuchas consejos de quien no tiene resultados?", opts:[{t:"A veces", s:2}, {t:"Nunca", s:10}]},
+                { id: 30, cat:"Tiempo", q:"¿Sabes cuánto vale tu hora de trabajo?", opts:[{t:"No", s:2}, {t:"Sí", s:10}]},
+                { id: 31, cat:"Estrategia", q:"¿Tienes un plan para los próximos 90 días?", opts:[{t:"No", s:2}, {t:"Sí", s:10}]},
+                { id: 32, cat:"Miedo", q:"¿Qué te da más miedo: fracasar o no intentarlo?", opts:[{t:"Fracasar", s:2}, {t:"No intentar", s:10}]},
+                { id: 33, cat:"Equipo", q:"¿Confías en otros para crecer?", opts:[{t:"No", s:2}, {t:"Sí", s:10}]},
+                { id: 34, cat:"Obsesión", q:"¿Piensas en tu progreso al despertar?", opts:[{t:"No", s:2}, {t:"Sí", s:10}]},
+                { id: 35, cat:"Ética", q:"¿Priorizas el dinero sobre el cliente?", opts:[{t:"Sí", s:2}, {t:"No", s:10}]},
+                { id: 36, cat:"Escalabilidad", q:"¿Tu negocio depende 100% de ti hoy?", opts:[{t:"Sí", s:2}, {t:"No", s:10}]},
+                { id: 37, cat:"Legado", q:"¿Buscas solo dinero o impacto real?", opts:[{t:"Dinero", s:2}, {t:"Impacto", s:10}]},
+                { id: 38, cat:"Curiosidad", q:"¿Investigas nuevas herramientas?", opts:[{t:"No", s:2}, {t:"Sí", s:10}]},
+                { id: 39, cat:"Humildad", q:"¿Aceptas críticas constructivas?", opts:[{t:"No", s:2}, {t:"Sí", s:10}]},
+                { id: 40, cat:"Decisión", q:"¿Estás listo para empezar hoy mismo?", opts:[{t:"Tengo dudas", s:2}, {t:"Totalmente", s:10}]}
             ], []);
+
+            const handleNext = () => {
+                setCurrentStep(prev => prev + 1);
+                setTimeout(scrollToTop, 10);
+            };
+
+            const handleBack = () => {
+                setCurrentStep(prev => prev - 1);
+                setTimeout(scrollToTop, 10);
+            };
 
             const handleSubmit = async () => {
                 if (!nombre || !email) return;
                 setSending(true);
                 const resumen = Object.keys(answers).map(id => `P${id}:${answers[id]}`).join(" | ");
                 const data = { nombre, email, fecha: new Date().toLocaleString(), resultado: resumen };
-
                 try {
                     await fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) });
                     setSubmitted(true);
-                    setTimeout(scrollToTop, 50);
+                    setTimeout(scrollToTop, 20);
                 } catch (e) { console.error(e); }
                 setSending(false);
             };
 
-            // 1. PANTALLA DE ÉXITO (POST-ENVÍO)
             if (submitted) {
                 return (
-                    <div className="min-h-screen bg-black text-white p-6 md:p-20 flex flex-col items-center animate-fade">
-                        <header className="mb-12 text-center">
-                            <h1 className="text-5xl md:text-8xl font-black italic tracking-tighter uppercase">
-                                FÓRMULA.<span className="text-yellow">MOMENTUM</span>
-                            </h1>
+                    <div className="min-h-screen bg-black text-white p-6 md:p-20 flex flex-col items-center animate-in">
+                        <header className="mb-10 text-center">
+                            <h1 className="text-4xl md:text-6xl font-black italic uppercase">FÓRMULA.<span className="text-yellow">MOMENTUM</span></h1>
                         </header>
-
-                        <div className="max-w-4xl w-full p-8 md:p-16 rounded-[50px] neu-card border border-yellow/20 space-y-10">
-                            <h2 className="text-2xl md:text-4xl font-bold text-yellow uppercase italic text-center tracking-tight">
-                                Tus resultados fueron enviados correctamente.
-                            </h2>
-
-                            <div className="space-y-8 text-slate-300 text-lg md:text-xl leading-relaxed">
-                                <p>Completar este formulario no garantiza nada.</p>
-                                <p>Solo marca el punto en el que algunas personas deciden dejar de improvisar y empezar a construir con <span className="text-white font-bold italic">criterio</span>.</p>
-                                <p>Los resultados consistentes no aparecen por motivación ni por promesas atractivas.</p>
-                                
-                                <div className="bg-yellow/5 p-8 rounded-3xl border border-yellow/20">
-                                    <p className="text-white font-medium italic">
-                                        Se desarrollan cuando hay una <span className="text-yellow font-black uppercase tracking-widest">ESTRUCTURA</span>, un <span className="text-yellow font-black uppercase tracking-widest">PROCESO</span> claro y acciones que pueden <span className="underline decoration-yellow decoration-2 underline-offset-4">MEDIRSE y COMPROBARSE</span> en el tiempo.
-                                    </p>
-                                </div>
-
-                                <p>En breve vas a recibir un email con el <span className="text-white font-black">ESTADO y NIVEL DE APROBACIÓN</span> de tu solicitud.</p>
-                                <p>Si cumplís con los requisitos, vas a poder acceder a un proyecto diseñado para trabajar sobre esa base: método, ejecución y lectura constante de resultados.</p>
-                                <p className="text-white font-bold italic">Acá el avance depende de <span className="text-yellow font-black">DECISIÓN, VOLUNTAD y RESILIENCIA</span>.</p>
-                                
-                                <p className="text-slate-500 text-base italic border-l-2 border-slate-800 pl-6">
-                                    Por eso son pocos los que llegan lejos: sostener el proceso cuando deja de ser cómodo es lo que separa a los que avanzan de los que se quedan en intención.
-                                </p>
-
-                                <div className="pt-12 border-t border-white/10 text-center">
-                                    <p className="text-sm uppercase tracking-[0.4em] text-slate-500 mb-6">Si estás acá, es porque aceptás una verdad simple:</p>
-                                    <h3 className="text-4xl md:text-6xl font-black italic text-white flex flex-col gap-2 leading-none">
-                                        <span>LOS RESULTADOS EXTRAORDINARIOS</span>
-                                        <span className="text-yellow">SE CONSTRUYEN,</span>
-                                        <span>NO SE ESPERAN.</span>
-                                    </h3>
+                        <div className="max-w-3xl w-full p-8 md:p-12 rounded-[40px] neu-card border border-yellow/20 space-y-8">
+                            <h2 className="text-2xl md:text-3xl font-bold text-yellow uppercase italic text-center">Tus resultados fueron enviados correctamente.</h2>
+                            <div className="space-y-6 text-slate-300 text-lg leading-relaxed">
+                                <p>Completar este formulario no garantiza nada. Solo marca el punto en el que algunas personas deciden dejar de improvisar y empezar a construir con criterio.</p>
+                                <p>Los resultados consistentes no aparecen por motivación ni por promesas atractivas. Se desarrollan cuando hay una ESTRUCTURA, un PROCESO claro y acciones que pueden MEDIRSE y COMPROBARSE en el tiempo.</p>
+                                <p>En breve vas a recibir un email con el ESTADO y NIVEL DE APROBACIÓN de tu solicitud.</p>
+                                <p>Acá el avance depende de DECISIÓN, VOLUNTAD y RESILIENCIA. Sostener el proceso cuando deja de ser cómodo es lo que separa a los que avanzan de los que se quedan en intención.</p>
+                                <div className="pt-10 border-t border-white/10 text-center">
+                                    <h3 className="text-3xl md:text-5xl font-black italic">LOS RESULTADOS EXTRAORDINARIOS <br/><span className="text-yellow">SE CONSTRUYEN, NO SE ESPERAN.</span></h3>
                                 </div>
                             </div>
                         </div>
@@ -112,38 +127,29 @@
                 );
             }
 
-            // 2. PANTALLA PRINCIPAL (CUESTIONARIO)
-            const currentQuestions = questions.slice(currentStep * 5, (currentStep + 1) * 5);
+            const questionsToShow = questions.slice(currentStep * 5, (currentStep + 1) * 5);
 
             return (
                 <div className="min-h-screen bg-black text-white p-6 md:p-12">
                     <div className="max-w-4xl mx-auto">
-                        <header className="text-center mb-16 animate-fade">
-                            <h1 className="text-6xl md:text-9xl font-black italic tracking-tighter mb-8 leading-none">
-                                FÓRMULA.<span className="text-yellow">MOMENTUM</span>
-                            </h1>
-                            
-                            {/* DESCRIPCIÓN SOLICITADA ABAJO DEL LOGO */}
-                            <div className="text-left space-y-6 text-slate-300 text-lg md:text-xl line-height-relaxed p-8 rounded-[40px] neu-card border-l-4 border-yellow">
-                                <p>La fórmula Momentum no está pensada para todos los momentos ni para todas las personas — se apoya en lo que realmente sostiene los resultados: <span className="text-white font-bold italic">HAMBRE POR AVANZAR, RESILIENCIA FRENTE A LOS OBSTÁCULOS y COMPROMISO REAL PARA LLEVAR UN PROCESO HASTA EL FINAL.</span></p>
-                                <p>Acá no se improvisa ni se persiguen efectos inmediatos. El avance se construye a partir de <span className="text-white font-bold">ESTRATEGIA</span> que define el enfoque, <span className="text-white font-bold uppercase">PROCESO</span> que ordena la ejecución y <span className="text-white font-bold">AJUSTE CONTINUO</span> que convierte la experiencia en mejora real.</p>
-                                <p>El único riesgo en esta inversión no es equivocarse ni avanzar más lento de lo esperado — es <span className="text-yellow font-bold underline">INTERRUMPIR EL PROCESO</span> antes de comprender cómo se alinean las acciones y los resultados. Cuando esa comprensión aparece, los resultados dejan de ser circunstanciales. Se vuelven PREVISIBLES, SOSTENIBLES y dependientes del criterio de quien ejecuta.</p>
-                                <p className="text-white font-bold pt-4 border-t border-white/5 uppercase tracking-tighter text-2xl">
-                                    Por eso, lo que sigue no es una promesa ni una inscripción automática — es una EVALUACIÓN HONESTA para que puedas UBICARTE CON CLARIDAD, reconocer en qué punto estás hoy y decidir, con CRITERIO PROFESIONAL, si la fórmula Momentum es el proceso adecuado para este momento de tu recorrido.
-                                </p>
-                            </div>
+                        <header className="text-center mb-12">
+                            <h1 className="text-4xl md:text-6xl font-black italic tracking-tighter uppercase mb-6">FÓRMULA.<span className="text-yellow">MOMENTUM</span></h1>
+                            {currentStep === 0 && (
+                                <div className="text-left space-y-4 text-slate-300 text-sm md:text-lg p-6 md:p-8 rounded-[30px] neu-card border-l-4 border-yellow animate-in">
+                                    <p>La fórmula Momentum no está pensada para todos... se apoya en <span className="text-white font-bold">HAMBRE POR AVANZAR, RESILIENCIA y COMPROMISO REAL.</span></p>
+                                    <p>Es una EVALUACIÓN HONESTA para que puedas UBICARTE CON CLARIDAD y decidir si este es tu momento.</p>
+                                </div>
+                            )}
                         </header>
 
-                        {/* BLOQUES DE PREGUNTAS */}
-                        <div className="space-y-8 animate-fade">
-                            {currentQuestions.map(q => (
-                                <div key={q.id} className="p-8 md:p-12 rounded-[40px] neu-card border border-white/5">
-                                    <span className="text-yellow text-[10px] font-black uppercase tracking-[0.4em] mb-2 block">{q.cat}</span>
-                                    <h3 className="text-2xl md:text-3xl font-bold mb-8 leading-tight">{q.q}</h3>
-                                    <div className="grid gap-4">
+                        <div className="space-y-6">
+                            {questionsToShow.map(q => (
+                                <div key={q.id} className="p-6 md:p-8 rounded-[30px] neu-card animate-in">
+                                    <h3 className="text-lg md:text-xl font-bold mb-6">{q.id}. {q.q}</h3>
+                                    <div className="grid gap-3">
                                         {q.opts.map((o, i) => (
                                             <button key={i} onClick={() => setAnswers({...answers, [q.id]: o.s})} 
-                                                className={`p-6 rounded-2xl text-left border transition-all duration-300 text-lg ${answers[q.id] === o.s ? 'bg-yellow text-black border-yellow font-black scale-[1.02]' : 'bg-transparent border-white/10 text-slate-500 hover:border-white/30 hover:text-white'}`}>
+                                                className={`p-4 rounded-xl text-left border transition-all ${answers[q.id] === o.s ? 'bg-yellow text-black border-yellow font-bold' : 'bg-transparent border-white/10 text-slate-400 hover:border-white/30'}`}>
                                                 {o.t}
                                             </button>
                                         ))}
@@ -152,27 +158,25 @@
                             ))}
                         </div>
 
-                        {/* FORMULARIO DE ENVÍO FINAL */}
-                        {currentStep === Math.ceil(questions.length / 5) - 1 && (
-                            <div className="mt-16 p-8 md:p-16 rounded-[50px] neu-card border border-yellow/20 text-center space-y-8 animate-fade">
-                                <h3 className="text-3xl font-black italic uppercase tracking-tighter text-white">DATOS PARA NOTIFICACIÓN</h3>
+                        {currentStep === 7 && (
+                            <div className="mt-12 p-8 rounded-[40px] neu-card border border-yellow/20 text-center space-y-6">
+                                <h3 className="text-2xl font-black italic uppercase text-yellow">Finalizar Evaluación</h3>
                                 <div className="space-y-4">
-                                    <input type="text" placeholder="Nombre completo" value={nombre} onChange={e => setNombre(e.target.value)} className="w-full p-6 rounded-2xl bg-black border border-white/10 text-white outline-none focus:border-yellow transition-all font-bold text-lg" />
-                                    <input type="email" placeholder="Email principal" value={email} onChange={e => setEmail(e.target.value)} className="w-full p-6 rounded-2xl bg-black border border-white/10 text-white outline-none focus:border-yellow transition-all font-bold text-lg" />
+                                    <input type="text" placeholder="Nombre completo" value={nombre} onChange={e => setNombre(e.target.value)} className="w-full p-5 rounded-2xl bg-black border border-white/10 text-white outline-none focus:border-yellow transition-all" />
+                                    <input type="email" placeholder="Email principal" value={email} onChange={e => setEmail(e.target.value)} className="w-full p-5 rounded-2xl bg-black border border-white/10 text-white outline-none focus:border-yellow transition-all" />
                                 </div>
-                                <button onClick={handleSubmit} disabled={sending || !nombre || !email} className="w-full p-8 rounded-[30px] bg-yellow text-black font-black text-2xl uppercase italic shadow-[0_20px_40px_rgba(234,179,8,0.2)] hover:scale-[1.02] active:scale-95 transition-all">
+                                <button onClick={handleSubmit} disabled={sending || !nombre || !email} className="w-full p-8 rounded-3xl bg-yellow text-black font-black text-2xl uppercase italic shadow-lg active:scale-95 transition-all">
                                     {sending ? 'TRANSMITIENDO...' : 'ENVIAR EVALUACIÓN'}
                                 </button>
                             </div>
                         )}
 
-                        {/* NAVEGACIÓN BLOQUES */}
-                        <div className="flex justify-between items-center mt-12 mb-24 animate-fade">
-                            <button onClick={() => {setCurrentStep(s => s - 1); setTimeout(scrollToTop, 20);}} disabled={currentStep === 0} className={`px-10 py-5 rounded-2xl font-black uppercase text-xs tracking-widest transition-all ${currentStep === 0 ? 'invisible' : 'neu-card text-slate-500 hover:text-white'}`}>Atrás</button>
-                            <span className="text-[10px] font-black text-slate-700 uppercase tracking-[0.5em]">BLOQUE {currentStep + 1} DE 8</span>
-                            {currentStep < 7 ? (
-                                <button onClick={() => {setCurrentStep(s => s + 1); setTimeout(scrollToTop, 20);}} className="px-10 py-5 rounded-2xl bg-white text-black font-black uppercase text-xs tracking-widest hover:bg-yellow transition-colors">Siguiente</button>
-                            ) : <div className="w-32"></div>}
+                        <div className="flex justify-between items-center mt-12 mb-20">
+                            <button onClick={handleBack} disabled={currentStep === 0} className={`px-8 py-4 rounded-xl font-bold uppercase text-xs tracking-widest ${currentStep === 0 ? 'invisible' : 'neu-card text-slate-400 hover:text-white'}`}>Atrás</button>
+                            <span className="text-[10px] font-black text-slate-700 uppercase">Bloque {currentStep + 1} de 8</span>
+                            {currentStep < 7 && (
+                                <button onClick={handleNext} className="px-10 py-4 bg-white text-black font-black rounded-xl uppercase tracking-widest text-xs hover:bg-yellow">Siguiente</button>
+                            )}
                         </div>
                     </div>
                 </div>
