@@ -16,7 +16,6 @@
     <script type="text/babel">
         const { useState, useMemo, useEffect } = React;
         
-        // Iconos de Lucide
         const ShieldCheck = () => <i data-lucide="shield-check"></i>;
         const Send = () => <i data-lucide="send"></i>;
         const Compass = () => <i data-lucide="compass"></i>;
@@ -48,7 +47,7 @@
                 { id: 8, cat:"Hambre de Avanzar", ref:"Sacrificio", q:"¿Qué estás dispuesto a sacrificar para que la Fórmula Momentum funcione?", opts: [ { t:"Solo mi tiempo de ocio", s:3 },{ t:"Mis fines de semana", s:5 }, { t:"Mi zona de confort habitual", s:8 },{ t:"Todo lo que no esté alineado con el resultado final", s: 10}]},
                 { id: 9, cat:"Compromiso Real", ref:"Constancia", q:"¿Qué tan frecuente es que interrumpas un proceso antes de terminarlo?", opts: [ { t:"Muy frecuente, me distraigo", s:1 },{ t:"A veces, si se vuelve difícil", s:4 }, { t:"Rara vez, suelo terminar", s:7 },{ t:"Nunca interrumpo hasta que el resultado es previsible", s: 10}]},
                 { id: 10, cat:"Visión", ref:"Criterio Profesional", q:"¿Buscas una promesa mágica o un sistema de trabajo previsible?", opts: [ { t:"Quiero un truco rápido", s:1 },{ t:"Busco facilidad de uso", s:4 }, { t:"Busco una guía", s:7 },{ t:"Busco un proceso profesional basado en resultados", s: 10}]},
-                { id: 11, cat:"Proceso", ref:"Enfoque Operativo", q:"¿Confías más en tu intuición o en una estrategia validada?", opts: [ { t:"100% intuición", s:2 },{ t:"Mezcla de ambos", s:5 },{ t:"Intuición informada", s:8 },{ t:"Estrategia validada", s:10 }]},
+                { id: 11, cat:"Proceso", ref:"Enfoque Operativo", q:"¿Confías más en tu intención o en una estrategia validada?", opts: [ { t:"100% intuición", s:2 },{ t:"Mezcla de ambos", s:5 },{ t:"Intuición informada", s:8 },{ t:"Estrategia validada", s:10 }]},
                 { id: 12, cat:"Impacto", ref:"Determinación", q:"Ante la crítica de terceros sobre tu nuevo rumbo profesional, tú:", opts: [ { t:"Me retracto", s:1 },{ t:"Dudo de mi capacidad", s:4 },{ t:"Ignoro sin analizar", s:7 },{ t:"Uso la crítica como combustible", s:10 }]},
                 { id: 13, cat:"Resiliencia", ref:"Capacidad de Respuesta", q:"Si el proceso toma el doble del tiempo planeado, ¿qué haces?", opts: [ { t:"Abandono", s:1 },{ t:"Reduzco calidad", s:3 },{ t:"Me frustro pero sigo", s:7 },{ t:"Ajusto y mantengo excelencia", s:10 }]},
                 { id: 14, cat:"Criterio", ref:"Autocrítica", q:"¿Reconoces que tu forma actual no es suficiente para escalar?", opts: [ { t:"No, trabajo perfecto", s:1 },{ t:"Quizás falten detalles", s:4 },{ t:"Soy consciente", s:8 },{ t:"Sé que debo transformarme", s:10 }]},
@@ -80,36 +79,25 @@
                 { id: 40, cat:"Final", ref:"Decisión", q:"¿Estás listo para ubicarte con claridad y aceptar tu realidad?", opts: [ { t:"Tengo miedo", s:2 },{ t:"Veremos", s:5 },{ t:"Estoy preparado", s:8 },{ t:"Deseo la verdad", s:10 }]}
             ], []);
 
-            const currentQuestions = questions.slice(currentStep * 5, (currentStep + 1) * 5);
+            const currentQuestions = useMemo(() => questions.slice(currentStep * 5, (currentStep + 1) * 5), [currentStep, questions]);
             const progress = (Object.keys(answers).length / 40) * 100;
+
+            // ESTA ES LA CORRECCIÓN CLAVE: Verifica si las preguntas del bloque actual están respondidas
+            const isStepComplete = useMemo(() => {
+                return currentQuestions.every(q => answers[q.id] !== undefined);
+            }, [answers, currentQuestions]);
 
             const handleSubmit = async () => {
                 if (!nombre.trim() || !email.trim()) return;
                 setSending(true);
-
                 const scriptURL = 'https://script.google.com/macros/s/AKfycby8DbX4l6LIG7US8BoGGHWM4tdvUo-Q9kvR5-ZIxygVl3x7_EBtJvwta3i5aAGtwkC5/exec';
-
-                const resumenRespuestas = Object.keys(answers).sort((a,b) => a-b).map(id => {
-                    return `P${id}: ${answers[id]}`;
-                }).join(" | ");
-
-                const dataToSend = {
-                    nombre: nombre,
-                    email: email,
-                    fecha: new Date().toLocaleString('es-AR'),
-                    resultado: resumenRespuestas
-                };
+                const resumenRespuestas = Object.keys(answers).sort((a,b) => a-b).map(id => `P${id}: ${answers[id]}`).join(" | ");
+                const dataToSend = { nombre, email, fecha: new Date().toLocaleString('es-AR'), resultado: resumenRespuestas };
 
                 try {
-                    await fetch(scriptURL, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(dataToSend)
-                    });
+                    await fetch(scriptURL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dataToSend) });
                     setSubmitted(true);
                 } catch (error) {
-                    console.error('Error:', error);
                     alert("Error al enviar los datos.");
                 } finally {
                     setSending(false);
@@ -127,13 +115,7 @@
                                 <ShieldCheck />
                             </div>
                             <h1 className="text-4xl font-black mb-6 tracking-tighter italic uppercase">Análisis en Proceso</h1>
-                            <p className="text-slate-400 mb-8 leading-relaxed text-lg">
-                                Gracias, <strong className="text-white">{nombre}</strong>. <br/>
-                                Tus datos han sido enviados al experto. Recibirás tu evaluación pronto.
-                            </p>
-                            <div className="p-6 bg-yellow-500/5 rounded-2xl border border-yellow-500/10 mb-8 italic text-sm text-yellow-500/80">
-                                "La claridad es el primer paso hacia los resultados previsibles."
-                            </div>
+                            <p className="text-slate-400 mb-8 leading-relaxed text-lg">Gracias, <strong className="text-white">{nombre}</strong>. <br/>Tus datos han sido enviados. Recibirás tu evaluación pronto.</p>
                         </div>
                     </div>
                 );
@@ -221,7 +203,7 @@
                             ))}
 
                             {currentStep === 7 && (
-                                <div className={`p-10 md:p-16 rounded-[50px] ${neuCard} text-center space-y-10 animate-in fade-in slide-in-from-bottom-10 duration-700`}>
+                                <div className={`p-10 md:p-16 rounded-[50px] ${neuCard} text-center space-y-10 animate-in fade-in`}>
                                     <h3 className="text-3xl md:text-4xl font-black italic text-white uppercase tracking-tighter mb-4">Finalizar Evaluación</h3>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left max-w-3xl mx-auto">
                                         <div className="space-y-3">
@@ -233,13 +215,11 @@
                                             <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Ej: contacto@empresa.com" className={`w-full px-8 py-5 rounded-3xl ${neuInner} bg-black text-white outline-none border border-transparent focus:border-yellow-500/50`} />
                                         </div>
                                     </div>
-                                    <div className="flex flex-col items-center gap-4">
-                                        <button onClick={handleSubmit}
-                                                disabled={!nombre.trim() || !email.includes('@') || sending || Object.keys(answers).length < 40}
-                                                className={`px-16 py-8 rounded-[35px] font-black text-2xl italic tracking-tight transition-all ${nombre.trim() && email.includes('@') && !sending && Object.keys(answers).length === 40 ? 'bg-yellow-500 text-black hover:scale-105' : 'bg-slate-900 text-slate-700 opacity-50 cursor-not-allowed'}`}>
-                                            {sending ? 'TRANSMITIENDO...' : 'ENVIAR EVALUACIÓN'}
-                                        </button>
-                                    </div>
+                                    <button onClick={handleSubmit}
+                                            disabled={!nombre.trim() || !email.includes('@') || sending || Object.keys(answers).length < 40}
+                                            className={`px-16 py-8 rounded-[35px] font-black text-2xl italic transition-all ${nombre.trim() && email.includes('@') && !sending && Object.keys(answers).length === 40 ? 'bg-yellow-500 text-black hover:scale-105' : 'bg-slate-900 text-slate-700 opacity-50 cursor-not-allowed'}`}>
+                                        {sending ? 'TRANSMITIENDO...' : 'ENVIAR EVALUACIÓN'}
+                                    </button>
                                 </div>
                             )}
 
@@ -254,9 +234,9 @@
                                     ))}
                                 </div>
                                 {currentStep < 7 ? (
-                                    <button disabled={Object.keys(answers).filter(id => id > currentStep * 5 && id <= (currentStep + 1) * 5).length < 5}
+                                    <button disabled={!isStepComplete}
                                             onClick={() => { setCurrentStep(s => s + 1); window.scrollTo(0, 0); }}
-                                            className={`flex items-center gap-3 px-10 py-5 rounded-3xl font-black uppercase tracking-widest transition-all ${Object.keys(answers).filter(id => id > currentStep * 5 && id <= (currentStep + 1) * 5).length < 5 ? 'bg-slate-900 text-slate-700 opacity-50' : 'bg-white text-black hover:bg-yellow-500'}`}>
+                                            className={`flex items-center gap-3 px-10 py-5 rounded-3xl font-black uppercase tracking-widest transition-all ${!isStepComplete ? 'bg-slate-900 text-slate-700 opacity-50' : 'bg-white text-black hover:bg-yellow-500'}`}>
                                         Siguiente <ChevronRight />
                                     </button>
                                 ) : <div className="w-48 invisible"></div>}
