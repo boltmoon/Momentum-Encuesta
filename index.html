@@ -14,6 +14,7 @@
         body { font-family: 'Inter', sans-serif; background-color: black; color: white; }
         .neu-card { background: #0a0a0a; border: 1px solid #1a1a1a; box-shadow: 10px 10px 20px #050505, -10px -10px 20px #0f0f0f; }
         .neu-inner { box-shadow: inset 4px 4px 8px #050505, inset -4px -4px 8px #0f0f0f; }
+        .text-hope { color: #4ade80; } /* Un verde esmeralda brillante que evoca esperanza */
     </style>
 </head>
 <body>
@@ -91,7 +92,6 @@
                 };
 
                 try {
-                    // Cambio de método para asegurar conexión con Google
                     await fetch(scriptURL, {
                         method: 'POST',
                         mode: 'no-cors',
@@ -99,38 +99,41 @@
                     });
                     setStep('thanks');
                 } catch (e) {
-                    console.error(e);
                     alert("Error al enviar. Por favor verifica tu conexión.");
                 } finally {
                     setSending(false);
                 }
             };
 
-            // 1. PANTALLA DE INICIO (RESTURADA)
+            // 1. PANTALLA DE INICIO (CON TU TEXTO EXACTO)
             if (step === 'welcome') {
                 return (
-                    <div className="min-h-screen flex items-center justify-center p-6">
+                    <div className="min-h-screen flex items-center justify-center p-6 py-16">
                         <div className="max-w-3xl neu-card p-12 rounded-[40px] text-center">
-                            <h1 className="text-6xl font-black italic uppercase tracking-tighter mb-4">
-                                Fórmula.<span className="text-yellow-500">Momentum</span>
+                            <h1 className="text-5xl md:text-6xl font-black italic uppercase tracking-tighter mb-8">
+                                FÓRMULA <span className="text-yellow-500">MOMENTUM</span>
                             </h1>
-                            <p className="text-xl text-slate-400 mb-8 leading-relaxed">
-                                Bienvenido a la Evaluación de Cualificación de Fórmula Momentum. 
-                                Esta herramienta ha sido diseñada para medir tu nivel de compromiso, 
-                                resiliencia y hambre de progreso. Al finalizar, tus datos serán analizados 
-                                por un experto para determinar tu punto de partida. Responde con total 
-                                honestidad; el éxito comienza con la verdad.
-                            </p>
+                            <div className="space-y-6 text-lg text-slate-300 leading-relaxed text-left">
+                                <p>La FÓRMULA MOMENTUM nace de una manera específica de entender cómo se construyen los resultados.</p>
+                                <p>Está diseñada exclusivamente para profesionales y emprendedores que comprenden que avanzar no depende de impulsos aislados, sino de sostener decisiones en el tiempo.</p>
+                                <p>Personas con <span className="text-white font-bold italic uppercase tracking-tight">HAMBRE POR AVANZAR, RESILIENCIA FRENTE A LOS OBSTÁCULOS y COMPROMISO REAL PARA LLEVAR UN PROCESO HASTA EL FINAL.</span></p>
+                                <p>Acá no se improvisa ni se persiguen efectos inmediatos.</p>
+                                <p>El avance se da cuando cada acción responde a un enfoque claro, una secuencia ordenada y una revisión constante que transforma la experiencia en mejora concreta.</p>
+                                <p>El único riesgo en este tipo de procesos no es equivocarse ni avanzar más lento de lo esperado — es <span className="text-white font-bold italic uppercase tracking-tight">INTERRUMPIR EL RECORRIDO</span> antes de comprender cómo se conectan las decisiones con los resultados.</p>
+                                <p>Cuando esa comprensión aparece, los resultados dejan de ser circunstanciales. Se vuelven PREVISIBLES, SOSTENIBLES y directamente dependientes del criterio de quien ejecuta.</p>
+                                <p>Esto no es una promesa ni una inscripción automática. Es una instancia de diagnóstico real, pensada para observar cómo tomás decisiones, cómo ejecutás y cómo sostenés un proceso cuando no hay atajos.</p>
+                                <p className="pb-8 font-semibold italic border-b border-zinc-800">No busca validar ni descartar personas; expone con claridad si estás dispuesto a hacer lo que el proceso exige, con consistencia, responsabilidad y sin relatos mágicos.</p>
+                            </div>
                             <button onClick={() => setStep('quiz')} 
-                                className="px-12 py-5 bg-white text-black font-black uppercase tracking-widest rounded-2xl hover:scale-105 transition-transform shadow-lg shadow-white/10">
-                                COMENZAR EVALUACIÓN
+                                className="mt-10 px-12 py-5 bg-white text-black font-black uppercase tracking-widest rounded-2xl hover:scale-105 transition-transform shadow-lg shadow-white/10">
+                                COMENZAR DIAGNÓSTICO
                             </button>
                         </div>
                     </div>
                 );
             }
 
-            // 2. PANTALLA DE AGRADECIMIENTO (RESTAURADA Y PRIVADA)
+            // 2. PANTALLA DE AGRADECIMIENTO (CON TU MENSAJE POSITIVO Y TIPOGRAFÍA DESTACADA)
             if (step === 'thanks') {
                 return (
                     <div className="min-h-screen flex items-center justify-center p-6">
@@ -138,16 +141,21 @@
                             <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-[0_0_40px_rgba(34,197,94,0.3)]">
                                 <i data-lucide="check" className="text-black w-10 h-10"></i>
                             </div>
-                            <h2 className="text-4xl font-black uppercase italic mb-6">¡Evaluación Enviada con Éxito!</h2>
-                            <p className="text-slate-400 text-lg leading-relaxed mb-8">
+                            <h2 className="text-4xl font-black uppercase italic mb-6 leading-tight">¡Evaluación Enviada con Éxito!</h2>
+                            <p className="text-slate-400 text-lg leading-relaxed mb-10">
                                 Tu perfil ha sido registrado en nuestro sistema. Ahora, un experto de 
                                 Fórmula Momentum analizará tus respuestas detalladamente para medir tu 
-                                potencial actual. <br/><br/>
-                                <span className="text-yellow-500 font-bold uppercase">Mantente atento:</span> El experto se pondrá en contacto contigo a la brevedad para brindarte los resultados y los pasos a seguir.
+                                potencial actual. El experto se pondrá en contacto contigo a la brevedad 
+                                para brindarte los resultados de tu evaluación.
                             </p>
-                            <div className="pt-6 border-t border-zinc-900">
-                                <p className="text-white font-bold italic text-xl uppercase tracking-tighter">
-                                    "La velocidad de tu éxito la determina tu capacidad de acción"
+                            
+                            {/* MENSAJE POSITIVO / MOTIVACIONAL DESTACADO */}
+                            <div className="py-10 px-6 rounded-[30px] neu-inner border border-zinc-900">
+                                <p className="text-3xl md:text-4xl font-black italic uppercase tracking-tighter text-hope leading-tight mb-4 drop-shadow-[0_2px_10px_rgba(74,222,128,0.2)]">
+                                    "Tu futuro está a una decisión de distancia"
+                                </p>
+                                <p className="text-white font-bold italic text-lg uppercase tracking-widest">
+                                    Sigue con firmeza, el proceso ya comenzó.
                                 </p>
                             </div>
                         </div>
@@ -158,7 +166,7 @@
             return (
                 <div className="max-w-4xl mx-auto py-12 px-6">
                     <header className="text-center mb-12">
-                        <h1 className="text-4xl font-black italic uppercase">Fórmula.<span className="text-yellow-500">Momentum</span></h1>
+                        <h1 className="text-4xl font-black italic uppercase">FÓRMULA <span className="text-yellow-500">MOMENTUM</span></h1>
                         <div className="mt-6 flex items-center justify-center gap-4">
                             <div className="w-full h-2 rounded-full bg-zinc-900 overflow-hidden neu-inner">
                                 <div className="h-full bg-yellow-500 transition-all duration-500" style={{width: `${(Object.keys(answers).length/40)*100}%`}}></div>
@@ -185,7 +193,7 @@
                             ))}
                             <div className="flex justify-between items-center py-10">
                                 <button disabled={currentQuizStep === 0} onClick={() => {setCurrentQuizStep(s=>s-1); window.scrollTo(0,0);}}
-                                    className="px-8 py-4 font-bold uppercase text-zinc-500 disabled:opacity-0 hover:text-white transition-colors">Anterior</button>
+                                    className="px-8 py-4 font-bold uppercase text-zinc-500 disabled:opacity-0 hover:text-white">Anterior</button>
                                 
                                 {currentQuizStep < 7 ? (
                                     <button disabled={!currentQuestions.every(q => answers[q.id])} 
