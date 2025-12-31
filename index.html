@@ -14,7 +14,8 @@
         body { font-family: 'Inter', sans-serif; background-color: black; color: white; }
         .neu-card { background: #0a0a0a; border: 1px solid #1a1a1a; box-shadow: 10px 10px 20px #050505, -10px -10px 20px #0f0f0f; }
         .neu-inner { box-shadow: inset 4px 4px 8px #050505, inset -4px -4px 8px #0f0f0f; }
-        .text-hope { color: #4ade80; } /* Un verde esmeralda brillante que evoca esperanza */
+        .text-hope { color: #4ade80; }
+        .text-highlight { color: #ff9d00; text-shadow: 0 0 15px rgba(255, 157, 0, 0.4); }
     </style>
 </head>
 <body>
@@ -82,7 +83,6 @@
             const handleSubmit = async () => {
                 setSending(true);
                 const scriptURL = 'https://script.google.com/macros/s/AKfycbxq1CbNJNWyG_vn1ghK1ep1tswmTzOdAG0rdzF73dhaPBoGE_Kmyfb7qV1IVtzCWr0/exec';
-                
                 const payload = {
                     nombre,
                     email,
@@ -90,22 +90,16 @@
                     puntaje: totalScore,
                     resultado: Object.keys(answers).sort((a,b)=>a-b).map(id => `P${id}:${answers[id]}`).join(" | ")
                 };
-
                 try {
-                    await fetch(scriptURL, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        body: JSON.stringify(payload)
-                    });
+                    await fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
                     setStep('thanks');
                 } catch (e) {
-                    alert("Error al enviar. Por favor verifica tu conexión.");
+                    alert("Error de conexión.");
                 } finally {
                     setSending(false);
                 }
             };
 
-            // 1. PANTALLA DE INICIO (CON TU TEXTO EXACTO)
             if (step === 'welcome') {
                 return (
                     <div className="min-h-screen flex items-center justify-center p-6 py-16">
@@ -115,7 +109,7 @@
                             </h1>
                             <div className="space-y-6 text-lg text-slate-300 leading-relaxed text-left">
                                 <p>La FÓRMULA MOMENTUM nace de una manera específica de entender cómo se construyen los resultados.</p>
-                                <p>Está diseñada exclusivamente para profesionales y emprendedores que comprenden que avanzar no depende de impulsos aislados, sino de sostener decisiones en el tiempo.</p>
+                                <p>Está diseñada exclusivamente para <span className="text-highlight font-black italic">𝙋𝙍𝙊𝙁𝙀𝙎𝙄𝙊𝙉𝘼𝙇𝙀𝙎</span> y <span className="text-highlight font-black italic">𝙀𝙈𝙋𝙍𝙀𝙉𝘿𝙀𝘿𝙊𝙍𝙀𝙎</span> que comprenden que avanzar no depende de impulsos aislados, sino de sostener decisiones en el tiempo.</p>
                                 <p>Personas con <span className="text-white font-bold italic uppercase tracking-tight">HAMBRE POR AVANZAR, RESILIENCIA FRENTE A LOS OBSTÁCULOS y COMPROMISO REAL PARA LLEVAR UN PROCESO HASTA EL FINAL.</span></p>
                                 <p>Acá no se improvisa ni se persiguen efectos inmediatos.</p>
                                 <p>El avance se da cuando cada acción responde a un enfoque claro, una secuencia ordenada y una revisión constante que transforma la experiencia en mejora concreta.</p>
@@ -125,7 +119,7 @@
                                 <p className="pb-8 font-semibold italic border-b border-zinc-800">No busca validar ni descartar personas; expone con claridad si estás dispuesto a hacer lo que el proceso exige, con consistencia, responsabilidad y sin relatos mágicos.</p>
                             </div>
                             <button onClick={() => setStep('quiz')} 
-                                className="mt-10 px-12 py-5 bg-white text-black font-black uppercase tracking-widest rounded-2xl hover:scale-105 transition-transform shadow-lg shadow-white/10">
+                                className="mt-10 px-12 py-5 bg-white text-black font-black uppercase tracking-widest rounded-2xl hover:scale-105 transition-transform">
                                 COMENZAR DIAGNÓSTICO
                             </button>
                         </div>
@@ -133,25 +127,22 @@
                 );
             }
 
-            // 2. PANTALLA DE AGRADECIMIENTO (CON TU MENSAJE POSITIVO Y TIPOGRAFÍA DESTACADA)
             if (step === 'thanks') {
                 return (
-                    <div className="min-h-screen flex items-center justify-center p-6">
-                        <div className="max-w-2xl neu-card p-12 rounded-[40px] text-center">
+                    <div className="min-h-screen flex items-center justify-center p-6 text-center">
+                        <div className="max-w-2xl neu-card p-12 rounded-[40px]">
                             <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-[0_0_40px_rgba(34,197,94,0.3)]">
                                 <i data-lucide="check" className="text-black w-10 h-10"></i>
                             </div>
-                            <h2 className="text-4xl font-black uppercase italic mb-6 leading-tight">¡Evaluación Enviada con Éxito!</h2>
+                            <h2 className="text-4xl font-black uppercase italic mb-6">¡Evaluación Enviada con Éxito!</h2>
                             <p className="text-slate-400 text-lg leading-relaxed mb-10">
                                 Tu perfil ha sido registrado en nuestro sistema. Ahora, un experto de 
                                 Fórmula Momentum analizará tus respuestas detalladamente para medir tu 
                                 potencial actual. El experto se pondrá en contacto contigo a la brevedad 
                                 para brindarte los resultados de tu evaluación.
                             </p>
-                            
-                            {/* MENSAJE POSITIVO / MOTIVACIONAL DESTACADO */}
                             <div className="py-10 px-6 rounded-[30px] neu-inner border border-zinc-900">
-                                <p className="text-3xl md:text-4xl font-black italic uppercase tracking-tighter text-hope leading-tight mb-4 drop-shadow-[0_2px_10px_rgba(74,222,128,0.2)]">
+                                <p className="text-3xl md:text-4xl font-black italic uppercase tracking-tighter text-hope leading-tight mb-4">
                                     "Tu futuro está a una decisión de distancia"
                                 </p>
                                 <p className="text-white font-bold italic text-lg uppercase tracking-widest">
@@ -174,7 +165,6 @@
                             <span className="text-yellow-500 font-bold">{Math.round((Object.keys(answers).length/40)*100)}%</span>
                         </div>
                     </header>
-
                     {step === 'quiz' ? (
                         <div className="space-y-8">
                             {currentQuestions.map(q => (
@@ -193,8 +183,7 @@
                             ))}
                             <div className="flex justify-between items-center py-10">
                                 <button disabled={currentQuizStep === 0} onClick={() => {setCurrentQuizStep(s=>s-1); window.scrollTo(0,0);}}
-                                    className="px-8 py-4 font-bold uppercase text-zinc-500 disabled:opacity-0 hover:text-white">Anterior</button>
-                                
+                                    className="px-8 py-4 font-bold uppercase text-zinc-500 disabled:opacity-0">Anterior</button>
                                 {currentQuizStep < 7 ? (
                                     <button disabled={!currentQuestions.every(q => answers[q.id])} 
                                         onClick={() => {setCurrentQuizStep(s=>s+1); window.scrollTo(0,0);}}
@@ -208,8 +197,8 @@
                         </div>
                     ) : (
                         <div className="max-w-xl mx-auto neu-card p-12 rounded-[40px] space-y-6">
-                            <h2 className="text-3xl font-black uppercase italic text-center mb-4 text-white">Último Paso</h2>
-                            <p className="text-center text-slate-400 mb-6 font-bold">Completa tus datos para enviar tu análisis al experto.</p>
+                            <h2 className="text-3xl font-black uppercase italic text-center text-white">Último Paso</h2>
+                            <p className="text-center text-slate-400 font-bold">Completa tus datos para enviar tu análisis al experto.</p>
                             <input type="text" placeholder="Nombre Completo" value={nombre} onChange={e=>setNombre(e.target.value)} className="w-full p-5 rounded-2xl bg-black neu-inner outline-none border border-transparent focus:border-yellow-500 text-white" />
                             <input type="email" placeholder="Email de contacto" value={email} onChange={e=>setEmail(e.target.value)} className="w-full p-5 rounded-2xl bg-black neu-inner outline-none border border-transparent focus:border-yellow-500 text-white" />
                             <button onClick={handleSubmit} disabled={sending || !nombre || !email.includes('@')}
