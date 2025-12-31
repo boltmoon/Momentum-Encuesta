@@ -16,13 +16,11 @@
     <script type="text/babel">
         const { useState, useMemo, useEffect } = React;
         
+        // Iconos
         const ShieldCheck = () => <i data-lucide="shield-check"></i>;
-        const Send = () => <i data-lucide="send"></i>;
-        const Compass = () => <i data-lucide="compass"></i>;
         const Activity = () => <i data-lucide="activity"></i>;
         const ChevronRight = () => <i data-lucide="chevron-right"></i>;
         const ChevronLeft = () => <i data-lucide="chevron-left"></i>;
-        const CircleDot = () => <i data-lucide="circle-dot"></i>;
         const User = () => <i data-lucide="user"></i>;
         const Mail = () => <i data-lucide="mail"></i>;
 
@@ -79,26 +77,49 @@
                 { id: 40, cat:"Final", ref:"Decisión", q:"¿Estás listo para ubicarte con claridad y aceptar tu realidad?", opts: [ { t:"Tengo miedo", s:2 },{ t:"Veremos", s:5 },{ t:"Estoy preparado", s:8 },{ t:"Deseo la verdad", s:10 }]}
             ], []);
 
+            // LÓGICA DE CÁLCULO DE PUNTAJE (CORREGIDO)
+            const totalScore = useMemo(() => {
+                return Object.values(answers).reduce((acc, curr) => acc + curr, 0);
+            }, [answers]);
+
             const currentQuestions = useMemo(() => questions.slice(currentStep * 5, (currentStep + 1) * 5), [currentStep, questions]);
             const progress = (Object.keys(answers).length / 40) * 100;
 
-            // ESTA ES LA CORRECCIÓN CLAVE: Verifica si las preguntas del bloque actual están respondidas
+            // VALIDACIÓN DE BLOQUES (CORREGIDO PARA BLOQUES 4-8)
             const isStepComplete = useMemo(() => {
                 return currentQuestions.every(q => answers[q.id] !== undefined);
             }, [answers, currentQuestions]);
 
             const handleSubmit = async () => {
-                if (!nombre.trim() || !email.trim()) return;
+                if (!nombre.trim() || !email.includes('@')) return;
                 setSending(true);
-                const scriptURL = 'https://script.google.com/macros/s/AKfycby8DbX4l6LIG7US8BoGGHWM4tdvUo-Q9kvR5-ZIxygVl3x7_EBtJvwta3i5aAGtwkC5/exec';
-                const resumenRespuestas = Object.keys(answers).sort((a,b) => a-b).map(id => `P${id}: ${answers[id]}`).join(" | ");
-                const dataToSend = { nombre, email, fecha: new Date().toLocaleString('es-AR'), resultado: resumenRespuestas };
+
+                // --- PEGA TU URL DE GOOGLE SCRIPT AQUÍ ---
+                const scriptURL = 'TU_URL_DE_GOOGLE_SCRIPT_AQUI'; 
+
+                const resumenRespuestas = Object.keys(answers)
+                    .sort((a,b) => a-b)
+                    .map(id => `P${id}:${answers[id]}`)
+                    .join(" | ");
+
+                const dataToSend = {
+                    nombre,
+                    email,
+                    fecha: new Date().toLocaleString('es-AR'),
+                    puntaje: totalScore,
+                    resultado: resumenRespuestas
+                };
 
                 try {
-                    await fetch(scriptURL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dataToSend) });
+                    await fetch(scriptURL, { 
+                        method: 'POST', 
+                        mode: 'no-cors', 
+                        headers: { 'Content-Type': 'application/json' }, 
+                        body: JSON.stringify(dataToSend) 
+                    });
                     setSubmitted(true);
                 } catch (error) {
-                    alert("Error al enviar los datos.");
+                    alert("Error en la conexión. Revisa el script.");
                 } finally {
                     setSending(false);
                 }
@@ -108,144 +129,87 @@
             const neuInner = "shadow-[inset_4px_4px_8px_#050505,inset_-4px_-4px_8px_#0f0f0f]";
 
             if (submitted) {
+                const isApto = totalScore >= 320;
                 return (
                     <div className="min-h-screen bg-black flex items-center justify-center p-6 text-white font-sans">
-                        <div className={`max-w-2xl w-full p-12 rounded-[40px] ${neuCard} text-center border-yellow-500/20`}>
-                            <div className="w-24 h-24 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-[0_0_30px_#eab308]">
+                        <div className={`max-w-2xl w-full p-12 rounded-[40px] ${neuCard} text-center`}>
+                            <div className={`w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-8 shadow-[0_0_30px_rgba(234,179,8,0.3)] ${isApto ? 'bg-green-500' : 'bg-yellow-500'}`}>
                                 <ShieldCheck />
                             </div>
-                            <h1 className="text-4xl font-black mb-6 tracking-tighter italic uppercase">Análisis en Proceso</h1>
-                            <p className="text-slate-400 mb-8 leading-relaxed text-lg">Gracias, <strong className="text-white">{nombre}</strong>. <br/>Tus datos han sido enviados. Recibirás tu evaluación pronto.</p>
+                            <h1 className="text-4xl font-black mb-4 italic uppercase tracking-tighter">Evaluación Completada</h1>
+                            <p className="text-slate-400 text-lg mb-6">Puntaje obtenido: <span className="text-white font-bold">{totalScore} / 400</span></p>
+                            <p className="text-slate-500 leading-relaxed">Tu análisis ha sido enviado a la dirección de correo proporcionada.</p>
                         </div>
                     </div>
                 );
             }
 
             return (
-                <div className="min-h-screen bg-black text-white p-4 md:p-12 font-sans selection:bg-yellow-500 selection:text-black">
+                <div className="min-h-screen bg-black text-white p-4 md:p-12 font-sans">
                     <div className="max-w-4xl mx-auto">
-                        <header className="text-center mb-16 relative">
-                            <div className="inline-block p-6 rounded-3xl mb-8 relative">
-                                <div className="absolute inset-0 bg-yellow-500/10 blur-3xl rounded-full"></div>
-                                <h1 className="text-5xl md:text-7xl font-black tracking-tighter italic relative z-10 flex flex-col leading-none">
-                                    <span className="text-white">fórmula.</span>
-                                    <span className="text-yellow-500 -mt-2">momentum</span>
-                                </h1>
-                            </div>
-
-                            <div className={`p-8 md:p-12 rounded-[32px] ${neuCard} text-left relative overflow-hidden group`}>
-                                <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                                    <Compass />
-                                </div>
-                                <div className="max-w-3xl space-y-6 text-slate-300 leading-relaxed text-lg md:text-xl">
-                                    <p>
-                                        La <strong className="text-white">FÓRMULA MOMENTUM</strong> está concebida para <strong className="text-white">PROFESIONALES Y EMPRENDEDORES</strong> que comprenden que los resultados reales no dependen del momento ideal ni de fórmulas rápidas, sino de lo que verdaderamente los sostiene en el tiempo: <strong className="text-yellow-500">HAMBRE POR AVANZAR, RESILIENCIA FRENTE A LOS OBSTÁCULOS</strong> y <strong className="text-yellow-500">COMPROMISO REAL PARA LLEVAR UN PROCESO HASTA EL FINAL.</strong>
-                                    </p>
-                                    <p>
-                                        En <strong className="text-white">MOMENTUM</strong> no se improvisa ni se persiguen efectos inmediatos. El avance se construye a partir de <strong className="text-white">ESTRATEGIA</strong>, que define el enfoque; <strong className="text-white">PROCESO</strong>, que ordena la ejecución; y <strong className="text-white">AJUSTE CONTINUO</strong>, que transforma la experiencia en mejora real.
-                                    </p>
-                                    <p>
-                                        El único riesgo en esta inversión no es equivocarse ni avanzar más lento de lo esperado. El verdadero riesgo es <strong className="text-white">INTERRUMPIR EL PROCESO</strong> antes de comprender cómo se alinean las acciones con los resultados. Cuando esa comprensión aparece, los resultados dejan de ser circunstanciales: se vuelven <strong className="text-white">PREVISIBLES, SOSTENIBLES</strong> y dependen del <strong className="text-white">CRITERIO DE QUIEN EJECUTA.</strong>
-                                    </p>
-                                    <p className="bg-white/5 p-6 rounded-2xl border-l-4 border-yellow-500">
-                                        Por eso, lo que sigue no es una promesa ni una inscripción automática. Es una <strong className="text-yellow-500">EVALUACIÓN HONESTA</strong>, pensada para que <strong className="text-white">PROFESIONALES Y EMPRENDEDORES</strong> puedan <strong className="text-white">UBICARSE CON CLARIDAD</strong>, reconocer en qué punto están hoy y decidir —con <strong className="text-white">CRITERIO PROFESIONAL</strong>— si la <strong className="text-white">FÓRMULA MOMENTUM</strong> es el proceso adecuado para este momento de su recorrido.
-                                    </p>
-                                </div>
-                            </div>
+                        <header className="text-center mb-16">
+                            <h1 className="text-5xl md:text-7xl font-black tracking-tighter italic flex flex-col uppercase">
+                                <span className="text-white">fórmula.</span>
+                                <span className="text-yellow-500 -mt-2">momentum</span>
+                            </h1>
                         </header>
 
                         <div className="mb-12">
                             <div className="flex justify-between items-end mb-4 px-4">
                                 <div className="flex items-center gap-3">
                                     <Activity />
-                                    <span className="text-xs font-black tracking-[0.3em] uppercase text-slate-500">Progreso de Evaluación</span>
+                                    <span className="text-[10px] font-black tracking-widest uppercase text-slate-500">Progreso</span>
                                 </div>
-                                <div className="text-right">
-                                    <span className="text-3xl font-black italic text-yellow-500 leading-none">{Math.round(progress)}%</span>
-                                </div>
+                                <span className="text-2xl font-black italic text-yellow-500">{Math.round(progress)}%</span>
                             </div>
-                            <div className={`h-4 w-full rounded-full ${neuInner} p-1 bg-black overflow-hidden`}>
-                                <div className="h-full bg-gradient-to-r from-yellow-600 via-yellow-400 to-white rounded-full transition-all duration-1000 ease-out shadow-[0_0_15px_#eab308]"
-                                     style={{ width: `${progress}%` }}></div>
+                            <div className={`h-3 w-full rounded-full ${neuInner} bg-black overflow-hidden`}>
+                                <div className="h-full bg-yellow-500 transition-all duration-700" style={{ width: `${progress}%` }}></div>
                             </div>
                         </div>
 
-                        <div className="space-y-10">
+                        <div className="space-y-8">
                             {currentQuestions.map((q) => (
-                                <div key={q.id} className={`p-8 md:p-10 rounded-[40px] ${neuCard} transition-all duration-500`}>
-                                    <div className="flex flex-col md:flex-row gap-6">
-                                        <div className="md:w-48 flex-shrink-0">
-                                            <div className="text-[10px] font-black text-yellow-500 tracking-widest uppercase mb-1">{q.cat}</div>
-                                            <div className="text-[9px] font-bold text-slate-600 uppercase mb-4 italic">Ref: {q.ref}</div>
-                                            <div className={`w-12 h-12 rounded-2xl ${neuInner} flex items-center justify-center text-xl font-black italic border border-white/5`}>
-                                                {q.id}
-                                            </div>
-                                        </div>
-                                        <div className="flex-1">
-                                            <h3 className="text-2xl md:text-3xl font-bold text-white mb-8 tracking-tight leading-tight">{q.q}</h3>
-                                            <div className="grid grid-cols-1 gap-4">
-                                                {q.opts.map((o, idx) => (
-                                                    <button key={idx}
-                                                            onClick={() => setAnswers(p => ({ ...p, [q.id]: o.s }))}
-                                                            className={`group text-left p-6 rounded-3xl border transition-all duration-300 ${answers[q.id] === o.s ? 'bg-yellow-500 border-yellow-500 text-black' : 'bg-black border-[#222] text-slate-400 hover:border-yellow-500/50 hover:text-white'}`}>
-                                                        <div className="flex items-center gap-4">
-                                                            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${answers[q.id] === o.s ? 'border-black' : 'border-slate-800'}`}>
-                                                                {answers[q.id] === o.s && <div className="w-2 h-2 rounded-full bg-black"></div>}
-                                                            </div>
-                                                            <span className="text-lg font-bold italic">{o.t}</span>
-                                                        </div>
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
+                                <div key={q.id} className={`p-8 rounded-[30px] ${neuCard}`}>
+                                    <div className="text-[10px] font-black text-yellow-500 tracking-widest uppercase mb-4">{q.cat} | {q.id}</div>
+                                    <h3 className="text-xl md:text-2xl font-bold mb-6">{q.q}</h3>
+                                    <div className="grid gap-3">
+                                        {q.opts.map((o, idx) => (
+                                            <button key={idx} 
+                                                onClick={() => setAnswers(p => ({ ...p, [q.id]: o.s }))}
+                                                className={`p-5 rounded-2xl text-left border transition-all ${answers[q.id] === o.s ? 'bg-yellow-500 border-yellow-500 text-black font-bold' : 'bg-transparent border-[#222] text-slate-400 hover:border-slate-600'}`}>
+                                                {o.t}
+                                            </button>
+                                        ))}
                                     </div>
                                 </div>
                             ))}
 
                             {currentStep === 7 && (
-                                <div className={`p-10 md:p-16 rounded-[50px] ${neuCard} text-center space-y-10 animate-in fade-in`}>
-                                    <h3 className="text-3xl md:text-4xl font-black italic text-white uppercase tracking-tighter mb-4">Finalizar Evaluación</h3>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left max-w-3xl mx-auto">
-                                        <div className="space-y-3">
-                                            <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-4 flex items-center gap-2"><User /> Nombre Completo</label>
-                                            <input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Ej: Juan Pérez" className={`w-full px-8 py-5 rounded-3xl ${neuInner} bg-black text-white outline-none border border-transparent focus:border-yellow-500/50`} />
-                                        </div>
-                                        <div className="space-y-3">
-                                            <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-4 flex items-center gap-2"><Mail /> Email</label>
-                                            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Ej: contacto@empresa.com" className={`w-full px-8 py-5 rounded-3xl ${neuInner} bg-black text-white outline-none border border-transparent focus:border-yellow-500/50`} />
-                                        </div>
+                                <div className={`p-10 rounded-[40px] ${neuCard} space-y-6`}>
+                                    <div className="grid md:grid-cols-2 gap-4">
+                                        <input type="text" placeholder="Nombre Completo" value={nombre} onChange={e=>setNombre(e.target.value)} className={`p-5 rounded-2xl bg-black ${neuInner} outline-none focus:border-yellow-500 border border-transparent`} />
+                                        <input type="email" placeholder="Email" value={email} onChange={e=>setEmail(e.target.value)} className={`p-5 rounded-2xl bg-black ${neuInner} outline-none focus:border-yellow-500 border border-transparent`} />
                                     </div>
-                                    <button onClick={handleSubmit}
-                                            disabled={!nombre.trim() || !email.includes('@') || sending || Object.keys(answers).length < 40}
-                                            className={`px-16 py-8 rounded-[35px] font-black text-2xl italic transition-all ${nombre.trim() && email.includes('@') && !sending && Object.keys(answers).length === 40 ? 'bg-yellow-500 text-black hover:scale-105' : 'bg-slate-900 text-slate-700 opacity-50 cursor-not-allowed'}`}>
-                                        {sending ? 'TRANSMITIENDO...' : 'ENVIAR EVALUACIÓN'}
+                                    <button onClick={handleSubmit} disabled={!nombre || !email.includes('@') || sending || Object.keys(answers).length < 40}
+                                        className="w-full py-6 rounded-2xl bg-yellow-500 text-black font-black text-xl hover:scale-[1.02] transition-transform disabled:opacity-50">
+                                        {sending ? 'ENVIANDO...' : 'FINALIZAR Y ENVIAR'}
                                     </button>
                                 </div>
                             )}
 
-                            <div className="flex flex-col md:flex-row items-center justify-between gap-8 pt-10 pb-20">
-                                <button disabled={currentStep === 0} onClick={() => { setCurrentStep(s => s - 1); window.scrollTo(0, 0); }}
-                                        className={`flex items-center gap-2 px-8 py-5 rounded-3xl font-black uppercase tracking-widest ${currentStep === 0 ? 'opacity-0 pointer-events-none' : `${neuCard} text-slate-400`}`}>
-                                    <ChevronLeft /> Regresar
+                            <div className="flex justify-between items-center pt-8 pb-20">
+                                <button disabled={currentStep === 0} onClick={() => {setCurrentStep(s=>s-1); window.scrollTo(0,0);}}
+                                    className={`px-8 py-4 rounded-2xl font-bold uppercase tracking-widest ${currentStep === 0 ? 'opacity-0' : 'text-slate-500'}`}>
+                                    Anterior
                                 </button>
-                                <div className="flex items-center gap-2">
-                                    {[...Array(8)].map((_, i) => (
-                                        <div key={i} className={`w-2 h-2 rounded-full transition-all ${currentStep === i ? 'bg-yellow-500 w-8' : 'bg-slate-800'}`}></div>
-                                    ))}
-                                </div>
-                                {currentStep < 7 ? (
-                                    <button disabled={!isStepComplete}
-                                            onClick={() => { setCurrentStep(s => s + 1); window.scrollTo(0, 0); }}
-                                            className={`flex items-center gap-3 px-10 py-5 rounded-3xl font-black uppercase tracking-widest transition-all ${!isStepComplete ? 'bg-slate-900 text-slate-700 opacity-50' : 'bg-white text-black hover:bg-yellow-500'}`}>
-                                        Siguiente <ChevronRight />
+                                {currentStep < 7 && (
+                                    <button disabled={!isStepComplete} onClick={() => {setCurrentStep(s=>s+1); window.scrollTo(0,0);}}
+                                        className="px-10 py-5 rounded-2xl bg-white text-black font-black uppercase tracking-widest disabled:opacity-30">
+                                        Siguiente
                                     </button>
-                                ) : <div className="w-48 invisible"></div>}
+                                )}
                             </div>
                         </div>
-
-                        <footer className="text-center py-10 opacity-30">
-                            <p className="text-slate-700 text-[10px] font-black tracking-[0.6em] uppercase">Fórmula Momentum ©2025</p>
-                        </footer>
                     </div>
                 </div>
             );
@@ -254,13 +218,5 @@
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
-
-    <style>
-        input::placeholder { font-style: italic; }
-        @keyframes fade-in { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-in { animation: fade-in 0.6s ease-out forwards; }
-        body { background-color: black; margin: 0; padding: 0; }
-        [data-lucide] { width: 1.25rem; height: 1.25rem; }
-    </style>
 </body>
 </html>
