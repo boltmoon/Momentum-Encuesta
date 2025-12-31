@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fórmula Momentum - Evaluación de Cualificación</title>
+    <title>Fórmula Momentum - Evaluación</title>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -23,7 +23,7 @@
         const { useState, useMemo, useEffect } = React;
 
         const App = () => {
-            const [step, setStep] = useState('welcome'); // 'welcome', 'quiz', 'form', 'thanks'
+            const [step, setStep] = useState('welcome'); 
             const [currentQuizStep, setCurrentQuizStep] = useState(0);
             const [answers, setAnswers] = useState({});
             const [nombre, setNombre] = useState('');
@@ -75,15 +75,8 @@
                 { id: 40, cat:"Final", q:"¿Estás listo para ubicarte con claridad y aceptar tu realidad?", opts: [ { t:"Tengo miedo", s:2 },{ t:"Veremos", s:5 },{ t:"Estoy preparado", s:8 },{ t:"Deseo la verdad", s:10 }]}
             ];
 
-            const currentQuestions = useMemo(() => 
-                questions.slice(currentQuizStep * 5, (currentQuizStep + 1) * 5), 
-                [currentQuizStep]
-            );
-
-            const totalScore = useMemo(() => 
-                Object.values(answers).reduce((a, b) => a + b, 0), 
-                [answers]
-            );
+            const currentQuestions = useMemo(() => questions.slice(currentQuizStep * 5, (currentQuizStep + 1) * 5), [currentQuizStep]);
+            const totalScore = useMemo(() => Object.values(answers).reduce((a, b) => a + b, 0), [answers]);
 
             const handleSubmit = async () => {
                 setSending(true);
@@ -94,10 +87,11 @@
                     email,
                     fecha: new Date().toLocaleString(),
                     puntaje: totalScore,
-                    resultado: Object.keys(answers).map(id => `P${id}:${answers[id]}`).join(" | ")
+                    resultado: Object.keys(answers).sort((a,b)=>a-b).map(id => `P${id}:${answers[id]}`).join(" | ")
                 };
 
                 try {
+                    // Cambio de método para asegurar conexión con Google
                     await fetch(scriptURL, {
                         method: 'POST',
                         mode: 'no-cors',
@@ -105,28 +99,30 @@
                     });
                     setStep('thanks');
                 } catch (e) {
-                    alert("Error al enviar. Intenta de nuevo.");
+                    console.error(e);
+                    alert("Error al enviar. Por favor verifica tu conexión.");
                 } finally {
                     setSending(false);
                 }
             };
 
-            // PANTALLA DE INICIO (DESCRIPCIÓN ORIGINAL)
+            // 1. PANTALLA DE INICIO (RESTURADA)
             if (step === 'welcome') {
                 return (
-                    <div className="min-h-screen flex items-center justify-center p-6 text-center">
-                        <div className="max-w-3xl neu-card p-12 rounded-[40px]">
+                    <div className="min-h-screen flex items-center justify-center p-6">
+                        <div className="max-w-3xl neu-card p-12 rounded-[40px] text-center">
                             <h1 className="text-6xl font-black italic uppercase tracking-tighter mb-4">
                                 Fórmula.<span className="text-yellow-500">Momentum</span>
                             </h1>
                             <p className="text-xl text-slate-400 mb-8 leading-relaxed">
-                                Bienvenido a la Evaluación de Cualificación Profesional. <br/>
-                                Este sistema medirá tu nivel de compromiso, resiliencia y visión estratégica 
-                                para determinar si estás listo para el siguiente nivel de ejecución. 
-                                Responde con total honestidad.
+                                Bienvenido a la Evaluación de Cualificación de Fórmula Momentum. 
+                                Esta herramienta ha sido diseñada para medir tu nivel de compromiso, 
+                                resiliencia y hambre de progreso. Al finalizar, tus datos serán analizados 
+                                por un experto para determinar tu punto de partida. Responde con total 
+                                honestidad; el éxito comienza con la verdad.
                             </p>
                             <button onClick={() => setStep('quiz')} 
-                                className="px-12 py-5 bg-white text-black font-black uppercase tracking-widest rounded-2xl hover:scale-105 transition-transform">
+                                className="px-12 py-5 bg-white text-black font-black uppercase tracking-widest rounded-2xl hover:scale-105 transition-transform shadow-lg shadow-white/10">
                                 COMENZAR EVALUACIÓN
                             </button>
                         </div>
@@ -134,22 +130,26 @@
                 );
             }
 
-            // PANTALLA DE GRACIAS (MENSAJE POSITIVO, SIN PUNTAJE PÚBLICO)
+            // 2. PANTALLA DE AGRADECIMIENTO (RESTAURADA Y PRIVADA)
             if (step === 'thanks') {
                 return (
-                    <div className="min-h-screen flex items-center justify-center p-6 text-center">
-                        <div className="max-w-2xl neu-card p-12 rounded-[40px]">
-                            <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-[0_0_30px_rgba(34,197,94,0.4)]">
+                    <div className="min-h-screen flex items-center justify-center p-6">
+                        <div className="max-w-2xl neu-card p-12 rounded-[40px] text-center">
+                            <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-[0_0_40px_rgba(34,197,94,0.3)]">
                                 <i data-lucide="check" className="text-black w-10 h-10"></i>
                             </div>
-                            <h2 className="text-4xl font-black uppercase italic mb-4">¡Registro Exitoso!</h2>
-                            <p className="text-slate-400 text-lg leading-relaxed">
-                                Gracias por completar la evaluación de la Fórmula Momentum. 
-                                Hemos recibido tus datos correctamente. Nuestro equipo analizará tu perfil 
-                                y nos pondremos en contacto contigo a la brevedad para los siguientes pasos. 
-                                <br/><br/>
-                                <span className="text-white font-bold italic">¡Sigue avanzando!</span>
+                            <h2 className="text-4xl font-black uppercase italic mb-6">¡Evaluación Enviada con Éxito!</h2>
+                            <p className="text-slate-400 text-lg leading-relaxed mb-8">
+                                Tu perfil ha sido registrado en nuestro sistema. Ahora, un experto de 
+                                Fórmula Momentum analizará tus respuestas detalladamente para medir tu 
+                                potencial actual. <br/><br/>
+                                <span className="text-yellow-500 font-bold uppercase">Mantente atento:</span> El experto se pondrá en contacto contigo a la brevedad para brindarte los resultados y los pasos a seguir.
                             </p>
+                            <div className="pt-6 border-t border-zinc-900">
+                                <p className="text-white font-bold italic text-xl uppercase tracking-tighter">
+                                    "La velocidad de tu éxito la determina tu capacidad de acción"
+                                </p>
+                            </div>
                         </div>
                     </div>
                 );
@@ -158,9 +158,9 @@
             return (
                 <div className="max-w-4xl mx-auto py-12 px-6">
                     <header className="text-center mb-12">
-                        <h1 className="text-4xl font-black italic uppercase italic">Fórmula.<span className="text-yellow-500">Momentum</span></h1>
+                        <h1 className="text-4xl font-black italic uppercase">Fórmula.<span className="text-yellow-500">Momentum</span></h1>
                         <div className="mt-6 flex items-center justify-center gap-4">
-                            <div className="w-full h-2 rounded-full bg-zinc-900 overflow-hidden">
+                            <div className="w-full h-2 rounded-full bg-zinc-900 overflow-hidden neu-inner">
                                 <div className="h-full bg-yellow-500 transition-all duration-500" style={{width: `${(Object.keys(answers).length/40)*100}%`}}></div>
                             </div>
                             <span className="text-yellow-500 font-bold">{Math.round((Object.keys(answers).length/40)*100)}%</span>
@@ -171,12 +171,12 @@
                         <div className="space-y-8">
                             {currentQuestions.map(q => (
                                 <div key={q.id} className="p-8 rounded-[30px] neu-card">
-                                    <p className="text-xs font-black text-yellow-500 uppercase tracking-widest mb-2">{q.cat}</p>
-                                    <h3 className="text-xl font-bold mb-6">{q.q}</h3>
+                                    <p className="text-xs font-black text-yellow-500 uppercase tracking-widest mb-2">{q.cat} | {q.id}</p>
+                                    <h3 className="text-xl md:text-2xl font-bold mb-6">{q.q}</h3>
                                     <div className="grid gap-3">
                                         {q.opts.map((o, idx) => (
                                             <button key={idx} onClick={() => setAnswers({...answers, [q.id]: o.s})}
-                                                className={`p-5 rounded-2xl text-left border transition-all ${answers[q.id] === o.s ? 'bg-yellow-500 border-yellow-500 text-black font-bold' : 'border-zinc-800 text-slate-400 hover:border-zinc-600'}`}>
+                                                className={`p-5 rounded-2xl text-left border transition-all ${answers[q.id] === o.s ? 'bg-yellow-500 border-yellow-500 text-black font-bold scale-[1.01]' : 'border-zinc-800 text-slate-400 hover:border-zinc-600'}`}>
                                                 {o.t}
                                             </button>
                                         ))}
@@ -185,25 +185,28 @@
                             ))}
                             <div className="flex justify-between items-center py-10">
                                 <button disabled={currentQuizStep === 0} onClick={() => {setCurrentQuizStep(s=>s-1); window.scrollTo(0,0);}}
-                                    className="px-8 py-4 font-bold uppercase text-zinc-500 disabled:opacity-0">Anterior</button>
+                                    className="px-8 py-4 font-bold uppercase text-zinc-500 disabled:opacity-0 hover:text-white transition-colors">Anterior</button>
                                 
                                 {currentQuizStep < 7 ? (
                                     <button disabled={!currentQuestions.every(q => answers[q.id])} 
                                         onClick={() => {setCurrentQuizStep(s=>s+1); window.scrollTo(0,0);}}
-                                        className="px-10 py-5 bg-white text-black font-black uppercase rounded-2xl disabled:opacity-20">Siguiente</button>
+                                        className="px-12 py-5 bg-white text-black font-black uppercase rounded-2xl disabled:opacity-20 hover:scale-105 transition-transform">Siguiente</button>
                                 ) : (
-                                    <button onClick={() => setStep('form')} className="px-10 py-5 bg-yellow-500 text-black font-black uppercase rounded-2xl">Continuar</button>
+                                    <button disabled={!currentQuestions.every(q => answers[q.id])}
+                                        onClick={() => setStep('form')} 
+                                        className="px-12 py-5 bg-yellow-500 text-black font-black uppercase rounded-2xl hover:scale-105 transition-transform">Continuar</button>
                                 )}
                             </div>
                         </div>
                     ) : (
-                        <div className="max-w-xl mx-auto neu-card p-10 rounded-[40px] space-y-6">
-                            <h2 className="text-2xl font-black uppercase italic text-center">Datos de contacto</h2>
-                            <input type="text" placeholder="Nombre Completo" value={nombre} onChange={e=>setNombre(e.target.value)} className="w-full p-5 rounded-2xl bg-black neu-inner outline-none border border-transparent focus:border-yellow-500" />
-                            <input type="email" placeholder="Email" value={email} onChange={e=>setEmail(e.target.value)} className="w-full p-5 rounded-2xl bg-black neu-inner outline-none border border-transparent focus:border-yellow-500" />
+                        <div className="max-w-xl mx-auto neu-card p-12 rounded-[40px] space-y-6">
+                            <h2 className="text-3xl font-black uppercase italic text-center mb-4 text-white">Último Paso</h2>
+                            <p className="text-center text-slate-400 mb-6 font-bold">Completa tus datos para enviar tu análisis al experto.</p>
+                            <input type="text" placeholder="Nombre Completo" value={nombre} onChange={e=>setNombre(e.target.value)} className="w-full p-5 rounded-2xl bg-black neu-inner outline-none border border-transparent focus:border-yellow-500 text-white" />
+                            <input type="email" placeholder="Email de contacto" value={email} onChange={e=>setEmail(e.target.value)} className="w-full p-5 rounded-2xl bg-black neu-inner outline-none border border-transparent focus:border-yellow-500 text-white" />
                             <button onClick={handleSubmit} disabled={sending || !nombre || !email.includes('@')}
-                                className="w-full py-6 bg-yellow-500 text-black font-black text-xl rounded-2xl disabled:opacity-50">
-                                {sending ? 'ENVIANDO...' : 'FINALIZAR Y ENVIAR'}
+                                className="w-full py-6 bg-yellow-500 text-black font-black text-2xl rounded-2xl disabled:opacity-50 hover:scale-[1.02] transition-transform">
+                                {sending ? 'PROCESANDO...' : 'ENVIAR EVALUACIÓN'}
                             </button>
                         </div>
                     )}
