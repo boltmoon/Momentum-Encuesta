@@ -3,214 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fórmula Momentum - Evaluación</title>
+    <title>Fórmula Momentum - Evaluación de Cualificación</title>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: black; color: white; }
+        .neu-card { background: #0a0a0a; border: 1px solid #1a1a1a; box-shadow: 10px 10px 20px #050505, -10px -10px 20px #0f0f0f; }
+        .neu-inner { box-shadow: inset 4px 4px 8px #050505, inset -4px -4px 8px #0f0f0f; }
+    </style>
 </head>
 <body>
     <div id="root"></div>
 
     <script type="text/babel">
         const { useState, useMemo, useEffect } = React;
-        
-        // Iconos
-        const ShieldCheck = () => <i data-lucide="shield-check"></i>;
-        const Activity = () => <i data-lucide="activity"></i>;
-        const ChevronRight = () => <i data-lucide="chevron-right"></i>;
-        const ChevronLeft = () => <i data-lucide="chevron-left"></i>;
-        const User = () => <i data-lucide="user"></i>;
-        const Mail = () => <i data-lucide="mail"></i>;
 
         const App = () => {
+            const [step, setStep] = useState('welcome'); // 'welcome', 'quiz', 'form', 'thanks'
+            const [currentQuizStep, setCurrentQuizStep] = useState(0);
             const [answers, setAnswers] = useState({});
             const [nombre, setNombre] = useState('');
             const [email, setEmail] = useState('');
             const [sending, setSending] = useState(false);
-            const [submitted, setSubmitted] = useState(false);
-            const [currentStep, setCurrentStep] = useState(0);
 
-            useEffect(() => { lucide.createIcons(); });
+            useEffect(() => { if (window.lucide) lucide.createIcons(); });
 
-            const questions = useMemo(() => [
-                { id: 1, cat:"Hambre de Avanzar", ref:"Deseo y Ambición", q:"¿Qué tanto te incomoda tu situación actual en una escala del 1 al 10?", opts: [{ t:"1-3: Estoy cómodo, solo busco curiosidad", s: 1}, { t: "4-6: Podría mejorar, pero no es vital", s: 4}, { t:"7-8: Necesito un cambio real pronto", s:7 },{ t:"9-10: Es innegociable avanzar hoy mismo", s:10 }]},
-                { id: 2, cat:"Resiliencia", ref:"Gestión de Crisis", q:"Si el proceso requiere ajustar la estrategia tres veces antes del resultado, ¿qué haces?", opts:[ { t:"Abandono por falta de claridad", s:1 },{ t:"Cuestiono el proceso", s:4 }, { t:"Ajusto con dudas", s:7 },{ t:"Acepto el ajuste como parte del aprendizaje real", s:10 }]},
-                { id: 3, cat:"Compromiso Real", ref:"Priorización", q:"¿Qué lugar ocupa este avance en tu lista de prioridades diarias?", opts: [ { t:"Es un pasatiempo", s:2 },{ t:"Lo hago si tengo tiempo libre", s:5 }, { t:"Es mi prioridad secundaria", s:8 },{ t:"Es el eje central de mi ejecución profesional", s: 10}]},
-                { id: 4, cat:"Estrategia", ref:"Visión de Proceso", q:"¿Ves los obstáculos como errores del sistema o como datos para el ajuste?", opts: [ { t:"Los veo como errores personales", s:2 },{ t:"Me frustran y me detienen", s:4 }, { t:"Los analizo con inseguridad", s:7 },{ t:"Son datos puros para la mejora continua", s:10 }]},
-                { id: 5, cat:"Hambre de Avanzar", ref:"Sostenibilidad", q:"¿Cuánto tiempo estás dispuesto a invertir antes de ver el primer gran retorno?", opts: [ { t:"Necesito resultados en 15 días", s:1 },{ t:"Máximo 2 meses", s:4 }, { t:"6 meses con resultados parciales", s:7 },{ t:"El tiempo que sea necesario para dominar el proceso", s: 10}]},
-                { id: 6, cat:"Ajuste Continuo", ref:"Coachability", q:"Si el método exige cambiar un hábito que consideras 'correcto', ¿cuál es tu reacción?", opts:[ { t:"Mantengo mi forma de actuar", s:1 },{ t:"Lo cambio pero con resistencia", s:4 }, { t:"Pido explicaciones constantes", s:7 },{ t:"Ejecuto el cambio con confianza en el método", s: 10}]},
-                { id: 7, cat:"Resiliencia", ref:"Inversión Emocional", q:"¿Cómo manejas la incertidumbre de un proceso que aún no comprendes del todo?", opts: [ { t:"Me genera ansiedad paralizante", s:2 },{ t:"Busco atajos inmediatos", s:4 }, { t:"Tolero la duda", s:8 },{ t:"Confío en que la comprensión vendrá con la acción", s: 10}]},
-                { id: 8, cat:"Hambre de Avanzar", ref:"Sacrificio", q:"¿Qué estás dispuesto a sacrificar para que la Fórmula Momentum funcione?", opts: [ { t:"Solo mi tiempo de ocio", s:3 },{ t:"Mis fines de semana", s:5 }, { t:"Mi zona de confort habitual", s:8 },{ t:"Todo lo que no esté alineado con el resultado final", s: 10}]},
-                { id: 9, cat:"Compromiso Real", ref:"Constancia", q:"¿Qué tan frecuente es que interrumpas un proceso antes de terminarlo?", opts: [ { t:"Muy frecuente, me distraigo", s:1 },{ t:"A veces, si se vuelve difícil", s:4 }, { t:"Rara vez, suelo terminar", s:7 },{ t:"Nunca interrumpo hasta que el resultado es previsible", s: 10}]},
-                { id: 10, cat:"Visión", ref:"Criterio Profesional", q:"¿Buscas una promesa mágica o un sistema de trabajo previsible?", opts: [ { t:"Quiero un truco rápido", s:1 },{ t:"Busco facilidad de uso", s:4 }, { t:"Busco una guía", s:7 },{ t:"Busco un proceso profesional basado en resultados", s: 10}]},
-                { id: 11, cat:"Proceso", ref:"Enfoque Operativo", q:"¿Confías más en tu intención o en una estrategia validada?", opts: [ { t:"100% intuición", s:2 },{ t:"Mezcla de ambos", s:5 },{ t:"Intuición informada", s:8 },{ t:"Estrategia validada", s:10 }]},
-                { id: 12, cat:"Impacto", ref:"Determinación", q:"Ante la crítica de terceros sobre tu nuevo rumbo profesional, tú:", opts: [ { t:"Me retracto", s:1 },{ t:"Dudo de mi capacidad", s:4 },{ t:"Ignoro sin analizar", s:7 },{ t:"Uso la crítica como combustible", s:10 }]},
-                { id: 13, cat:"Resiliencia", ref:"Capacidad de Respuesta", q:"Si el proceso toma el doble del tiempo planeado, ¿qué haces?", opts: [ { t:"Abandono", s:1 },{ t:"Reduzco calidad", s:3 },{ t:"Me frustro pero sigo", s:7 },{ t:"Ajusto y mantengo excelencia", s:10 }]},
-                { id: 14, cat:"Criterio", ref:"Autocrítica", q:"¿Reconoces que tu forma actual no es suficiente para escalar?", opts: [ { t:"No, trabajo perfecto", s:1 },{ t:"Quizás falten detalles", s:4 },{ t:"Soy consciente", s:8 },{ t:"Sé que debo transformarme", s:10 }]},
-                { id: 15, cat:"Momentum", ref:"Velocidad de Acción", q:"¿Cuánto tardas en pasar de una idea a la ejecución real?", opts: [ { t: "Semanas", s: 2 }, { t: "Días", s: 5 }, { t: "24 horas", s: 8 }, { t: "Inmediatamente", s: 10 }]},
-                { id: 16, cat: "Proceso", ref:"Gestión de Datos", q:"¿Prefieres ocultar tus fallos o analizarlos frente a un experto?", opts: [ { t:"Ocultarlos", s:1 },{ t:"Mostrarlos solo si fallan mucho", s:4 },{ t:"Ser honesto a medias", s:7 },{ t:"Total transparencia", s:10 }]},
-                { id: 17, cat:"Hambre", ref:"Obsesión por Mejora", q:"¿Qué tan obsesivo eres con los detalles que otros ignoran?", opts: [ { t:"Poco", s: 2}, { t: "Solo en lo estético", s: 5}, { t: "En lo técnico", s: 8}, { t: "En todo lo que impacta", s: 10}]},
-                { id: 18, cat:"Sostenibilidad", ref:"Mentalidad", q:"¿Cómo visualizas tu recorrido en los próximos 18 meses?", opts: [ { t:"Sin visión clara", s:2 },{ t:"Esperando suerte", s:4 },{ t:"Metas vagas", s:7 },{ t:"Plan de avance continuo", s:10 }]},
-                { id: 19, cat:"Compromiso", ref:"Responsabilidad", q:"Si los resultados no llegan, ¿dónde buscas la causa?", opts: [ { t:"Mercado externo", s:1 },{ t:"Mala suerte", s:3 },{ t:"La herramienta", s:6 },{ t:"Mi propia ejecución", s:10 }]},
-                { id: 20, cat:"Ejecución", ref:"Inversión", q:"¿Invertirías tu último capital si el proceso es el correcto?", opts: [ { t:"No, miedo", s:2 },{ t:"Mínima parte", s:4 },{ t:"Lo dudaría mucho", s:7 },{ t:"Es obligatorio", s:10 }]},
-                { id: 21, cat:"Criterio", ref:"Foco", q: "¿Dices NO a oportunidades rentables que te alejan de Momentum?", opts:[ { t:"Acepto todo", s:1 },{ t:"Me cuesta mucho", s:4 },{ t:"Cedo a veces", s:7 },{ t:"NO radical", s:10 }]},
-                { id: 22, cat:"Energía", ref:"Capacidad", q:"¿Cuál es tu capacidad de trabajo enfocado sin distracciones?", opts: [ { t:"30 minutos", s:2 },{ t:"1-2 horas", s:5 },{ t:"4 horas", s:8 },{ t:"Deep Work total", s:10 }]},
-                { id: 23, cat:"Determinación", ref:"Superación", q:"Frente a un 'No' de un prospecto, tú:", opts:[ { t:"Me deprimo", s:2 },{ t:"Busco culpables", s:4 },{ t:"Lo olvido", s:7 },{ t:"Es un paso más al Sí", s:10 }]},
-                { id: 24, cat:"Impacto", ref:"Legacy", q:"¿Te importa más tu imagen o la transformación real?", opts: [ { t:"Imagen social", s:2 },{ t:"Equilibrio", s:5 },{ t:"Éxito financiero", s:7 },{ t:"Transformación real", s:10 }]},
-                { id: 25, cat:"Disciplina", ref:"Ritmo", q:"¿Mantienes un ritmo aburrido pero efectivo por meses?", opts: [ { t:"Necesito novedad", s:2 },{ t:"Me cuesta", s:5 },{ t:"Lo intento", s:7 },{ t:"La consistencia manda", s:10 }]},
-                { id: 26, cat:"Visión", ref:"Mentoría", q:"¿Qué valor le das al acompañamiento experto?", opts: [ { t:"Gasto innecesario", s:1 },{ t:"Solo si es barato", s:4 },{ t:"Es útil", s:7 },{ t:"Acelerador esencial", s:10 }]},
-                { id: 27, cat:"Ajuste", ref:"Humildad", q:"¿Aceptas que tu conocimiento actual tiene un techo?", opts: [ { t:"Lo sé todo", s:1 },{ t:"Me cuesta aprender", s:4 },{ t:"Sé que me falta", s:7 },{ t:"Hambre de aprender", s:10 }]},
-                { id: 28, cat:"Sostenibilidad", ref:"Legado", q:"¿Prefieres un resultado hoy o una máquina de resultados?", opts: [ { t:"Dinero de hoy", s:3 },{ t:"Lo rápido", s:5 },{ t:"Un mix", s:8 },{ t:"Sistema previsible", s:10 }]},
-                { id: 29, cat:"Compromiso", ref:"Resolución", q:"Ante una tarea técnica difícil, ¿qué haces?", opts: [ { t:"Lo pospongo", s:2 },{ t:"Busco gratis", s:4 },{ t:"A medias", s:7 },{ t:"Resuelvo con los mejores", s:10 }]},
-                { id: 30, cat:"Resiliencia", ref:"Fuerza Mental", q:"¿Cómo reaccionas cuando nada sale según el plan?", opts: [ { t: "Pánico", s: 2 }, { t: "Queja", s: 4 }, { t: "Me detengo", s: 7 }, { t: "Ajusto y sigo", s: 10 }]},
-                { id: 31, cat: "Criterio", ref:"Autoridad", q:"¿Cómo cuidas tu comunicación digital?", opts:[ { t:"No importa", s:2 },{ t:"Rápido", s:5 },{ t:"Lo básico", s:8 },{ t:"Alineada con mi autoridad", s:10 }]},
-                { id: 32, cat:"Mentalidad", ref:"Progresión", q:"¿Te comparas con otros o contigo mismo ayer?", opts: [ { t:"Referentes", s:2 },{ t:"Amigos", s:4 },{ t:"Competencia", s:7 },{ t:"Mi ejecución de ayer", s:10 }]},
-                { id: 33, cat:"Ambición", ref:"Nivel", q:"¿Cuál es tu hambre por alcanzar el siguiente nivel?", opts: [ { t: "Bajo", s: 2 }, { t: "Medio", s: 5 }, { t: "Alto", s: 8 }, { t: "Absoluto", s: 10 }]},
-                { id: 34, cat: "Consistencia", ref:"Foco Diario", q:"¿Qué haces cada día para avanzar?", opts:[ { t: "Lo que surge", s:2 }, { t: "Emails", s: 4 }, { t: "Operativa", s: 7 }, { t: "Tarea de mayor impacto", s:10 }]},
-                { id: 35, cat: "Evaluación", ref:"Honestidad", q:"¿Qué tan honesto eres sobre tus debilidades?", opts: [ { t:"Me miento", s:2 },{ t:"Autocrítico duro", s:5 },{ t:"Objetivo", s:8 },{ t:"Las afronto", s:10 }]},
-                { id: 36, cat:"Momentum", ref:"Inercia", q:"Una vez que empiezas algo, ¿qué tan difícil es detenerte?", opts: [ { t: "Fácil", s: 2 }, { t: "Depende", s: 5 }, { t: "Suelo seguir", s: 8 }, { t: "Soy imparable", s: 10 }]},
-                { id: 37, cat: "Ajuste", ref: "Feedback", q: "¿Buscas críticas constructivas o solo halagos?", opts: [ { t: "Halagos", s: 1 }, { t: "Me molestan críticas", s:4 }, { t: "Las acepto", s: 7 }, { t: "Exijo feedback brutal", s:10 }]},
-                { id: 38, cat: "Compromiso", ref:"Firma", q:"¿Firmarías hoy 2 años de trabajo duro por éxito seguro?", opts: [ { t:"Mucho tiempo", s:2 },{ t:"Tal vez uno", s:5 },{ t:"Con dudas", s:8 },{ t:"Sin dudar", s:10 }]},
-                { id: 39, cat:"Hambre", ref:"Motivación", q:"¿Qué te mueve más: el miedo o el deseo de ganar?", opts: [ { t:"Miedo", s:3 },{ t:"Necesidad", s:5 },{ t:"Deseo", s:8 },{ t:"La visión del legado", s:10 }]},
-                { id: 40, cat:"Final", ref:"Decisión", q:"¿Estás listo para ubicarte con claridad y aceptar tu realidad?", opts: [ { t:"Tengo miedo", s:2 },{ t:"Veremos", s:5 },{ t:"Estoy preparado", s:8 },{ t:"Deseo la verdad", s:10 }]}
-            ], []);
+            const questions = [
+                { id: 1, cat:"Hambre de Avanzar", q:"¿Qué tanto te incomoda tu situación actual en una escala del 1 al 10?", opts: [{ t:"1-3: Estoy cómodo, solo busco curiosidad", s: 1}, { t: "4-6: Podría mejorar, pero no es vital", s: 4}, { t:"7-8: Necesito un cambio real pronto", s:7 },{ t:"9-10: Es innegociable avanzar hoy mismo", s:10 }]},
+                { id: 2, cat:"Resiliencia", q:"Si el proceso requiere ajustar la estrategia tres veces antes del resultado, ¿qué haces?", opts:[ { t:"Abandono por falta de claridad", s:1 },{ t:"Cuestiono el proceso", s:4 }, { t:"Ajusto con dudas", s:7 },{ t:"Acepto el ajuste como parte del aprendizaje real", s:10 }]},
+                { id: 3, cat:"Compromiso Real", q:"¿Qué lugar ocupa este avance en tu lista de prioridades diarias?", opts: [ { t:"Es un pasatiempo", s:2 },{ t:"Lo hago si tengo tiempo libre", s:5 }, { t:"Es mi prioridad secundaria", s:8 },{ t:"Es el eje central de mi ejecución profesional", s: 10}]},
+                { id: 4, cat:"Estrategia", q:"¿Ves los obstáculos como errores del sistema o como datos para el ajuste?", opts: [ { t:"Los veo como errores personales", s:2 },{ t:"Me frustran y me detienen", s:4 }, { t:"Los analizo con inseguridad", s:7 },{ t:"Son datos puros para la mejora continua", s:10 }]},
+                { id: 5, cat:"Hambre de Avanzar", q:"¿Cuánto tiempo estás dispuesto a invertir antes de ver el primer gran retorno?", opts: [ { t:"Necesito resultados en 15 días", s:1 },{ t:"Máximo 2 meses", s:4 }, { t:"6 meses con resultados parciales", s:7 },{ t:"El tiempo que sea necesario para dominar el proceso", s: 10}]},
+                { id: 6, cat:"Ajuste Continuo", q:"Si el método exige cambiar un hábito que consideras 'correcto', ¿cuál es tu reacción?", opts:[ { t:"Mantengo mi forma de actuar", s:1 },{ t:"Lo cambio pero con resistencia", s:4 }, { t:"Pido explicaciones constantes", s:7 },{ t:"Ejecuto el cambio con confianza en el método", s: 10}]},
+                { id: 7, cat:"Resiliencia", q:"¿Cómo manejas la incertidumbre de un proceso que aún no comprendes del todo?", opts: [ { t:"Me genera ansiedad paralizante", s:2 },{ t:"Busco atajos inmediatos", s:4 }, { t:"Tolero la duda", s:8 },{ t:"Confío en que la comprensión vendrá con la acción", s: 10}]},
+                { id: 8, cat:"Hambre de Avanzar", q:"¿Qué estás dispuesto a sacrificar para que la Fórmula Momentum funcione?", opts: [ { t:"Solo mi tiempo de ocio", s:3 },{ t:"Mis fines de semana", s:5 }, { t:"Mi zona de confort habitual", s:8 },{ t:"Todo lo que no esté alineado con el resultado final", s: 10}]},
+                { id: 9, cat:"Compromiso Real", q:"¿Qué tan frecuente es que interrumpas un proceso antes de terminarlo?", opts: [ { t:"Muy frecuente, me distraigo", s:1 },{ t:"A veces, si se vuelve difícil", s:4 }, { t:"Rara vez, suelo terminar", s:7 },{ t:"Nunca interrumpo hasta que el resultado es previsible", s: 10}]},
+                { id: 10, cat:"Visión", q:"¿Buscas una promesa mágica o un sistema de trabajo previsible?", opts: [ { t:"Quiero un truco rápido", s:1 },{ t:"Busco facilidad de uso", s:4 }, { t:"Busco una guía", s:7 },{ t:"Busco un proceso profesional basado en resultados", s: 10}]},
+                { id: 11, cat:"Proceso", q:"¿Confías más en tu intención o en una estrategia validada?", opts: [ { t:"100% intuición", s:2 },{ t:"Mezcla de ambos", s:5 },{ t:"Intuición informada", s:8 },{ t:"Estrategia validada", s:10 }]},
+                { id: 12, cat:"Impacto", q:"Ante la crítica de terceros sobre tu nuevo rumbo profesional, tú:", opts: [ { t:"Me retracto", s:1 },{ t:"Dudo de mi capacidad", s:4 },{ t:"Ignoro sin analizar", s:7 },{ t:"Uso la crítica como combustible", s:10 }]},
+                { id: 13, cat:"Resiliencia", q:"Si el proceso toma el doble del tiempo planeado, ¿qué haces?", opts: [ { t:"Abandono", s:1 },{ t:"Reduzco calidad", s:3 },{ t:"Me frustro pero sigo", s:7 },{ t:"Ajusto y mantengo excelencia", s:10 }]},
+                { id: 14, cat:"Criterio", q:"¿Reconoces que tu forma actual no es suficiente para escalar?", opts: [ { t:"No, trabajo perfecto", s:1 },{ t:"Quizás falten detalles", s:4 },{ t:"Soy consciente", s:8 },{ t:"Sé que debo transformarme", s:10 }]},
+                { id: 15, cat:"Momentum", q:"¿Cuánto tardas en pasar de una idea a la ejecución real?", opts: [ { t: "Semanas", s: 2 }, { t: "Días", s: 5 }, { t: "24 horas", s: 8 }, { t: "Inmediatamente", s: 10 }]},
+                { id: 16, cat: "Proceso", q:"¿Prefieres ocultar tus fallos o analizarlos frente a un experto?", opts: [ { t:"Ocultarlos", s:1 },{ t:"Mostrarlos solo si fallan mucho", s:4 },{ t:"Ser honesto a medias", s:7 },{ t:"Total transparencia", s:10 }]},
+                { id: 17, cat:"Hambre", q:"¿Qué tan obsesivo eres con los detalles que otros ignoran?", opts: [ { t:"Poco", s: 2}, { t: "Solo en lo estético", s: 5}, { t: "En lo técnico", s: 8}, { t: "En todo lo que impacta", s: 10}]},
+                { id: 18, cat:"Sostenibilidad", q:"¿Cómo visualizas tu recorrido en los próximos 18 meses?", opts: [ { t:"Sin visión clara", s:2 },{ t:"Esperando suerte", s:4 },{ t:"Metas vagas", s:7 },{ t:"Plan de avance continuo", s:10 }]},
+                { id: 19, cat:"Compromiso", q:"Si los resultados no llegan, ¿dónde buscas la causa?", opts: [ { t:"Mercado externo", s:1 },{ t:"Mala suerte", s:3 },{ t:"La herramienta", s:6 },{ t:"Mi propia ejecución", s:10 }]},
+                { id: 20, cat:"Ejecución", q:"¿Invertirías tu último capital si el proceso es el correcto?", opts: [ { t:"No, miedo", s:2 },{ t:"Mínima parte", s:4 },{ t:"Lo dudaría mucho", s:7 },{ t:"Es obligatorio", s:10 }]},
+                { id: 21, cat:"Criterio", q: "¿Dices NO a oportunidades rentables que te alejan de Momentum?", opts:[ { t:"Acepto todo", s:1 },{ t:"Me cuesta mucho", s:4 },{ t:"Cedo a veces", s:7 },{ t:"NO radical", s:10 }]},
+                { id: 22, cat:"Energía", q:"¿Cuál es tu capacidad de trabajo enfocado sin distracciones?", opts: [ { t:"30 minutos", s:2 },{ t:"1-2 horas", s:5 },{ t:"4 horas", s:8 },{ t:"Deep Work total", s:10 }]},
+                { id: 23, cat:"Determinación", q:"Frente a un 'No' de un prospecto, tú:", opts:[ { t:"Me deprimo", s:2 },{ t:"Busco culpables", s:4 },{ t:"Lo olvido", s:7 },{ t:"Es un paso más al Sí", s:10 }]},
+                { id: 24, cat:"Impacto", q:"¿Te importa más tu imagen o la transformación real?", opts: [ { t:"Imagen social", s:2 },{ t:"Equilibrio", s:5 },{ t:"Éxito financiero", s:7 },{ t:"Transformación real", s:10 }]},
+                { id: 25, cat:"Disciplina", q:"¿Mantienes un ritmo aburrido pero efectivo por meses?", opts: [ { t:"Necesito novedad", s:2 },{ t:"Me cuesta", s:5 },{ t:"Lo intento", s:7 },{ t:"La consistencia manda", s:10 }]},
+                { id: 26, cat:"Visión", q:"¿Qué valor le das al acompañamiento experto?", opts: [ { t:"Gasto innecesario", s:1 },{ t:"Solo si es barato", s:4 },{ t:"Es útil", s:7 },{ t:"Acelerador esencial", s:10 }]},
+                { id: 27, cat:"Ajuste", q:"¿Aceptas que tu conocimiento actual tiene un techo?", opts: [ { t:"Lo sé todo", s:1 },{ t:"Me cuesta aprender", s:4 },{ t:"Sé que me falta", s:7 },{ t:"Hambre de aprender", s:10 }]},
+                { id: 28, cat:"Sostenibilidad", q:"¿Prefieres un resultado hoy o una máquina de resultados?", opts: [ { t:"Dinero de hoy", s:3 },{ t:"Lo rápido", s:5 },{ t:"Un mix", s:8 },{ t:"Sistema previsible", s:10 }]},
+                { id: 29, cat:"Compromiso", q:"Ante una tarea técnica difícil, ¿qué haces?", opts: [ { t:"Lo pospongo", s:2 },{ t:"Busco gratis", s:4 },{ t:"A medias", s:7 },{ t:"Resuelvo con los mejores", s:10 }]},
+                { id: 30, cat:"Resiliencia", q:"¿Cómo reaccionas cuando nada sale según el plan?", opts: [ { t: "Pánico", s: 2 }, { t: "Queja", s: 4 }, { t: "Me detengo", s: 7 }, { t: "Ajusto y sigo", s: 10 }]},
+                { id: 31, cat: "Criterio", q:"¿Cómo cuidas tu comunicación digital?", opts:[ { t:"No importa", s:2 },{ t:"Rápido", s:5 },{ t:"Lo básico", s:8 },{ t:"Alineada con mi autoridad", s:10 }]},
+                { id: 32, cat:"Mentalidad", q:"¿Te comparas con otros o contigo mismo ayer?", opts: [ { t:"Referentes", s:2 },{ t:"Amigos", s:4 },{ t:"Competencia", s:7 },{ t:"Mi ejecución de ayer", s:10 }]},
+                { id: 33, cat:"Ambición", q:"¿Cuál es tu hambre por alcanzar el siguiente nivel?", opts: [ { t: "Bajo", s: 2 }, { t: "Medio", s: 5 }, { t: "Alto", s: 8 }, { t: "Absoluto", s: 10 }]},
+                { id: 34, cat: "Consistencia", q:"¿Qué haces cada día para avanzar?", opts:[ { t: "Lo que surge", s:2 }, { t: "Emails", s: 4 }, { t: "Operativa", s: 7 }, { t: "Tarea de mayor impacto", s:10 }]},
+                { id: 35, cat: "Evaluación", q:"¿Qué tan honesto eres sobre tus debilidades?", opts: [ { t:"Me miento", s:2 },{ t:"Autocrítico duro", s:5 },{ t:"Objetivo", s:8 },{ t:"Las afronto", s:10 }]},
+                { id: 36, cat:"Momentum", q:"Una vez que empiezas algo, ¿qué tan difícil es detenerte?", opts: [ { t: "Fácil", s: 2 }, { t: "Depende", s: 5 }, { t: "Suelo seguir", s: 8 }, { t: "Soy imparable", s: 10 }]},
+                { id: 37, cat: "Ajuste", q: "¿Buscas críticas constructivas o solo halagos?", opts: [ { t: "Halagos", s: 1 }, { t: "Me molestan críticas", s:4 }, { t: "Las acepto", s: 7 }, { t: "Exijo feedback brutal", s:10 }]},
+                { id: 38, cat: "Compromiso", q:"¿Firmarías hoy 2 años de trabajo duro por éxito seguro?", opts: [ { t:"Mucho tiempo", s:2 },{ t:"Tal vez uno", s:5 },{ t:"Con dudas", s:8 },{ t:"Sin dudar", s:10 }]},
+                { id: 39, cat:"Hambre", q:"¿Qué te mueve más: el miedo o el deseo de ganar?", opts: [ { t:"Miedo", s:3 },{ t:"Necesidad", s:5 },{ t:"Deseo", s:8 },{ t:"La visión del legado", s:10 }]},
+                { id: 40, cat:"Final", q:"¿Estás listo para ubicarte con claridad y aceptar tu realidad?", opts: [ { t:"Tengo miedo", s:2 },{ t:"Veremos", s:5 },{ t:"Estoy preparado", s:8 },{ t:"Deseo la verdad", s:10 }]}
+            ];
 
-            // LÓGICA DE CÁLCULO DE PUNTAJE (CORREGIDO)
-            const totalScore = useMemo(() => {
-                return Object.values(answers).reduce((acc, curr) => acc + curr, 0);
-            }, [answers]);
+            const currentQuestions = useMemo(() => 
+                questions.slice(currentQuizStep * 5, (currentQuizStep + 1) * 5), 
+                [currentQuizStep]
+            );
 
-            const currentQuestions = useMemo(() => questions.slice(currentStep * 5, (currentStep + 1) * 5), [currentStep, questions]);
-            const progress = (Object.keys(answers).length / 40) * 100;
-
-            // VALIDACIÓN DE BLOQUES (CORREGIDO PARA BLOQUES 4-8)
-            const isStepComplete = useMemo(() => {
-                return currentQuestions.every(q => answers[q.id] !== undefined);
-            }, [answers, currentQuestions]);
+            const totalScore = useMemo(() => 
+                Object.values(answers).reduce((a, b) => a + b, 0), 
+                [answers]
+            );
 
             const handleSubmit = async () => {
-                if (!nombre.trim() || !email.includes('@')) return;
                 setSending(true);
-
-                // --- PEGA TU URL DE GOOGLE SCRIPT AQUÍ ---
-                const scriptURL = 'TU_URL_DE_GOOGLE_SCRIPT_AQUI'; 
-
-                const resumenRespuestas = Object.keys(answers)
-                    .sort((a,b) => a-b)
-                    .map(id => `P${id}:${answers[id]}`)
-                    .join(" | ");
-
-                const dataToSend = {
+                const scriptURL = 'https://script.google.com/macros/s/AKfycbxq1CbNJNWyG_vn1ghK1ep1tswmTzOdAG0rdzF73dhaPBoGE_Kmyfb7qV1IVtzCWr0/exec';
+                
+                const payload = {
                     nombre,
                     email,
-                    fecha: new Date().toLocaleString('es-AR'),
+                    fecha: new Date().toLocaleString(),
                     puntaje: totalScore,
-                    resultado: resumenRespuestas
+                    resultado: Object.keys(answers).map(id => `P${id}:${answers[id]}`).join(" | ")
                 };
 
                 try {
-                    await fetch(scriptURL, { 
-                        method: 'POST', 
-                        mode: 'no-cors', 
-                        headers: { 'Content-Type': 'application/json' }, 
-                        body: JSON.stringify(dataToSend) 
+                    await fetch(scriptURL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        body: JSON.stringify(payload)
                     });
-                    setSubmitted(true);
-                } catch (error) {
-                    alert("Error en la conexión. Revisa el script.");
+                    setStep('thanks');
+                } catch (e) {
+                    alert("Error al enviar. Intenta de nuevo.");
                 } finally {
                     setSending(false);
                 }
             };
 
-            const neuCard = "bg-[#0a0a0a] shadow-[10px_10px_20px_#050505,-10px_-10px_20px_#0f0f0f] border border-[#1a1a1a]";
-            const neuInner = "shadow-[inset_4px_4px_8px_#050505,inset_-4px_-4px_8px_#0f0f0f]";
-
-            if (submitted) {
-                const isApto = totalScore >= 320;
+            // PANTALLA DE INICIO (DESCRIPCIÓN ORIGINAL)
+            if (step === 'welcome') {
                 return (
-                    <div className="min-h-screen bg-black flex items-center justify-center p-6 text-white font-sans">
-                        <div className={`max-w-2xl w-full p-12 rounded-[40px] ${neuCard} text-center`}>
-                            <div className={`w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-8 shadow-[0_0_30px_rgba(234,179,8,0.3)] ${isApto ? 'bg-green-500' : 'bg-yellow-500'}`}>
-                                <ShieldCheck />
+                    <div className="min-h-screen flex items-center justify-center p-6 text-center">
+                        <div className="max-w-3xl neu-card p-12 rounded-[40px]">
+                            <h1 className="text-6xl font-black italic uppercase tracking-tighter mb-4">
+                                Fórmula.<span className="text-yellow-500">Momentum</span>
+                            </h1>
+                            <p className="text-xl text-slate-400 mb-8 leading-relaxed">
+                                Bienvenido a la Evaluación de Cualificación Profesional. <br/>
+                                Este sistema medirá tu nivel de compromiso, resiliencia y visión estratégica 
+                                para determinar si estás listo para el siguiente nivel de ejecución. 
+                                Responde con total honestidad.
+                            </p>
+                            <button onClick={() => setStep('quiz')} 
+                                className="px-12 py-5 bg-white text-black font-black uppercase tracking-widest rounded-2xl hover:scale-105 transition-transform">
+                                COMENZAR EVALUACIÓN
+                            </button>
+                        </div>
+                    </div>
+                );
+            }
+
+            // PANTALLA DE GRACIAS (MENSAJE POSITIVO, SIN PUNTAJE PÚBLICO)
+            if (step === 'thanks') {
+                return (
+                    <div className="min-h-screen flex items-center justify-center p-6 text-center">
+                        <div className="max-w-2xl neu-card p-12 rounded-[40px]">
+                            <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-[0_0_30px_rgba(34,197,94,0.4)]">
+                                <i data-lucide="check" className="text-black w-10 h-10"></i>
                             </div>
-                            <h1 className="text-4xl font-black mb-4 italic uppercase tracking-tighter">Evaluación Completada</h1>
-                            <p className="text-slate-400 text-lg mb-6">Puntaje obtenido: <span className="text-white font-bold">{totalScore} / 400</span></p>
-                            <p className="text-slate-500 leading-relaxed">Tu análisis ha sido enviado a la dirección de correo proporcionada.</p>
+                            <h2 className="text-4xl font-black uppercase italic mb-4">¡Registro Exitoso!</h2>
+                            <p className="text-slate-400 text-lg leading-relaxed">
+                                Gracias por completar la evaluación de la Fórmula Momentum. 
+                                Hemos recibido tus datos correctamente. Nuestro equipo analizará tu perfil 
+                                y nos pondremos en contacto contigo a la brevedad para los siguientes pasos. 
+                                <br/><br/>
+                                <span className="text-white font-bold italic">¡Sigue avanzando!</span>
+                            </p>
                         </div>
                     </div>
                 );
             }
 
             return (
-                <div className="min-h-screen bg-black text-white p-4 md:p-12 font-sans">
-                    <div className="max-w-4xl mx-auto">
-                        <header className="text-center mb-16">
-                            <h1 className="text-5xl md:text-7xl font-black tracking-tighter italic flex flex-col uppercase">
-                                <span className="text-white">fórmula.</span>
-                                <span className="text-yellow-500 -mt-2">momentum</span>
-                            </h1>
-                        </header>
-
-                        <div className="mb-12">
-                            <div className="flex justify-between items-end mb-4 px-4">
-                                <div className="flex items-center gap-3">
-                                    <Activity />
-                                    <span className="text-[10px] font-black tracking-widest uppercase text-slate-500">Progreso</span>
-                                </div>
-                                <span className="text-2xl font-black italic text-yellow-500">{Math.round(progress)}%</span>
+                <div className="max-w-4xl mx-auto py-12 px-6">
+                    <header className="text-center mb-12">
+                        <h1 className="text-4xl font-black italic uppercase italic">Fórmula.<span className="text-yellow-500">Momentum</span></h1>
+                        <div className="mt-6 flex items-center justify-center gap-4">
+                            <div className="w-full h-2 rounded-full bg-zinc-900 overflow-hidden">
+                                <div className="h-full bg-yellow-500 transition-all duration-500" style={{width: `${(Object.keys(answers).length/40)*100}%`}}></div>
                             </div>
-                            <div className={`h-3 w-full rounded-full ${neuInner} bg-black overflow-hidden`}>
-                                <div className="h-full bg-yellow-500 transition-all duration-700" style={{ width: `${progress}%` }}></div>
-                            </div>
+                            <span className="text-yellow-500 font-bold">{Math.round((Object.keys(answers).length/40)*100)}%</span>
                         </div>
+                    </header>
 
+                    {step === 'quiz' ? (
                         <div className="space-y-8">
-                            {currentQuestions.map((q) => (
-                                <div key={q.id} className={`p-8 rounded-[30px] ${neuCard}`}>
-                                    <div className="text-[10px] font-black text-yellow-500 tracking-widest uppercase mb-4">{q.cat} | {q.id}</div>
-                                    <h3 className="text-xl md:text-2xl font-bold mb-6">{q.q}</h3>
+                            {currentQuestions.map(q => (
+                                <div key={q.id} className="p-8 rounded-[30px] neu-card">
+                                    <p className="text-xs font-black text-yellow-500 uppercase tracking-widest mb-2">{q.cat}</p>
+                                    <h3 className="text-xl font-bold mb-6">{q.q}</h3>
                                     <div className="grid gap-3">
                                         {q.opts.map((o, idx) => (
-                                            <button key={idx} 
-                                                onClick={() => setAnswers(p => ({ ...p, [q.id]: o.s }))}
-                                                className={`p-5 rounded-2xl text-left border transition-all ${answers[q.id] === o.s ? 'bg-yellow-500 border-yellow-500 text-black font-bold' : 'bg-transparent border-[#222] text-slate-400 hover:border-slate-600'}`}>
+                                            <button key={idx} onClick={() => setAnswers({...answers, [q.id]: o.s})}
+                                                className={`p-5 rounded-2xl text-left border transition-all ${answers[q.id] === o.s ? 'bg-yellow-500 border-yellow-500 text-black font-bold' : 'border-zinc-800 text-slate-400 hover:border-zinc-600'}`}>
                                                 {o.t}
                                             </button>
                                         ))}
                                     </div>
                                 </div>
                             ))}
-
-                            {currentStep === 7 && (
-                                <div className={`p-10 rounded-[40px] ${neuCard} space-y-6`}>
-                                    <div className="grid md:grid-cols-2 gap-4">
-                                        <input type="text" placeholder="Nombre Completo" value={nombre} onChange={e=>setNombre(e.target.value)} className={`p-5 rounded-2xl bg-black ${neuInner} outline-none focus:border-yellow-500 border border-transparent`} />
-                                        <input type="email" placeholder="Email" value={email} onChange={e=>setEmail(e.target.value)} className={`p-5 rounded-2xl bg-black ${neuInner} outline-none focus:border-yellow-500 border border-transparent`} />
-                                    </div>
-                                    <button onClick={handleSubmit} disabled={!nombre || !email.includes('@') || sending || Object.keys(answers).length < 40}
-                                        className="w-full py-6 rounded-2xl bg-yellow-500 text-black font-black text-xl hover:scale-[1.02] transition-transform disabled:opacity-50">
-                                        {sending ? 'ENVIANDO...' : 'FINALIZAR Y ENVIAR'}
-                                    </button>
-                                </div>
-                            )}
-
-                            <div className="flex justify-between items-center pt-8 pb-20">
-                                <button disabled={currentStep === 0} onClick={() => {setCurrentStep(s=>s-1); window.scrollTo(0,0);}}
-                                    className={`px-8 py-4 rounded-2xl font-bold uppercase tracking-widest ${currentStep === 0 ? 'opacity-0' : 'text-slate-500'}`}>
-                                    Anterior
-                                </button>
-                                {currentStep < 7 && (
-                                    <button disabled={!isStepComplete} onClick={() => {setCurrentStep(s=>s+1); window.scrollTo(0,0);}}
-                                        className="px-10 py-5 rounded-2xl bg-white text-black font-black uppercase tracking-widest disabled:opacity-30">
-                                        Siguiente
-                                    </button>
+                            <div className="flex justify-between items-center py-10">
+                                <button disabled={currentQuizStep === 0} onClick={() => {setCurrentQuizStep(s=>s-1); window.scrollTo(0,0);}}
+                                    className="px-8 py-4 font-bold uppercase text-zinc-500 disabled:opacity-0">Anterior</button>
+                                
+                                {currentQuizStep < 7 ? (
+                                    <button disabled={!currentQuestions.every(q => answers[q.id])} 
+                                        onClick={() => {setCurrentQuizStep(s=>s+1); window.scrollTo(0,0);}}
+                                        className="px-10 py-5 bg-white text-black font-black uppercase rounded-2xl disabled:opacity-20">Siguiente</button>
+                                ) : (
+                                    <button onClick={() => setStep('form')} className="px-10 py-5 bg-yellow-500 text-black font-black uppercase rounded-2xl">Continuar</button>
                                 )}
                             </div>
                         </div>
-                    </div>
+                    ) : (
+                        <div className="max-w-xl mx-auto neu-card p-10 rounded-[40px] space-y-6">
+                            <h2 className="text-2xl font-black uppercase italic text-center">Datos de contacto</h2>
+                            <input type="text" placeholder="Nombre Completo" value={nombre} onChange={e=>setNombre(e.target.value)} className="w-full p-5 rounded-2xl bg-black neu-inner outline-none border border-transparent focus:border-yellow-500" />
+                            <input type="email" placeholder="Email" value={email} onChange={e=>setEmail(e.target.value)} className="w-full p-5 rounded-2xl bg-black neu-inner outline-none border border-transparent focus:border-yellow-500" />
+                            <button onClick={handleSubmit} disabled={sending || !nombre || !email.includes('@')}
+                                className="w-full py-6 bg-yellow-500 text-black font-black text-xl rounded-2xl disabled:opacity-50">
+                                {sending ? 'ENVIANDO...' : 'FINALIZAR Y ENVIAR'}
+                            </button>
+                        </div>
+                    )}
                 </div>
             );
         };
