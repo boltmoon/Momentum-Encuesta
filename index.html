@@ -80,7 +80,6 @@
                 { id: 40, cat:"Final", ref:"Decisión", q:"¿Estás listo para ubicarte con claridad y aceptar tu realidad?", opts: [ { t:"Tengo miedo", s:2 },{ t:"Veremos", s:5 },{ t:"Estoy preparado", s:8 },{ t:"Deseo la verdad", s:10 }]}
             ], []);
 
-            // CORRECCIÓN: Filtro de preguntas por bloque
             const currentQuestions = questions.slice(currentStep * 5, (currentStep + 1) * 5);
             const progress = (Object.keys(answers).length / 40) * 100;
 
@@ -156,11 +155,19 @@
                                 <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
                                     <Compass />
                                 </div>
-                                <div className="max-w-3xl space-y-4 text-slate-300 leading-relaxed font-medium">
-                                    <p className="text-xl md:text-2xl text-white font-bold italic mb-4">
-                                        La evaluación de criterio definitiva —
+                                <div className="max-w-3xl space-y-6 text-slate-300 leading-relaxed text-lg md:text-xl">
+                                    <p>
+                                        La <strong className="text-white">FÓRMULA MOMENTUM</strong> está concebida para <strong className="text-white">PROFESIONALES Y EMPRENDEDORES</strong> que comprenden que los resultados reales no dependen del momento ideal ni de fórmulas rápidas, sino de lo que verdaderamente los sostiene en el tiempo: <strong className="text-yellow-500">HAMBRE POR AVANZAR, RESILIENCIA FRENTE A LOS OBSTÁCULOS</strong> y <strong className="text-yellow-500">COMPROMISO REAL PARA LLEVAR UN PROCESO HASTA EL FINAL.</strong>
                                     </p>
-                                    <p>Responde con honestidad total para obtener tu ubicación real en el sistema.</p>
+                                    <p>
+                                        En <strong className="text-white">MOMENTUM</strong> no se improvisa ni se persiguen efectos inmediatos. El avance se construye a partir de <strong className="text-white">ESTRATEGIA</strong>, que define el enfoque; <strong className="text-white">PROCESO</strong>, que ordena la ejecución; y <strong className="text-white">AJUSTE CONTINUO</strong>, que transforma la experiencia en mejora real.
+                                    </p>
+                                    <p>
+                                        El único riesgo en esta inversión no es equivocarse ni avanzar más lento de lo esperado. El verdadero riesgo es <strong className="text-white">INTERRUMPIR EL PROCESO</strong> antes de comprender cómo se alinean las acciones con los resultados. Cuando esa comprensión aparece, los resultados dejan de ser circunstanciales: se vuelven <strong className="text-white">PREVISIBLES, SOSTENIBLES</strong> y dependen del <strong className="text-white">CRITERIO DE QUIEN EJECUTA.</strong>
+                                    </p>
+                                    <p className="bg-white/5 p-6 rounded-2xl border-l-4 border-yellow-500">
+                                        Por eso, lo que sigue no es una promesa ni una inscripción automática. Es una <strong className="text-yellow-500">EVALUACIÓN HONESTA</strong>, pensada para que <strong className="text-white">PROFESIONALES Y EMPRENDEDORES</strong> puedan <strong className="text-white">UBICARSE CON CLARIDAD</strong>, reconocer en qué punto están hoy y decidir —con <strong className="text-white">CRITERIO PROFESIONAL</strong>— si la <strong className="text-white">FÓRMULA MOMENTUM</strong> es el proceso adecuado para este momento de su recorrido.
+                                    </p>
                                 </div>
                             </div>
                         </header>
@@ -257,7 +264,7 @@
                         </div>
 
                         <footer className="text-center py-10 opacity-30">
-                            <p className="text-slate-700 text-[10px] font-black tracking-[0.6em] uppercase">Fórmula Momentum ©2024</p>
+                            <p className="text-slate-700 text-[10px] font-black tracking-[0.6em] uppercase">Fórmula Momentum ©2025</p>
                         </footer>
                     </div>
                 </div>
