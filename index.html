@@ -3,237 +3,372 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fórmula Momentum | Diagnóstico Profesional</title>
+    <title>Fórmula Momentum | Diagnóstico</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #000; color: #fff; overflow-x: hidden; }
-        .neu-card { background: #0a0a0a; box-shadow: 10px 10px 20px #050505, -10px -10px 20px #0f0f0f; border: 1px solid #1a1a1a; }
-        .neu-inner { box-shadow: inset 4px 4px 8px #050505, inset -4px -4px 8px #0f0f0f; }
-        .loading-spinner { border: 3px solid rgba(255, 255, 255, 0.1); border-radius: 50%; border-top: 3px solid #eab308; width: 24px; height: 24px; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        html { scroll-behavior: smooth; }
+        body {
+            background-color: black;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        .momentum-yellow { color: #EAB308; }
+        .bg-momentum-yellow { background-color: #EAB308; }
+        .border-momentum-yellow { border-color: #EAB308; }
+        
+        .fade-in {
+            animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .selection-yellow::selection {
+            background: #EAB308;
+            color: black;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #000;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 10px;
+        }
+
+        input::placeholder { color: #555; }
+        
+        .hidden { display: none; }
     </style>
 </head>
-<body class="p-4 md:p-8 lg:p-12">
+<body class="selection-yellow custom-scrollbar">
 
-    <div class="max-w-4xl mx-auto">
-        <!-- Encabezado con Logo -->
-        <header id="main-header" class="text-center mb-10 md:mb-16">
-            <h1 class="text-4xl sm:text-5xl md:text-7xl font-black tracking-tighter italic flex flex-col leading-tight uppercase mb-8">
-                <span class="text-white">fórmula</span>
-                <span class="text-yellow-500 -mt-1 md:-mt-2">momentum</span>
+    <div id="app" class="max-w-4xl mx-auto px-4 py-12 md:py-24">
+        
+        <!-- PANTALLA DE INICIO (HEADER) -->
+        <header id="header-screen" class="text-center mb-16 fade-in">
+            <h1 class="text-6xl md:text-8xl font-black tracking-tighter uppercase italic flex flex-col leading-none mb-12 drop-shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+                <span class="text-white">FÓRMULA</span>
+                <span class="momentum-yellow -mt-2">MOMENTUM</span>
             </h1>
-            
-            <div id="intro-block" class="p-6 md:p-12 rounded-[24px] md:rounded-[32px] neu-card text-left space-y-6 leading-relaxed text-sm md:text-base">
-                <p class="text-slate-400">la <span class="text-white font-bold italic uppercase">FÓRMULA MOMENTUM</span> es un diagnóstico para <span class="text-yellow-500 font-black italic uppercase">PROFESIONALES</span>.</p>
-                <p class="text-slate-400 italic">este proceso expondrá si estás listo para la <span class="text-white font-bold italic uppercase">EJECUCIÓN CONSTANTE</span>.</p>
-                
-                <div class="space-y-4 text-slate-400 border-t border-white/10 pt-6">
-                    <p>Este sistema es una infraestructura digital integrada de tres capas diseñada para captar, evaluar y procesar perfiles profesionales de alto valor.</p>
-                    <p>Al completar las preguntas, el sistema calculará tu puntuación y notificará automáticamente los resultados para tu validación.</p>
-                </div>
 
-                <div class="pt-6 flex justify-center">
-                    <button onclick="startQuiz()" class="w-full md:w-auto px-12 py-5 bg-white text-black font-black italic text-lg rounded-2xl hover:bg-yellow-500 transition-all active:scale-95">
-                        COMENZAR DIAGNÓSTICO
-                    </button>
+            <div class="space-y-6 leading-relaxed text-base md:text-lg font-medium text-slate-400 text-left">
+                <p>
+                    <span>la </span>
+                    <span class="text-white font-black italic uppercase">FÓRMULA MOMENTUM </span>
+                    <span>nace de una manera específica de entender cómo se construyen los resultados.</span>
+                </p>
+
+                <p>
+                    <span>está diseñada exclusivamente para </span>
+                    <span class="momentum-yellow font-black italic uppercase">PROFESIONALES </span>
+                    <span>y </span>
+                    <span class="momentum-yellow font-black italic uppercase">EMPRENDEDORES </span>
+                    <span>que comprenden que avanzar no depende de impulsos aislados, sino de sostener decisiones en el tiempo.</span>
+                </p>
+
+                <p>
+                    <span>personas con </span>
+                    <span class="momentum-yellow font-black italic uppercase">HAMBRE POR AVANZAR</span>
+                    <span>, </span>
+                    <span class="momentum-yellow font-black italic uppercase">RESILIENCIA FRENTE A LOS OBSTÁCULOS </span>
+                    <span>y </span>
+                    <span class="momentum-yellow font-black italic uppercase">COMPROMISO REAL PARA LLEVAR UN PROCESO HASTA EL FINAL</span>
+                    <span>.</span>
+                </p>
+
+                <p><span>acá no se improvisa ni se persiguen efectos inmediatos.</span></p>
+
+                <p><span>el avance se da cuando cada acción responde a un enfoque claro, una secuencia ordenada y una revisión constante que transforma la experiencia en mejora concreta.</span></p>
+
+                <p>
+                    <span>el único riesgo en este tipo de procesos no es equivocarse ni avanzar más lento de lo esperado — es </span>
+                    <span class="momentum-yellow font-black italic uppercase underline decoration-2 underline-offset-4">INTERRUMPIR EL RECORRIDO </span>
+                    <span>antes de comprender cómo se conectan las decisiones con los resultados.</span>
+                </p>
+
+                <p>
+                    <span>cuando esa comprensión aparece, los resultados dejan de ser circunstanciales. se vuelven </span>
+                    <span class="text-white font-black italic uppercase">PREVISIBLES, SOSTENIBLES </span>
+                    <span>y directamente dependientes del criterio de quien ejecuta.</span>
+                </p>
+
+                <!-- BLOQUE DE ADVERTENCIA ACTUALIZADO A MINÚSCULAS -->
+                <div class="p-8 md:p-10 rounded-[32px] border border-[#EAB308]/30 bg-[#1a1a1a] mt-12 shadow-[0_20px_40px_rgba(0,0,0,0.5)]">
+                    <div class="text-sm md:text-base font-bold italic leading-relaxed text-justify space-y-5 lowercase tracking-tight">
+                        <p class="text-white">
+                            esto no es una promesa ni una inscripción automática. es una instancia de diagnóstico real, pensada para observar cómo tomás decisiones, cómo ejecutás y cómo sostenés un proceso cuando no hay atajos.
+                        </p>
+                        <p class="text-white">
+                            no busca validar ni descartar personas; expone con claridad si estás dispuesto a hacer lo que el proceso exige, con consistencia, responsabilidad y sin relatos mágicos.
+                        </p>
+                    </div>
                 </div>
+            </div>
+            
+            <div class="pt-12 text-center">
+                <button onclick="startDiagnostic()" class="w-full md:w-auto px-16 py-8 bg-white text-black font-black italic text-2xl rounded-3xl hover:bg-[#EAB308] transition-all hover:scale-105 shadow-xl flex items-center justify-center gap-4 mx-auto uppercase">
+                    COMENZAR DIAGNÓSTICO
+                    <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M13 10V3L4 14H11V21L20 10H13Z"/></svg>
+                </button>
             </div>
         </header>
 
-        <!-- Quiz -->
-        <main id="quiz-container" class="hidden">
-            <!-- Mensaje Motivacional dinámico -->
-            <div id="motivation-box" class="mb-8 p-4 border-l-4 border-yellow-500 bg-white/5 italic text-yellow-500 font-bold uppercase tracking-tight text-sm">
-                "El primer paso es el más difícil, pero es el que rompe la inercia."
-            </div>
-
-            <div class="mb-8 px-2">
-                <div class="flex justify-between items-end mb-4 text-xs font-black text-slate-500 uppercase">
-                    <span>Tu Progreso</span>
-                    <span id="progress-text" class="text-2xl italic text-yellow-500">0%</span>
-                </div>
-                <div class="h-3 w-full rounded-full neu-inner bg-black">
-                    <div id="progress-bar" class="h-full bg-yellow-500 rounded-full transition-all duration-700" style="width: 0%"></div>
+        <!-- CONTENEDOR DE PREGUNTAS -->
+        <main id="diagnostic-screen" class="hidden fade-in">
+            <!-- Info del bloque -->
+            <div class="mb-12 p-8 rounded-[30px] bg-[#EAB308]/5 border border-[#EAB308]/20 shadow-[0_0_30px_rgba(234,179,8,0.05)]">
+                <div class="flex items-start gap-4">
+                    <svg class="w-8 h-8 momentum-yellow shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-7.714 2.143L11 21l-2.143-7.714L1 12l7.714-2.143L11 3z"></path></svg>
+                    <div>
+                        <h4 id="step-title" class="momentum-yellow font-black italic tracking-widest text-[10px] mb-2 uppercase"></h4>
+                        <p id="step-text" class="text-white font-bold italic text-lg leading-tight uppercase"></p>
+                    </div>
                 </div>
             </div>
 
-            <div id="questions-wrapper" class="space-y-6"></div>
+            <!-- Barra de progreso -->
+            <div class="mb-12 px-2">
+                <div class="flex justify-between items-center mb-4 text-[10px] font-black tracking-widest uppercase text-slate-600">
+                    <span>Progreso del Análisis</span>
+                    <span id="progress-text" class="text-xl momentum-yellow">0%</span>
+                </div>
+                <div class="h-1 w-full rounded-full bg-white/5 overflow-hidden">
+                    <div id="progress-bar" class="h-full bg-momentum-yellow transition-all duration-700 shadow-[0_0_15px_#EAB308]" style="width: 0%"></div>
+                </div>
+            </div>
 
-            <!-- Formulario y Botón de Envío -->
-            <div id="final-form" class="hidden mt-10 p-8 rounded-[32px] neu-card text-center space-y-6">
-                <h3 class="text-2xl font-black italic text-white uppercase">Validación de Perfil Final</h3>
-                <p class="text-slate-400 text-sm">Estás a un paso de completar tu diagnóstico profesional.</p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-left max-w-2xl mx-auto">
-                    <input id="userName" type="text" placeholder="NOMBRE COMPLETO" class="w-full px-5 py-4 rounded-xl neu-inner bg-black outline-none font-bold text-white border border-transparent focus:border-yellow-500/50">
-                    <input id="userEmail" type="email" placeholder="EMAIL" class="w-full px-5 py-4 rounded-xl neu-inner bg-black outline-none font-bold text-white border border-transparent focus:border-yellow-500/50">
+            <!-- Contenedor de preguntas inyectadas -->
+            <div id="questions-container" class="space-y-8"></div>
+
+            <!-- Formulario Final -->
+            <div id="final-form" class="hidden p-10 md:p-16 rounded-[50px] bg-[#0a0a0a] border border-[#EAB308]/30 text-center space-y-10 mt-12">
+                <div class="max-w-xl mx-auto space-y-4">
+                    <h3 class="text-3xl font-black italic text-white uppercase tracking-tighter">Veredicto Final</h3>
+                    <p class="text-white text-[10px] font-bold uppercase tracking-[0.2em] leading-relaxed">
+                        EL SISTEMA HA RECOPILADO TU PATRÓN DE DECISIÓN. RELLENA TUS DATOS PARA VINCULAR EL RESULTADO A TU PERFIL PROFESIONAL.
+                    </p>
                 </div>
                 
-                <div id="error-msg" class="text-red-500 font-bold hidden uppercase text-xs">Por favor completa todos los campos correctamente</div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
+                    <input id="input-nombre" type="text" placeholder="NOMBRE COMPLETO" class="bg-white/5 border border-white/10 p-5 rounded-2xl outline-none focus:border-[#EAB308] font-black uppercase text-xs text-white">
+                    <input id="input-email" type="email" placeholder="EMAIL PROFESIONAL" class="bg-white/5 border border-white/10 p-5 rounded-2xl outline-none focus:border-[#EAB308] font-black uppercase text-xs text-white">
+                </div>
 
-                <button id="submitBtn" onclick="submitQuiz()" class="w-full md:w-auto px-12 py-6 rounded-3xl bg-yellow-500 text-black font-black text-xl italic hover:scale-105 transition-all flex items-center justify-center gap-4 mx-auto">
-                    <span>ENVIAR DIAGNÓSTICO FINAL</span>
-                    <div id="loader" class="loading-spinner hidden"></div>
+                <button id="btn-submit" onclick="submitDiagnostic()" class="px-16 py-8 rounded-3xl bg-momentum-yellow text-black font-black text-2xl italic transition-all hover:scale-105 shadow-2xl disabled:opacity-20 uppercase">
+                    OBTENER MI VEREDICTO
                 </button>
             </div>
 
-            <div id="nav-btns" class="flex items-center justify-between pt-10 pb-20 gap-4">
-                <button id="prevBtn" onclick="changeStep(-1)" class="invisible flex-1 md:flex-none px-8 py-4 rounded-2xl font-black uppercase text-xs neu-card text-slate-400 hover:text-white transition-colors">
-                    ← Volver atrás
+            <!-- Navegación -->
+            <div class="flex flex-col md:flex-row items-center justify-between gap-8 pt-10 pb-20">
+                <button id="btn-prev" onclick="changeStep(-1)" class="px-8 py-4 rounded-xl font-black uppercase text-[10px] tracking-widest text-slate-500 hover:text-white transition-all">
+                    ← Anterior
                 </button>
-                <button id="nextBtn" onclick="changeStep(1)" class="flex-1 md:flex-none px-12 py-4 rounded-2xl font-black uppercase text-xs bg-white text-black hover:bg-yellow-500 transition-colors">
-                    Continuar →
+                
+                <div id="step-indicators" class="flex gap-2"></div>
+                
+                <button id="btn-next" onclick="changeStep(1)" class="px-10 py-4 bg-white text-black font-black uppercase text-[10px] tracking-widest hover:bg-momentum-yellow transition-all disabled:opacity-10">
+                    Siguiente Bloque →
                 </button>
             </div>
         </main>
 
-        <!-- Pantalla de Éxito -->
-        <div id="success-screen" class="hidden min-h-[50vh] flex items-center justify-center">
-            <div class="p-12 rounded-[50px] neu-card text-center max-w-lg">
-                <div class="text-green-500 text-6xl mb-6">✓</div>
-                <h1 class="text-3xl font-black uppercase italic mb-4">Análisis Completado</h1>
-                <p class="text-slate-400">Tus datos han sido sincronizados con la planilla profesional. Nos pondremos en contacto pronto.</p>
+        <!-- PANTALLA DE ÉXITO -->
+        <div id="success-screen" class="hidden min-h-[60vh] flex items-center justify-center fade-in">
+            <div class="max-w-2xl w-full p-10 md:p-16 rounded-[40px] bg-[#0a0a0a] border border-white/5 text-center shadow-2xl">
+                <div class="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-10 shadow-[0_0_50px_rgba(34,197,94,0.3)]">
+                    <svg class="w-14 h-14 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+                <h1 class="text-4xl font-black mb-6 tracking-tighter italic uppercase text-white">Diagnóstico Procesado</h1>
+                <div class="space-y-6 text-lg text-slate-300">
+                    <p>Has dado un paso decisivo. Tu capacidad de llegar hasta aquí demuestra una determinación superior.</p>
+                    <p class="text-sm border-t border-white/10 pt-6 font-bold uppercase tracking-widest momentum-yellow">Veredicto enviado a la planilla central.</p>
+                </div>
             </div>
         </div>
+
     </div>
 
     <script>
-        // URL DE GOOGLE APPS SCRIPT
-        const GOOGLE_SCRIPT_URL = ""; 
-
-        const motivationPhrases = [
-            "El primer paso es el más difícil, pero es el que rompe la inercia.",
-            "Mantén el enfoque. La claridad mental es la base de la ejecución.",
-            "Estás profundizando en tu perfil. La honestidad aquí es clave.",
-            "Casi llegamos. Un profesional sabe que el diablo está en los detalles.",
-            "Última fase. Tu Momentum se construye con cada decisión correcta."
-        ];
-
-        const questions = [
-            { id: 1, q: "¿Qué tan comprometido estás con tu avance?", opts: ["Bajo", "Medio", "Alto", "Total"] },
-            { id: 2, q: "¿Cómo manejas la presión profesional?", opts: ["Me paralizo", "Dudo mucho", "Actúo con cautela", "Ajusto y ejecuto"] },
-            { id: 3, q: "¿Prefieres resultados inmediatos o sostenibilidad?", opts: ["Inmediatos", "Sostenibilidad", "Equilibrio", "Largo Plazo"] },
-            { id: 4, q: "¿Qué tanto delegas en tu proceso actual?", opts: ["Nada", "Poco", "Casi todo", "Estratégicamente"] },
-            { id: 5, q: "¿Cómo es tu disciplina diaria?", opts: ["Inconstante", "Regular", "Alta", "Inquebrantable"] },
-            { id: 6, q: "¿Analizas tus fallos anteriores?", opts: ["Nunca", "Rara vez", "Frecuentemente", "Siempre"] },
-            { id: 7, q: "¿Cuál es tu meta de facturación?", opts: ["Sobrevivir", "Crecimiento", "Escalar", "Dominar el mercado"] },
-            { id: 8, q: "¿Inviertes en formación?", opts: ["No", "Poco", "Regularmente", "Constantemente"] },
-            { id: 9, q: "¿Cómo te ves en 12 meses?", opts: ["Igual", "Crecido", "Liderando", "En la cima"] },
-            { id: 10, q: "¿Estás listo para el All-In?", opts: ["Tengo dudas", "Tal vez", "Sí", "Lo estoy haciendo ahora"] }
-            // Ampliar hasta las 40 según sea necesario
-        ];
-
+        const scriptURL = "https://script.google.com/macros/s/AKfycbw98Taz29fd-3ud9Z1e-dfdN8d9CL4C1y2CtNIf1LU5CaG0pXgPDsZs_uUZcn_G-L9S/exec";
+        
         let currentStep = 0;
         let answers = {};
+        const totalSteps = 8;
         const questionsPerStep = 5;
-        const stepsCount = Math.ceil(questions.length / questionsPerStep);
 
-        function startQuiz() {
-            document.getElementById('intro-block').classList.add('hidden');
-            document.getElementById('quiz-container').classList.remove('hidden');
-            renderQuestions();
+        const stepMessages = [
+            { title: "MÉRITO Y DETERMINACIÓN", text: "LO QUE TE DESMARCA DE QUIENES BUSCAN FÓRMULAS FÁCILES ES TU CAPACIDAD DE ENFRENTAR EL DIAGNÓSTICO CON VERDAD." },
+            { title: "EJECUCIÓN SOBRE DESEO", text: "EL DESEO ES COMÚN, LA DETERMINACIÓN DE SOSTENER EL PROCESO ES EL FILTRO QUE POCOS LOGRAN SUPERAR." },
+            { title: "CRITERIO ESTRATÉGICO", text: "AVANZAR NO ES CORRER, ES SABER POR QUÉ DAS CADA PASO. TU RIGOR AQUÍ DEFINE TU RESULTADO ALLÁ." },
+            { title: "RESILIENCIA OPERATIVA", text: "LOS OBSTÁCULOS NO SON ERRORES, SON DATOS. SIGUE ANALIZANDO CON PRECISIÓN QUIRÚRGICA." },
+            { title: "CONSISTENCIA TÉCNICA", text: "LA MAESTRÍA SE CONSTRUYE EN LA REPETICIÓN DE LO CORRECTO, NO EN LA BÚSQUEDA DE LO NUEVO." },
+            { title: "AUTORIDAD PROFESIONAL", text: "ESTÁS EN LA RECTA FINAL. CADA RESPUESTA DEBE ESTAR ALINEADA CON TU VISIÓN DE LARGO PLAZO." },
+            { title: "HONESTIDAD RADICAL", text: "TU VEREDICTO DEPENDE DE TU TRANSPARENCIA. EL SISTEMA NO PERDONA EL AUTOENGAÑO." },
+            { title: "COMPROMISO TOTAL", text: "HAS LOGRADO COMPLETAR EL RECORRIDO CON SERIEDAD. ANTES DEL PASO FINAL, REVISA SI TU EJECUCIÓN HA SIDO LÓGICA O EMOCIONAL." }
+        ];
+
+        // Generar 40 preguntas (5 iniciales + 35 generadas)
+        const baseQuestions = [
+            { id: 1, q:"¿Qué tanto te incomoda tu situación actual en una escala del 1 al 10?", opts: [{ t:"1-3: Estoy cómodo, solo busco curiosidad", s: 1}, { t: "4-6: Podría mejorar, pero no es vital", s: 4}, { t:"7-8: Necesito un cambio real pronto", s:7 },{ t:"9-10: Es innegociable avanzar hoy mismo", s:10 }]},
+            { id: 2, q:"Si el proceso requiere ajustar la estrategia tres veces antes del resultado, ¿qué haces?", opts:[ { t:"Abandono por falta de claridad", s:1 },{ t:"Cuestiono el proceso", s:4 }, { t:"Ajusto con dudas", s:7 },{ t:"Acepto el ajuste como parte del aprendizaje real", s:10 }]},
+            { id: 3, q:"¿Qué lugar ocupa este avance en tu lista de prioridades diarias?", opts: [ { t:"Es un pasatiempo", s:2 },{ t:"Lo hago si tengo tiempo libre", s:5 }, { t:"Es mi prioridad secundaria", s:8 },{ t:"Es el eje central de mi ejecución profesional", s: 10}]},
+            { id: 4, q:"¿Ves los obstáculos como errores del sistema o como datos para el ajuste?", opts: [ { t:"Los veo como errores personales", s:2 },{ t:"Me frustran y me detienen", s:4 }, { t:"Los analizo con inseguridad", s:7 },{ t:"Son datos puros para la mejora continua", s:10 }]},
+            { id: 5, q:"¿Cuánto tiempo estás dispuesto a invertir antes de ver el primer gran retorno?", opts: [ { t:"Necesito resultados en 15 días", s:1 },{ t:"Máximo 2 meses", s:4 }, { t:"6 meses con resultados parciales", s:7 },{ t:"El tiempo que sea necesario para dominar el proceso", s: 10}]}
+        ];
+
+        const questions = [...baseQuestions];
+        for(let i = 6; i <= 40; i++) {
+            questions.push({
+                id: i,
+                q: `Factor de Criterio ${i}: ¿Cómo priorizas la sostenibilidad frente al beneficio inmediato?`,
+                opts: [
+                    { t: "Elijo lo rápido siempre", s: 2 },
+                    { t: "Busco equilibrio", s: 5 },
+                    { t: "Sostengo el plan aunque no vea lucro hoy", s: 8 },
+                    { t: "La sostenibilidad es mi único indicador de éxito", s: 10 }
+                ]
+            });
         }
 
-        function renderQuestions() {
-            const wrapper = document.getElementById('questions-wrapper');
-            const motivationBox = document.getElementById('motivation-box');
-            wrapper.innerHTML = '';
+        function startDiagnostic() {
+            document.getElementById('header-screen').classList.add('hidden');
+            document.getElementById('diagnostic-screen').classList.remove('hidden');
+            window.scrollTo(0, 0);
+            renderStep();
+        }
+
+        function renderStep() {
+            const container = document.getElementById('questions-container');
+            const indicators = document.getElementById('step-indicators');
+            container.innerHTML = '';
+            indicators.innerHTML = '';
+
+            // Mensaje del bloque
+            document.getElementById('step-title').innerText = stepMessages[currentStep].title;
+            document.getElementById('step-text').innerText = stepMessages[currentStep].text;
+
+            // Preguntas del bloque actual
+            const currentQuestions = questions.slice(currentStep * questionsPerStep, (currentStep + 1) * questionsPerStep);
             
-            // Actualizar motivación según el paso
-            const phraseIndex = Math.min(currentStep, motivationPhrases.length - 1);
-            motivationBox.innerText = `"${motivationPhrases[phraseIndex]}"`;
-
-            const slice = questions.slice(currentStep * questionsPerStep, (currentStep + 1) * questionsPerStep);
-
-            slice.forEach(q => {
+            currentQuestions.forEach(q => {
                 const qDiv = document.createElement('div');
-                qDiv.className = 'p-6 md:p-10 rounded-[32px] neu-card';
+                qDiv.className = 'p-8 md:p-10 rounded-[40px] bg-[#0a0a0a] border border-white/5 hover:border-white/10 transition-colors fade-in';
+                
+                let optionsHtml = q.opts.map(o => `
+                    <button 
+                        onclick="selectOption(${q.id}, ${o.s})"
+                        class="text-left p-6 rounded-2xl border-2 transition-all option-btn-${q.id} ${answers[q.id] === o.s ? 'bg-momentum-yellow border-momentum-yellow text-black' : 'bg-black border-white/5 text-slate-400 hover:border-[#EAB308]/30'}"
+                    >
+                        <span class="text-base font-bold italic uppercase">${o.t}</span>
+                    </button>
+                `).join('');
+
                 qDiv.innerHTML = `
-                    <h3 class="text-lg md:text-xl font-bold text-white mb-6 uppercase tracking-tight">${q.id}. ${q.q}</h3>
-                    <div class="grid grid-cols-1 gap-3">
-                        ${q.opts.map((opt, i) => `
-                            <button onclick="selectOption(${q.id}, '${opt}')" 
-                                    id="btn-${q.id}-${i}"
-                                    class="option-btn-${q.id} text-left p-4 rounded-xl border border-[#222] bg-black text-slate-400 hover:border-yellow-500 transition-all font-bold italic ${answers[q.id] === opt ? 'bg-yellow-500 text-black border-yellow-500' : ''}">
-                                ${opt}
-                            </button>
-                        `).join('')}
+                    <div class="flex flex-col md:flex-row gap-8">
+                        <div class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-sm font-black italic momentum-yellow shrink-0 border border-white/5">
+                            ${q.id}
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-2xl font-bold text-white mb-8 tracking-tight italic">${q.q}</h3>
+                            <div class="grid grid-cols-1 gap-3">${optionsHtml}</div>
+                        </div>
                     </div>
                 `;
-                wrapper.appendChild(qDiv);
+                container.appendChild(qDiv);
             });
-            updateUI();
+
+            // Indicadores de paso
+            for(let i=0; i<totalSteps; i++) {
+                const dot = document.createElement('div');
+                dot.className = `h-1 rounded-full transition-all duration-500 ${currentStep === i ? 'bg-momentum-yellow w-10' : 'bg-white/5 w-3'}`;
+                indicators.appendChild(dot);
+            }
+
+            // Botones nav
+            document.getElementById('btn-prev').style.opacity = currentStep === 0 ? '0' : '1';
+            document.getElementById('btn-prev').style.pointerEvents = currentStep === 0 ? 'none' : 'auto';
+            
+            checkStepCompletion();
+            updateProgress();
+            
+            // Mostrar form final si es el último paso
+            document.getElementById('final-form').classList.toggle('hidden', currentStep !== 7);
+            document.getElementById('btn-next').classList.toggle('hidden', currentStep === 7);
         }
 
-        function selectOption(qId, val) {
-            answers[qId] = val;
-            renderQuestions();
-            updateProgress();
+        function selectOption(qId, score) {
+            answers[qId] = score;
+            renderStep();
+        }
+
+        function checkStepCompletion() {
+            const start = currentStep * questionsPerStep;
+            const end = (currentStep + 1) * questionsPerStep;
+            let count = 0;
+            for(let i = start + 1; i <= end; i++) {
+                if(answers[i]) count++;
+            }
+            document.getElementById('btn-next').disabled = count < 5;
+            
+            // Check submit btn
+            const totalAnswered = Object.keys(answers).length;
+            document.getElementById('btn-submit').disabled = totalAnswered < 40;
         }
 
         function updateProgress() {
-            const count = Object.keys(answers).length;
-            const perc = (count / questions.length) * 100;
-            document.getElementById('progress-bar').style.width = perc + '%';
-            document.getElementById('progress-text').innerText = Math.round(perc) + '%';
+            const perc = Math.round((Object.keys(answers).length / 40) * 100);
+            document.getElementById('progress-text').innerText = `${perc}%`;
+            document.getElementById('progress-bar').style.width = `${perc}%`;
         }
 
-        function changeStep(dir) {
-            currentStep += dir;
-            // Asegurar que sube al encabezado en cada cambio
+        function changeStep(delta) {
+            currentStep += delta;
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            renderQuestions();
+            renderStep();
         }
 
-        function updateUI() {
-            document.getElementById('prevBtn').style.visibility = currentStep === 0 ? 'hidden' : 'visible';
-            const isLast = currentStep === stepsCount - 1;
-            document.getElementById('nextBtn').classList.toggle('hidden', isLast);
-            document.getElementById('final-form').classList.toggle('hidden', !isLast);
-        }
+        async function submitDiagnostic() {
+            const nombre = document.getElementById('input-nombre').value.trim();
+            const email = document.getElementById('input-email').value.trim();
+            const btn = document.getElementById('btn-submit');
 
-        async function submitQuiz() {
-            const name = document.getElementById('userName').value;
-            const email = document.getElementById('userEmail').value;
-            const loader = document.getElementById('loader');
-            const submitBtn = document.getElementById('submitBtn');
+            if(!nombre || !email) return;
+            
+            btn.disabled = true;
+            btn.innerHTML = '<svg class="animate-spin h-6 w-6 mx-auto" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
 
-            if (!name || !email.includes('@')) {
-                document.getElementById('error-msg').classList.remove('hidden');
-                return;
-            }
+            const totalScore = Object.values(answers).reduce((a, b) => a + b, 0);
+            let calificacion = "NO APTO";
+            if (totalScore >= 320) calificacion = "APTO / ALTA CALIFICACIÓN";
+            else if (totalScore >= 200) calificacion = "INTERMEDIO / REQUIERE EVALUACIÓN";
 
-            loader.classList.remove('hidden');
-            submitBtn.disabled = true;
-
-            const payload = {
-                nombre: name,
-                email: email,
-                respuestas: JSON.stringify(answers),
-                fecha: new Date().toLocaleString()
-            };
+            const formData = new URLSearchParams();
+            formData.append("fecha", new Date().toLocaleString());
+            formData.append("nombre", nombre.toUpperCase());
+            formData.append("email", email.toLowerCase());
+            formData.append("detalles", "Diagnóstico Fórmula Momentum - HTML Version - 40 Factores.");
+            formData.append("puntaje", totalScore);
+            formData.append("calificacion", calificacion);
 
             try {
-                if (GOOGLE_SCRIPT_URL) {
-                    await fetch(GOOGLE_SCRIPT_URL, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        cache: 'no-cache',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                }
-                
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                document.getElementById('quiz-container').classList.add('hidden');
+                await fetch(scriptURL, { method: 'POST', body: formData, mode: 'no-cors' });
+                document.getElementById('diagnostic-screen').classList.add('hidden');
                 document.getElementById('success-screen').classList.remove('hidden');
-            } catch (e) {
-                console.error(e);
-                alert("Error de conexión. Reintenta.");
-            } finally {
-                loader.classList.add('hidden');
-                submitBtn.disabled = false;
+                window.scrollTo(0, 0);
+            } catch (err) {
+                console.error(err);
+                btn.disabled = false;
+                btn.innerText = 'REINTENTAR ENVÍO';
             }
         }
     </script>
