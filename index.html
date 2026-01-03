@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 
 const App = () => {
+  // CONFIGURACIÓN: Reemplaza con la URL de tu Web App de Google
   const scriptURL = "https://script.google.com/macros/s/AKfycbw98Taz29fd-3ud9Z1e-dfdN8d9CL4C1y2CtNIf1LU5CaG0pXgPDsZs_uUZcn_G-L9S/exec"; 
 
   const [started, setStarted] = useState(false);
@@ -34,6 +35,7 @@ const App = () => {
     { title: "COMPROMISO TOTAL", text: "HAS LOGRADO COMPLETAR EL RECORRIDO CON SERIEDAD. ANTES DEL PASO FINAL, REVISA SI TU EJECUCIÓN HA SIDO LÓGICA O EMOCIONAL." }
   ];
 
+  // 40 Preguntas ajustadas
   const questions = useMemo(() => [
     { id: 1, q:"¿Qué tanto te incomoda tu situación actual en una escala del 1 al 10?", opts: [{ t:"1-3: Estoy cómodo, solo busco curiosidad", s: 1}, { t: "4-6: Podría mejorar, pero no es vital", s: 4}, { t:"7-8: Necesito un cambio real pronto", s:7 },{ t:"9-10: Es innegociable avanzar hoy mismo", s:10 }]},
     { id: 2, q:"Si el proceso requiere ajustar la estrategia tres veces antes del resultado, ¿qué haces?", opts:[ { t:"Abandono por falta de claridad", s:1 },{ t:"Cuestiono el proceso", s:4 }, { t:"Ajusto con dudas", s:7 },{ t:"Acepto el ajuste como parte del aprendizaje real", s:10 }]},
@@ -51,38 +53,52 @@ const App = () => {
     ]
   }))), []);
 
-  const currentQuestions = questions.slice(currentStep * 5, (currentStep + 1) * 5);
   const progress = (Object.keys(answers).length / 40) * 100;
 
   const handleSubmit = async () => {
     if (!nombre.trim() || !email.trim()) return;
     setSending(true);
+    
+    // Calcular puntaje total sumado
     const totalScore = Object.values(answers).reduce((acc, curr) => acc + curr, 0);
+    
+    // Lógica de calificación (Para Columna F)
+    let calificacion = "NO APTO";
+    if (totalScore >= 320) calificacion = "APTO / ALTA CALIFICACIÓN";
+    else if (totalScore >= 200) calificacion = "INTERMEDIO / REQUIERE EVALUACIÓN";
+
+    // SINCRONIZACIÓN CON GOOGLE APPS SCRIPT:
+    // Estos nombres de parámetros deben ser exactamente los que usas en e.parameter.NOMBRE
     const params = new URLSearchParams();
-    params.append("nombre", nombre);
-    params.append("email", email);
-    params.append("puntaje", totalScore);
+    params.append("fecha", new Date().toLocaleString()); // Columna A
+    params.append("nombre", nombre.toUpperCase());       // Columna B
+    params.append("email", email.toLowerCase());         // Columna C
+    params.append("detalles", "Diagnóstico Fórmula Momentum - 40 Factores evaluados."); // Columna D
+    params.append("puntaje", totalScore);                // Columna E
+    params.append("calificacion", calificacion);         // Columna F
 
     try {
+      // Usamos no-cors porque Google Apps Script no permite CORS directo, pero los datos se envían igual
       await fetch(scriptURL, { method: 'POST', body: params, mode: 'no-cors' });
       setSubmitted(true);
-    } catch (error) { console.error(error); } finally { setSending(false); }
+    } catch (error) { 
+      console.error("Error en envío:", error); 
+    } finally { 
+      setSending(false); 
+    }
   };
-
-  const digitalGold = "#EAB308"; 
-  const digitalGray = "#9CA3AF";
 
   if (submitted) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center p-6 text-white overflow-y-auto">
-        <div className={`max-w-2xl w-full p-10 md:p-16 rounded-[40px] bg-[#0a0a0a] border border-white/5 text-center shadow-2xl`}>
+        <div className="max-w-2xl w-full p-10 md:p-16 rounded-[40px] bg-[#0a0a0a] border border-white/5 text-center shadow-2xl">
           <div className="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-10 shadow-[0_0_50px_rgba(34,197,94,0.3)]">
             <CheckCircle2 className="w-14 h-14 text-black" />
           </div>
           <h1 className="text-4xl font-black mb-6 tracking-tighter italic uppercase">Diagnóstico Procesado</h1>
           <div className="space-y-6 text-lg text-slate-300">
             <p>Has dado un paso decisivo. Tu capacidad de llegar hasta aquí demuestra una determinación superior.</p>
-            <p className="text-sm border-t border-white/10 pt-6">Estamos evaluando la lógica de tus respuestas para emitir tu veredicto de admisión a la Fórmula Momentum.</p>
+            <p className="text-sm border-t border-white/10 pt-6 font-bold uppercase tracking-widest text-[#EAB308]">Veredicto enviado a la planilla central.</p>
           </div>
         </div>
       </div>
@@ -95,52 +111,29 @@ const App = () => {
         <header className="text-center mb-16">
           <h1 className="text-6xl md:text-8xl font-black tracking-tighter uppercase italic flex flex-col leading-none mb-12 drop-shadow-[0_0_20px_rgba(255,255,255,0.1)]">
             <span className="text-white">FÓRMULA</span>
-            <span style={{ color: digitalGold, textShadow: `0 0-25px ${digitalGold}44` }} className=" -mt-2">MOMENTUM</span>
+            <span className="text-[#EAB308] -mt-2">MOMENTUM</span>
           </h1>
 
           {!started && (
             <div className="animate-in space-y-10 max-w-3xl mx-auto text-left">
               <div className="space-y-6 leading-relaxed">
-                
-                <p style={{ color: digitalGray }} className="text-xl">
+                <p className="text-xl text-slate-400">
                   La <span className="text-white uppercase font-black italic">FÓRMULA MOMENTUM</span> nace de una manera específica de entender cómo se construyen los resultados.
                 </p>
-
-                <p style={{ color: digitalGray }} className="text-xl">
-                  Está diseñada exclusivamente para <span style={{ color: digitalGold }} className="uppercase font-black italic drop-shadow-[0_0_10px_rgba(234,179,8,0.3)]">PROFESIONALES</span> y <span style={{ color: digitalGold }} className="uppercase font-black italic drop-shadow-[0_0_10px_rgba(234,179,8,0.3)]">EMPRENDEDORES</span> que comprenden que avanzar no depende de impulsos aislados, sino de sostener decisiones en el tiempo.
+                <p className="text-xl text-slate-400">
+                  Está diseñada para <span className="text-[#EAB308] uppercase font-black italic">PROFESIONALES</span> que comprenden que el éxito depende de sostener decisiones en el tiempo.
                 </p>
-
                 <p className="text-white text-2xl font-black italic tracking-tight uppercase leading-snug">
-                  Personas con HAMBRE POR AVANZAR, RESILIENCIA FRENTE A LOS OBSTÁCULOS y COMPROMISO REAL PARA LLEVAR UN PROCESO HASTA EL FINAL.
+                  MÉRITO, DETERMINACIÓN Y RIGOR ESTRATÉGICO.
                 </p>
-
-                <p style={{ color: digitalGray }} className="text-xl">
-                  Acá no se improvisa ni se persiguen efectos inmediatos. El avance se da cuando cada acción responde a un enfoque claro, una secuencia ordenada y una revisión constante que transforma la experiencia en mejora concreta.
-                </p>
-
-                <p style={{ color: digitalGray }} className="text-xl">
-                  El único riesgo en este tipo de procesos no es equivocarse ni avanzar más lento de lo esperado — es <span className="text-white uppercase font-black italic">INTERRUMPIR EL RECORRIDO</span> antes de comprender cómo se conectan las decisiones con los resultados.
-                </p>
-
-                <p style={{ color: digitalGray }} className="text-xl">
-                  Cuando esa comprensión aparece, los resultados dejan de ser circunstanciales. Se vuelven <span className="text-white uppercase font-black italic">PREVISIBLES</span>, <span className="text-white uppercase font-black italic">SOSTENIBLES</span> y directamente dependientes del criterio de quien ejecuta.
-                </p>
-
                 <div className="p-8 md:p-10 rounded-[40px] border border-white/10 bg-white/[0.02] mt-12 relative overflow-hidden group">
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] to-transparent pointer-events-none" />
                   <p className="text-white text-xs md:text-sm font-bold italic leading-relaxed uppercase tracking-[0.15em] opacity-90 text-justify">
-                    ESTO NO ES UNA PROMESA NI UNA INSCRIPCIÓN AUTOMÁTICA. ES UNA INSTANCIA DE DIAGNÓSTICO REAL, PENSADA PARA OBSERVAR CÓMO TOMÁS DECISIONES, CÓMO EJECUTÁS Y CÓMO SOSTENÉS UN PROCESO CUANDO NO HAY ATAJOS. 
-                    <br/><br/>
-                    NO BUSCA VALIDAR NI DESCARTAR PERSONAS; EXPONE CON CLARIDAD SI ESTÁS DISPUESTO A HACER LO QUE EL PROCESO EXIGE, CON CONSISTENCIA, RESPONSABILIDAD Y SIN RELATOS MÁGICOS.
+                    ESTO NO ES UNA PROMESA NI UNA INSCRIPCIÓN AUTOMÁTICA. ES UNA INSTANCIA DE DIAGNÓSTICO REAL PARA OBSERVAR CÓMO TOMÁS DECISIONES Y CÓMO SOSTENÉS UN PROCESO.
                   </p>
                 </div>
               </div>
-
               <div className="pt-12 text-center">
-                <button 
-                  onClick={() => setStarted(true)}
-                  className="w-full md:w-auto px-16 py-8 bg-white text-black font-black italic text-2xl rounded-3xl hover:bg-[#EAB308] transition-all hover:scale-105 shadow-xl flex items-center justify-center gap-4 mx-auto"
-                >
+                <button onClick={() => setStarted(true)} className="w-full md:w-auto px-16 py-8 bg-white text-black font-black italic text-2xl rounded-3xl hover:bg-[#EAB308] transition-all hover:scale-105 shadow-xl flex items-center justify-center gap-4 mx-auto">
                   COMENZAR DIAGNÓSTICO <Zap className="w-6 h-6 fill-current" />
                 </button>
               </div>
@@ -162,7 +155,7 @@ const App = () => {
 
             <div className="mb-12 px-2">
               <div className="flex justify-between items-center mb-4 text-[10px] font-black tracking-widest uppercase text-slate-600">
-                <span>Análisis de Criterio</span>
+                <span>Progreso del Análisis</span>
                 <span className="text-xl text-[#EAB308]">{Math.round(progress)}%</span>
               </div>
               <div className="h-1 w-full rounded-full bg-white/5 overflow-hidden">
@@ -171,7 +164,7 @@ const App = () => {
             </div>
 
             <div className="space-y-8">
-              {currentQuestions.map((q) => (
+              {questions.slice(currentStep * 5, (currentStep + 1) * 5).map((q) => (
                 <div key={q.id} className="p-8 md:p-10 rounded-[40px] bg-[#0a0a0a] border border-white/5 hover:border-white/10 transition-colors">
                   <div className="flex flex-col md:flex-row gap-8">
                     <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-sm font-black italic text-[#EAB308] shrink-0 border border-white/5">
@@ -202,15 +195,15 @@ const App = () => {
               {currentStep === 7 && (
                 <div className="p-10 md:p-16 rounded-[50px] bg-[#0a0a0a] border border-[#EAB308]/30 text-center space-y-10 animate-in">
                   <div className="max-w-xl mx-auto space-y-4">
-                    <h3 className="text-3xl font-black italic text-white uppercase tracking-tighter">Veredicto de Actitud</h3>
+                    <h3 className="text-3xl font-black italic text-white uppercase tracking-tighter">Veredicto Final</h3>
                     <p className="text-white text-[10px] font-bold uppercase tracking-[0.2em] leading-relaxed">
-                      EL SISTEMA HA RECOPILADO TU PATRÓN DE DECISIÓN. SI HAS SIDO HONESTO, EL RESULTADO SERÁ TU HOJA DE RUTA. SI HAS SIDO EMOCIONAL, TE RECOMENDAMOS VOLVER ATRÁS Y REVISAR TUS RESPUESTAS CON LÓGICA PURA.
+                      EL SISTEMA HA RECOPILADO TU PATRÓN DE DECISIÓN. RELLENA TUS DATOS PARA VINCULAR EL RESULTADO A TU PERFIL PROFESIONAL.
                     </p>
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
                     <input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="NOMBRE COMPLETO" className="bg-white/5 border border-white/10 p-5 rounded-2xl outline-none focus:border-[#EAB308] font-black uppercase text-xs text-white" />
-                    <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="EMAIL ESTRATÉGICO" className="bg-white/5 border border-white/10 p-5 rounded-2xl outline-none focus:border-[#EAB308] font-black uppercase text-xs text-white" />
+                    <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="EMAIL PROFESIONAL" className="bg-white/5 border border-white/10 p-5 rounded-2xl outline-none focus:border-[#EAB308] font-black uppercase text-xs text-white" />
                   </div>
 
                   <button 
@@ -225,7 +218,7 @@ const App = () => {
 
               <div className="flex flex-col md:flex-row items-center justify-between gap-8 pt-10 pb-20">
                 <button onClick={() => setCurrentStep(s => s - 1)} className={`px-8 py-4 rounded-xl font-black uppercase text-[10px] tracking-widest transition-all ${currentStep === 0 ? 'opacity-0 pointer-events-none' : 'text-slate-500 hover:text-white'}`}>
-                  <ChevronLeft className="inline mr-1 w-4 h-4" /> Paso Anterior
+                  <ChevronLeft className="inline mr-1 w-4 h-4" /> Anterior
                 </button>
                 
                 <div className="flex gap-2">
