@@ -3,36 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FÓRMULA MOMENTUM | DIAGNÓSTICO</title>
+    <title>FÓRMULA MOMENTUM</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,900;1,400;1,900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&display=swap');
         
         body { 
             font-family: 'Inter', sans-serif; 
             background-color: #000000; 
             color: white;
             margin: 0;
-            overflow-x: hidden;
         }
 
-        .text-gris { color: #94a3b8; } /* Gris para minúsculas */
-        .text-blanco { color: #ffffff; } /* Blanco para MAYÚSCULAS */
-        .text-amarillo-digital { color: #FACC15; } /* Amarillo digital (Tailwind yellow-400) */
+        .text-gris { color: #888888; }
+        .text-blanco { color: #ffffff; }
+        .text-amarillo-digital { color: #FACC15; } /* Amarillo digital intenso */
 
-        @keyframes fade-up {
-            from { opacity: 0; transform: translateY(20px); }
+        .recuadro-diagnostico {
+            background-color: #111111;
+            border: 1px solid #FACC15;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .animate-in {
-            animation: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        .animate-text {
+            animation: fadeIn 0.8s ease-out forwards;
         }
     </style>
 </head>
@@ -40,212 +46,98 @@
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useMemo, useEffect } = React;
+        const { useMemo } = React;
 
-        const Icon = ({ name, className = "w-6 h-6" }) => {
-            useEffect(() => {
-                if (window.lucide) window.lucide.createIcons();
-            }, [name]);
-            return <i data-lucide={name} className={className}></i>;
+        const TextFormatter = ({ text }) => {
+            // Función para procesar el texto y aplicar estilos palabra por palabra
+            const formattedWords = useMemo(() => {
+                return text.split(/(\s+)/).map((part, index) => {
+                    if (/\s+/.test(part)) return part; // Mantener espacios
+
+                    const cleanWord = part.replace(/[.,:;()]/g, '').toUpperCase();
+                    const isSpecial = cleanWord === "PROFESIONALES" || cleanWord === "EMPRENDEDORES";
+                    
+                    // Lógica de color:
+                    // 1. Si es Profesional/Emprendedor -> Amarillo
+                    // 2. Si la palabra original contiene mayúsculas -> Blanco
+                    // 3. Si la palabra original es todo minúsculas -> Gris
+                    
+                    let className = "text-gris";
+                    if (isSpecial) {
+                        className = "text-amarillo-digital font-black italic";
+                    } else if (/[A-Z]/.test(part)) {
+                        className = "text-blanco font-bold";
+                    }
+
+                    return <span key={index} className={className}>{part}</span>;
+                });
+            }, [text]);
+
+            return <span>{formattedWords}</span>;
         };
 
         const App = () => {
-            const scriptURL = "https://script.google.com/macros/s/AKfycbw98Taz29fd-3ud9Z1e-dfdN8d9CL4C1y2CtNIf1LU5CaG0pXgPDsZs_uUZcn_G-L9S/exec"; 
-
-            const [started, setStarted] = useState(false);
-            const [answers, setAnswers] = useState({});
-            const [nombre, setNombre] = useState('');
-            const [email, setEmail] = useState('');
-            const [sending, setSending] = useState(false);
-            const [submitted, setSubmitted] = useState(false);
-            const [currentStep, setCurrentStep] = useState(0);
-
-            useEffect(() => {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }, [currentStep, started]);
-
-            const stepMessages = [
-                { title: "MÉRITO Y DETERMINACIÓN", text: "LO QUE TE DESMARCA DE QUIENES BUSCAN FÓRMULAS FÁCILES ES TU CAPACIDAD DE ENFRENTAR EL DIAGNÓSTICO CON VERDAD." },
-                { title: "EJECUCIÓN SOBRE DESEO", text: "EL DESEO ES COMÚN, LA DETERMINACIÓN DE SOSTENER EL PROCESO ES EL FILTRO QUE POCOS LOGRAN SUPERAR." },
-                { title: "CRITERIO ESTRATÉGICO", text: "AVANZAR NO ES CORRER, ES SABER POR QUÉ DAS CADA PASO. TU RIGOR AQUÍ DEFINE TU RESULTADO ALLÁ." },
-                { title: "RESILIENCIA OPERATIVA", text: "LOS OBSTÁCULOS NO SON ERRORES, SON DATOS. SIGUE ANALIZANDO CON PRECISIÓN QUIRÚRGICA." },
-                { title: "CONSISTENCIA TÉCNICA", text: "LA MAESTRÍA SE CONSTRUYE EN LA REPETICIÓN DE LO CORRECTO, NO EN LA BÚSQUEDA DE LO NUEVO." },
-                { title: "AUTORIDAD PROFESIONAL", text: "ESTÁS EN LA RECTA FINAL. CADA RESPUESTA DEBE ESTAR ALINEADA CON TU VISIÓN DE LARGO PLAZO." },
-                { title: "HONESTIDAD RADICAL", text: "TU VEREDICTO DEPENDE DE TU TRANSPARENCIA. EL SISTEMA NO PERDONA EL AUTOENGAÑO." },
-                { title: "COMPROMISO TOTAL", text: "HAS LOGRADO COMPLETAR EL RECORRIDO CON SERIEDAD. ANTES DEL PASO FINAL, REVISA SI TU EJECUCIÓN HA SIDO LÓGICA O EMOCIONAL." }
-            ];
-
-            const questions = useMemo(() => [
-                { id: 1, q:"¿Qué tanto te incomoda tu situación actual en una escala del 1 al 10?", opts: [{ t:"1-3: Estoy cómodo, solo busco curiosidad", s: 1}, { t: "4-6: Podría mejorar, pero no es vital", s: 4}, { t:"7-8: Necesito un cambio real pronto", s:7 },{ t:"9-10: Es innegociable avanzar hoy mismo", s:10 }]},
-                { id: 2, q:"Si el proceso requiere ajustar la estrategia tres veces antes del resultado, ¿qué haces?", opts:[ { t:"Abandono por falta de claridad", s:1 },{ t:"Cuestiono el proceso", s:4 }, { t:"Ajusto con dudas", s:7 },{ t:"Acepto el ajuste como parte del aprendizaje real", s:10 }]},
-                { id: 3, q:"¿Qué lugar ocupa este avance en tu lista de prioridades diarias?", opts: [ { t:"Es un pasatiempo", s:2 },{ t:"Lo hago si tengo tiempo libre", s:5 }, { t:"Es mi prioridad secundaria", s:8 },{ t:"Es el eje central de mi ejecución profesional", s: 10}]},
-                { id: 4, q:"¿Ves los obstáculos como errores del sistema o como datos para el ajuste?", opts: [ { t:"Los veo como errores personales", s:2 },{ t:"Me frustran y me detienen", s:4 }, { t:"Los analizo con inseguridad", s:7 },{ t:"Son datos puros para la mejora continua", s:10 }]},
-                { id: 5, q:"¿Cuánto tiempo estás dispuesto a invertir antes de ver el primer gran retorno?", opts: [ { t:"Necesito resultados en 15 días", s:1 },{ t:"Máximo 2 meses", s:4 }, { t:"6 meses con resultados parciales", s:7 },{ t:"El tiempo que sea necesario para dominar el proceso", s: 10}]},
-            ].concat(Array(35).fill(0).map((_, i) => ({
-                id: i + 6,
-                q: `Factor de Criterio ${i + 6}: ¿Cómo priorizas la sostenibilidad frente al beneficio inmediato?`,
-                opts: [
-                    { t: "Elijo lo rápido siempre", s: 2 },
-                    { t: "Busco equilibrio", s: 5 },
-                    { t: "Sostengo el plan aunque no vea lucro hoy", s: 8 },
-                    { t: "La sostenibilidad es mi único indicador de éxito", s: 10 }
-                ]
-            }))), []);
-
-            const progress = (Object.keys(answers).length / 40) * 100;
-
-            const handleSubmit = async () => {
-                if (!nombre.trim() || !email.trim()) return;
-                setSending(true);
-                const totalScore = Object.values(answers).reduce((acc, curr) => acc + curr, 0);
-                const calificacion = totalScore >= 320 ? "APTO" : "EN EVALUACIÓN";
-                const params = new URLSearchParams();
-                params.append("fecha", new Date().toLocaleString());
-                params.append("nombre", nombre.toUpperCase());
-                params.append("email", email.toLowerCase());
-                params.append("puntaje", totalScore);
-                params.append("calificacion", calificacion);
-
-                try {
-                    await fetch(scriptURL, { method: 'POST', body: params, mode: 'no-cors' });
-                    setSubmitted(true);
-                } catch (error) { console.error(error); } finally { setSending(false); }
-            };
-
-            if (submitted) {
-                return (
-                    <div className="min-h-screen bg-black flex items-center justify-center p-6 text-white animate-in">
-                        <div className="max-w-2xl w-full p-10 rounded-[40px] bg-[#0a0a0a] border border-white/5 text-center shadow-2xl">
-                            <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-[0_0_40px_rgba(34,197,94,0.3)]">
-                                <Icon name="check" className="w-12 h-12 text-black" />
-                            </div>
-                            <h1 className="text-3xl font-black mb-4 tracking-tighter italic uppercase">Diagnóstico Procesado</h1>
-                            <p className="text-[#FACC15] font-bold uppercase tracking-widest text-sm py-4 border-t border-white/10 mt-6">Veredicto enviado a la planilla central.</p>
-                        </div>
-                    </div>
-                );
-            }
-
             return (
-                <div className="min-h-screen bg-black text-white p-6 md:p-12 font-sans selection:bg-[#FACC15] selection:text-black">
-                    <div className="max-w-4xl mx-auto">
-                        <header className="text-center mb-12">
-                            <h1 className="text-6xl md:text-7xl font-black tracking-tighter uppercase italic flex flex-col leading-none mb-12">
+                <div className="min-h-screen bg-black text-white p-6 md:p-20 flex flex-col items-center">
+                    <div className="max-w-4xl w-full">
+                        
+                        {/* LOGO SECCIÓN */}
+                        <header className="mb-16 text-center md:text-left">
+                            <h1 className="text-6xl md:text-8xl font-black tracking-tighter uppercase italic leading-none flex flex-col">
                                 <span className="text-white">FÓRMULA</span>
-                                <span className="text-amarillo-digital -mt-2">MOMENTUM</span>
+                                <span className="text-amarillo-digital">MOMENTUM</span>
                             </h1>
-
-                            {!started && (
-                                <div className="animate-in text-left space-y-6 max-w-3xl mx-auto text-lg leading-relaxed">
-                                    <p>
-                                        <span className="text-gris">La</span> <span className="text-blanco font-black italic">FÓRMULA MOMENTUM</span> <span className="text-gris">nace de una manera específica de entender cómo se construyen los resultados.</span>
-                                    </p>
-                                    <p>
-                                        <span className="text-gris">Está diseñada exclusivamente para</span> <span className="text-amarillo-digital font-black italic">PROFESIONALES</span> <span className="text-gris">y</span> <span className="text-amarillo-digital font-black italic">EMPRENDEDORES</span> <span className="text-gris">que comprenden que avanzar no depende de impulsos aislados, sino de sostener decisiones en el tiempo.</span>
-                                    </p>
-                                    <p>
-                                        <span className="text-gris">Personas con</span> <span className="text-blanco font-black italic">HAMBRE POR AVANZAR</span>, <span className="text-blanco font-black italic">RESILIENCIA FRENTE A LOS OBSTÁCULOS</span> <span className="text-gris">y</span> <span className="text-blanco font-black italic">COMPROMISO REAL PARA LLEVAR UN PROCESO HASTA EL FINAL</span>.
-                                    </p>
-                                    <p>
-                                        <span className="text-gris">Acá no se improvisa ni se persiguen efectos inmediatos. El avance se da cuando cada acción responde a un enfoque claro, una secuencia ordenada y una revisión constante que transforma la experiencia en mejora concreta.</span>
-                                    </p>
-                                    <p>
-                                        <span className="text-gris">El único riesgo en este tipo de procesos no es equivocarse ni avanzar más lento de lo esperado — es</span> <span className="text-blanco font-black italic">INTERRUMPIR EL RECORRIDO</span> <span className="text-gris">antes de comprender cómo se conectan las decisiones con los resultados.</span>
-                                    </p>
-                                    <p>
-                                        <span className="text-gris">Cuando esa comprensión aparece, los resultados dejan de ser circunstanciales. Se vuelven</span> <span className="text-blanco font-black italic">PREVISIBLES, SOSTENIBLES</span> <span className="text-gris">y directamente dependientes del criterio de quien ejecuta.</span>
-                                    </p>
-                                    
-                                    {/* Recuadro resaltado solicitado */}
-                                    <div className="p-8 md:p-10 rounded-[40px] border border-[#FACC15]/30 bg-[#121212] mt-10 space-y-4">
-                                        <p className="text-gris">
-                                            <span className="text-blanco font-bold">Esto no es una promesa ni una inscripción automática.</span> Es una instancia de diagnóstico real, pensada para observar cómo tomás decisiones, cómo ejecutás y cómo sostenés un proceso cuando no hay atajos.
-                                        </p>
-                                        <p className="text-gris uppercase font-bold text-sm tracking-wide">
-                                            No busca validar ni descartar personas; expone con claridad si estás dispuesto a hacer lo que el proceso exige, con <span className="text-blanco">consistencia, responsabilidad y sin relatos mágicos.</span>
-                                        </p>
-                                    </div>
-
-                                    <div className="pt-10 text-center">
-                                        <button onClick={() => setStarted(true)} className="w-full md:w-auto px-12 py-6 bg-white text-black font-black italic text-xl rounded-2xl hover:bg-[#FACC15] transition-all hover:scale-105 shadow-xl">
-                                            COMENZAR DIAGNÓSTICO
-                                        </button>
-                                    </div>
-                                </div>
-                            )}
                         </header>
 
-                        {started && (
-                            <div className="animate-in">
-                                <div className="mb-12 p-8 rounded-[30px] bg-white/[0.03] border border-[#FACC15]/20">
-                                    <div className="flex items-start gap-4">
-                                        <Icon name="target" className="w-6 h-6 text-amarillo-digital mt-1" />
-                                        <div>
-                                            <h4 className="text-amarillo-digital font-black italic tracking-widest text-[10px] mb-1">{stepMessages[currentStep].title}</h4>
-                                            <p className="text-white font-bold italic text-lg leading-tight uppercase">{stepMessages[currentStep].text}</p>
-                                        </div>
-                                    </div>
-                                </div>
+                        {/* CUERPO DE TEXTO PRINCIPAL */}
+                        <div className="space-y-8 text-lg md:text-xl leading-relaxed animate-text">
+                            
+                            <p>
+                                <TextFormatter text="La FÓRMULA MOMENTUM nace de una manera específica de entender cómo se construyen los resultados." />
+                            </p>
 
-                                <div className="mb-10 h-1 w-full bg-white/5 rounded-full overflow-hidden">
-                                    <div className="h-full bg-amarillo-digital transition-all duration-700" style={{ width: `${progress}%` }}></div>
-                                </div>
+                            <p>
+                                <TextFormatter text="Está diseñada exclusivamente para PROFESIONALES y EMPRENDEDORES que comprenden que avanzar no depende de impulsos aislados, sino de sostener decisiones en el tiempo." />
+                            </p>
 
+                            <p>
+                                <TextFormatter text="Personas con HAMBRE POR AVANZAR, RESILIENCIA FRENTE A LOS OBSTÁCULOS y COMPROMISO REAL PARA LLEVAR UN PROCESO HASTA EL FINAL." />
+                            </p>
+
+                            <p>
+                                <TextFormatter text="Acá no se improvisa ni se persiguen efectos inmediatos." />
+                            </p>
+
+                            <p>
+                                <TextFormatter text="El avance se da cuando cada acción responde a un enfoque claro, una secuencia ordenada y una revisión constante que transforma la experiencia en mejora concreta." />
+                            </p>
+
+                            <p>
+                                <TextFormatter text="El único riesgo en este tipo de procesos no es equivocarse ni avanzar más lento de lo esperado — es INTERRUMPIR EL RECORRIDO antes de comprender cómo se conectan las decisiones con los resultados." />
+                            </p>
+
+                            <p>
+                                <TextFormatter text="Cuando esa comprensión aparece, los resultados dejan de ser circunstanciales. Se vuelven PREVISIBLES, SOSTENIBLES y directamente dependientes del criterio de quien ejecuta." />
+                            </p>
+
+                            {/* RECUADRO DE DIAGNÓSTICO */}
+                            <div className="recuadro-diagnostico">
                                 <div className="space-y-6">
-                                    {questions.slice(currentStep * 5, (currentStep + 1) * 5).map((q) => (
-                                        <div key={q.id} className="p-8 rounded-[30px] bg-[#080808] border border-white/5">
-                                            <h3 className="text-xl font-bold mb-6 italic">{q.q}</h3>
-                                            <div className="grid gap-2">
-                                                {q.opts.map((o, idx) => (
-                                                    <button 
-                                                        key={idx}
-                                                        onClick={() => setAnswers(p => ({ ...p, [q.id]: o.s }))}
-                                                        className={`text-left p-5 rounded-xl border-2 transition-all ${
-                                                            answers[q.id] === o.s 
-                                                            ? 'bg-amarillo-digital border-amarillo-digital text-black' 
-                                                            : 'bg-black border-white/5 text-slate-500 hover:border-white/10'
-                                                        }`}
-                                                    >
-                                                        <span className="text-sm font-black uppercase italic">{o.t}</span>
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    ))}
-
-                                    {currentStep === 7 && (
-                                        <div className="p-10 rounded-[40px] bg-[#0a0a0a] border border-amarillo-digital/30 text-center space-y-8 mt-10">
-                                            <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Vincula tus datos para el veredicto</p>
-                                            <div className="grid md:grid-cols-2 gap-4">
-                                                <input type="text" value={nombre} onChange={e => setNombre(e.target.value)} placeholder="NOMBRE COMPLETO" className="bg-white/5 border border-white/10 p-4 rounded-xl outline-none focus:border-amarillo-digital font-bold text-xs" />
-                                                <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="EMAIL" className="bg-white/5 border border-white/10 p-4 rounded-xl outline-none focus:border-amarillo-digital font-bold text-xs" />
-                                            </div>
-                                            <button onClick={handleSubmit} disabled={!nombre || !email || sending || Object.keys(answers).length < 40} className="w-full py-6 bg-amarillo-digital text-black font-black text-xl rounded-2xl hover:scale-105 transition-all disabled:opacity-20">
-                                                {sending ? 'ENVIANDO...' : 'FINALIZAR Y ENVIAR'}
-                                            </button>
-                                        </div>
-                                    )}
-
-                                    <div className="flex justify-between items-center py-10">
-                                        <button onClick={() => setCurrentStep(s => s - 1)} className={`text-slate-500 font-black text-xs uppercase ${currentStep === 0 ? 'invisible' : ''}`}>Anterior</button>
-                                        <div className="flex gap-2">
-                                            {[...Array(8)].map((_, i) => (
-                                                <div key={i} className={`h-1 rounded-full transition-all ${currentStep === i ? 'bg-amarillo-digital w-8' : 'bg-white/10 w-2'}`}></div>
-                                            ))}
-                                        </div>
-                                        {currentStep < 7 && (
-                                            <button 
-                                                disabled={Object.keys(answers).filter(id => id > currentStep*5 && id <= (currentStep+1)*5).length < 5}
-                                                onClick={() => setCurrentStep(s => s + 1)} 
-                                                className="bg-white text-black px-6 py-3 rounded-xl font-black text-xs uppercase hover:bg-amarillo-digital transition-all disabled:opacity-20"
-                                            >
-                                                Siguiente
-                                            </button>
-                                        )}
-                                    </div>
+                                    <p>
+                                        <TextFormatter text="Esto no es una promesa ni una inscripción automática. Es una instancia de diagnóstico real, pensada para observar cómo tomás decisiones, cómo ejecutás y cómo sostenés un proceso cuando no hay atajos." />
+                                    </p>
+                                    <p>
+                                        <TextFormatter text="No busca validar ni descartar personas; expone con claridad si estás dispuesto a hacer lo que el proceso exige, con consistencia, responsabilidad y sin relatos mágicos." />
+                                    </p>
                                 </div>
                             </div>
-                        )}
+                        </div>
+
+                        <footer className="mt-20 text-center">
+                            <button className="px-10 py-5 bg-white text-black font-black italic rounded-full hover:bg-yellow-400 transition-colors uppercase tracking-widest text-sm">
+                                Comenzar Evaluación
+                            </button>
+                        </footer>
                     </div>
                 </div>
             );
