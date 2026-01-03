@@ -1,313 +1,279 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import { 
-  Send, 
-  ChevronRight, 
-  ChevronLeft,
-  User,
-  Mail,
-  Loader2,
-  Play,
-  CheckCircle2
-} from 'lucide-react';
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fórmula Momentum | Diagnóstico de Criterio Profesional</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        .neu-card {
+            background: #0a0a0a;
+            box-shadow: 10px 10px 20px #050505, -10px -10px 20px #0f0f0f;
+            border: 1px solid #1a1a1a;
+        }
+        .neu-inner {
+            box-shadow: inset 4px 4px 8px #050505, inset -4px -4px 8px #0f0f0f;
+        }
+        .step-content {
+            display: none;
+        }
+        .step-content.active {
+            display: block;
+        }
+        input::placeholder {
+            color: #4b5563;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8 lg:p-12">
 
-const App = () => {
-  const [started, setStarted] = useState(false);
-  const [answers, setAnswers] = useState({});
-  const [nombre, setNombre] = useState('');
-  const [email, setEmail] = useState('');
-  const [sending, setSending] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [currentStep, setCurrentStep] = useState(0);
-
-  // URL de Google Script
-  const SCRIPT_URL = ""; 
-
-  const questions = useMemo(() => [
-    { id: 1, q: "¿Qué tanto te incomoda tu situación actual en una escala del 1 al 10?", opts: [
-      { t: "1-3: Estoy cómodo, solo busco curiosidad", s: 1 }, { t: "4-6: Podría mejorar, pero no es vital", s: 4 },
-      { t: "7-8: Necesito un cambio real pronto", s: 7 }, { t: "9-10: Es innegociable avanzar hoy mismo", s: 10 }]},
-    { id: 2, q: "Si el proceso requiere ajustar la estrategia tres veces antes del resultado, ¿qué haces?", opts: [
-      { t: "Abandono por falta de claridad", s: 1 }, { t: "Cuestiono el proceso", s: 4 },
-      { t: "Ajusto con dudas", s: 7 }, { t: "Acepto el ajuste como parte del aprendizaje real", s: 10 }]},
-    { id: 3, q: "¿Qué lugar ocupa este avance en tu lista de prioridades diarias?", opts: [
-      { t: "Es un pasatiempo", s: 2 }, { t: "Lo hago si tengo tiempo libre", s: 5 },
-      { t: "Es mi prioridad secundaria", s: 8 }, { t: "Es el eje central de mi ejecución profesional", s: 10 }]},
-    { id: 4, q: "¿Ves los obstáculos como errores del sistema o como datos para el ajuste?", opts: [
-      { t: "Los veo como errores personales", s: 2 }, { t: "Me frustran y me detienen", s: 4 },
-      { t: "Los analizo con inseguridad", s: 7 }, { t: "Son datos puros para la mejora continua", s: 10 }]},
-    { id: 5, q: "¿Cuánto tiempo estás dispuesto a invertir antes de ver el primer gran retorno?", opts: [
-      { t: "Necesito resultados en 15 días", s: 1 }, { t: "Máximo 2 meses", s: 4 },
-      { t: "6 meses con resultados parciales", s: 7 }, { t: "El tiempo que sea necesario para dominar el proceso", s: 10 }]},
-    { id: 6, q: "Si el método exige cambiar un hábito que consideras 'correcto', ¿cuál es tu reacción?", opts: [
-      { t: "Mantengo mi forma de actuar", s: 1 }, { t: "Lo cambio pero con resistencia", s: 4 },
-      { t: "Pido explicaciones constantes", s: 7 }, { t: "Ejecuto el cambio con confianza en el método", s: 10 }]},
-    { id: 7, q: "¿Cómo manejas la incertidumbre de un proceso que aún no comprendes del todo?", opts: [
-      { t: "Me genera ansiedad paralizante", s: 2 }, { t: "Busco atajos inmediatos", s: 4 },
-      { t: "Tolero la duda", s: 8 }, { t: "Confío en que la comprensión vendrá con la acción", s: 10 }]},
-    { id: 8, q: "¿Qué estás dispuesto a sacrificar para que la Fórmula Momentum funcione?", opts: [
-      { t: "Solo mi tiempo de ocio", s: 3 }, { t: "Mis fines de semana", s: 5 },
-      { t: "Mi zona de confort habitual", s: 8 }, { t: "Todo lo que no esté alineado con el resultado final", s: 10 }]},
-    { id: 9, q: "¿Qué tan frecuente es que interrumpas un proceso antes de terminarlo?", opts: [
-      { t: "Muy frecuente, me distraigo", s: 1 }, { t: "A veces, si se vuelve difícil", s: 4 },
-      { t: "Rara vez, suelo terminar", s: 7 }, { t: "Nunca interrumpo hasta que el resultado es previsible", s: 10 }]},
-    { id: 10, q: "¿Buscas una promesa mágica o un sistema de trabajo previsible?", opts: [
-      { t: "Quiero un truco rápido", s: 1 }, { t: "Busco facilidad de uso", s: 4 },
-      { t: "Busco una guía", s: 7 }, { t: "Busco un proceso profesional basado en resultados", s: 10 }]},
-    { id: 11, q: "¿Confías más en tu intuición o en una estrategia validada?", opts: [
-      { t: "100% intuición", s: 2 }, { t: "Mezcla de ambos", s: 5 }, { t: "Intuición informada", s: 8 }, { t: "Estrategia validada", s: 10 }]},
-    { id: 12, q: "Ante la crítica de terceros sobre tu nuevo rumbo profesional, tú:", opts: [
-      { t: "Me retracto", s: 1 }, { t: "Dudo de mi capacidad", s: 4 }, { t: "Ignoro sin analizar", s: 7 }, { t: "Uso la crítica como combustible", s: 10 }]},
-    { id: 13, q: "Si el proceso toma el doble del tiempo planeado, ¿qué haces?", opts: [
-      { t: "Abandono", s: 1 }, { t: "Reduzco calidad", s: 3 }, { t: "Me frustro pero sigo", s: 7 }, { t: "Ajusto y mantengo excelencia", s: 10 }]},
-    { id: 14, q: "¿Reconoces que tu forma actual no es suficiente para escalar?", opts: [
-      { t: "No, trabajo perfecto", s: 1 }, { t: "Quizás falten detalles", s: 4 }, { t: "Soy consciente", s: 8 }, { t: "Sé que debo transformarme", s: 10 }]},
-    { id: 15, q: "¿Cuánto tardas en pasar de una idea a la ejecución real?", opts: [
-      { t: "Semanas", s: 2 }, { t: "Días", s: 5 }, { t: "24 horas", s: 8 }, { t: "Inmediatamente", s: 10 }]},
-    { id: 16, q: "¿Prefieres ocultar tus fallos o analizarlos frente a un experto?", opts: [
-      { t: "Ocultarlos", s: 1 }, { t: "Mostrarlos solo si fallan mucho", s: 4 }, { t: "Ser honesto a medias", s: 7 }, { t: "Total transparencia", s: 10 }]},
-    { id: 17, q: "¿Qué tan obsesivo eres con los detalles que otros ignoran?", opts: [
-      { t: "Poco", s: 2 }, { t: "Solo en lo estético", s: 5 }, { t: "En lo técnico", s: 8 }, { t: "En todo lo que impacta", s: 10 }]},
-    { id: 18, q: "¿Cómo visualizas tu recorrido en los próximos 18 meses?", opts: [
-      { t: "Sin visión clara", s: 2 }, { t: "Esperando suerte", s: 4 }, { t: "Metas vagas", s: 7 }, { t: "Plan de avance continuo", s: 10 }]},
-    { id: 19, q: "Si los resultados no llegan, ¿dónde buscas la causa?", opts: [
-      { t: "Mercado externo", s: 1 }, { t: "Mala suerte", s: 3 }, { t: "La herramienta", s: 6 }, { t: "Mi propia ejecución", s: 10 }]},
-    { id: 20, q: "¿Invertirías tu último capital si el proceso es el correcto?", opts: [
-      { t: "No, miedo", s: 2 }, { t: "Mínima parte", s: 4 }, { t: "Lo dudaría mucho", s: 7 }, { t: "Es obligatorio", s: 10 }]},
-    { id: 21, q: "¿Dices NO a oportunidades rentables que te alejan de Momentum?", opts: [
-      { t: "Acepto todo", s: 1 }, { t: "Me cuesta mucho", s: 4 }, { t: "Cedo a veces", s: 7 }, { t: "NO radical", s: 10 }]},
-    { id: 22, q: "¿Cuál es tu capacidad de trabajo enfocado sin distracciones?", opts: [
-      { t: "30 minutos", s: 2 }, { t: "1-2 horas", s: 5 }, { t: "4 horas", s: 8 }, { t: "Deep Work total", s: 10 }]},
-    { id: 23, q: "Ante un 'No' de un prospecto, tú:", opts: [
-      { t: "Me deprimo", s: 2 }, { t: "Busco culpables", s: 4 }, { t: "Lo olvido", s: 7 }, { t: "Es un paso más al Sí", s: 10 }]},
-    { id: 24, q: "¿Te importa más tu imagen o la transformación real?", opts: [
-      { t: "Imagen social", s: 2 }, { t: "Equilibrio", s: 5 }, { t: "Éxito financiero", s: 7 }, { t: "Transformación real", s: 10 }]},
-    { id: 25, q: "¿Mantienes un ritmo aburrido pero efectivo por meses?", opts: [
-      { t: "Necesito novedad", s: 2 }, { t: "Me cuesta", s: 5 }, { t: "Lo intento", s: 7 }, { t: "La consistencia manda", s: 10 }]},
-    { id: 26, q: "¿Qué valor le das al acompañamiento experto?", opts: [
-      { t: "Gasto innecesario", s: 1 }, { t: "Solo si es barato", s: 4 }, { t: "Es útil", s: 7 }, { t: "Acelerador esencial", s: 10 }]},
-    { id: 27, q: "¿Aceptas que tu conocimiento actual tiene un techo?", opts: [
-      { t: "Lo sé todo", s: 1 }, { t: "Me cuesta aprender", s: 4 }, { t: "Sé que me falta", s: 7 }, { t: "Hambre de aprender", s: 10 }]},
-    { id: 28, q: "¿Prefieres un resultado hoy o una máquina de resultados?", opts: [
-      { t: "Dinero de hoy", s: 3 }, { t: "Lo rápido", s: 5 }, { t: "Un mix", s: 8 }, { t: "Sistema previsible", s: 10 }]},
-    { id: 29, q: "Ante una tarea técnica difícil, ¿qué haces?", opts: [
-      { t: "Lo pospongo", s: 2 }, { t: "Busco gratis", s: 4 }, { t: "A medias", s: 7 }, { t: "Resuelvo con los mejores", s: 10 }]},
-    { id: 30, q: "¿Cómo reaccionas cuando nada sale según el plan?", opts: [
-      { t: "Pánico", s: 2 }, { t: "Queja", s: 4 }, { t: "Me detengo", s: 7 }, { t: "Ajusto y sigo", s: 10 }]},
-    { id: 31, q: "¿Cómo cuidas tu comunicación digital?", opts: [
-      { t: "No importa", s: 2 }, { t: "Rápido", s: 5 }, { t: "Lo básico", s: 8 }, { t: "Alineada con mi autoridad", s: 10 }]},
-    { id: 32, q: "¿Te comparas con otros o contigo mismo ayer?", opts: [
-      { t: "Referentes", s: 2 }, { t: "Amigos", s: 4 }, { t: "Competencia", s: 7 }, { t: "Mi ejecución de ayer", s: 10 }]},
-    { id: 33, q: "¿Cuál es tu hambre por alcanzar el siguiente nivel?", opts: [
-      { t: "Bajo", s: 2 }, { t: "Medio", s: 5 }, { t: "Alto", s: 8 }, { t: "Absoluto", s: 10 }]},
-    { id: 34, q: "¿Qué haces cada día para avanzar?", opts: [
-      { t: "Lo que surge", s: 2 }, { t: "Emails", s: 4 }, { t: "Operativa", s: 7 }, { t: "Tarea de mayor impacto", s: 10 }]},
-    { id: 35, q: "¿Qué tan honesto eres sobre tus debilidades?", opts: [
-      { t: "Me miento", s: 2 }, { t: "Autocrítico duro", s: 5 }, { t: "Objetivo", s: 8 }, { t: "Las afronto", s: 10 }]},
-    { id: 36, q: "Una vez que empiezas algo, ¿qué tan difícil es detenerte?", opts: [
-      { t: "Fácil", s: 2 }, { t: "Depende", s: 5 }, { t: "Suelo seguir", s: 8 }, { t: "Soy imparable", s: 10 }]},
-    { id: 37, q: "¿Buscas críticas constructivas o solo halagos?", opts: [
-      { t: "Halagos", s: 1 }, { t: "Me molestan críticas", s: 4 }, { t: "Las acepto", s: 7 }, { t: "Exijo feedback brutal", s: 10 }]},
-    { id: 38, q: "¿Firmarías hoy 2 años de trabajo duro por éxito seguro?", opts: [
-      { t: "Mucho tiempo", s: 2 }, { t: "Tal vez uno", s: 5 }, { t: "Con dudas", s: 8 }, { t: "Sin dudar", s: 10 }]},
-    { id: 39, q: "¿Qué te mueve más: el miedo o el deseo de ganar?", opts: [
-      { t: "Miedo", s: 3 }, { t: "Necesidad", s: 5 }, { t: "Deseo", s: 8 }, { t: "La visión del legado", s: 10 }]},
-    { id: 40, q: "¿Estás listo para ubicarte con claridad y aceptar tu realidad?", opts: [
-      { t: "Tengo miedo", s: 2 }, { t: "Veremos", s: 5 }, { t: "Estoy preparado", s: 8 }, { t: "Deseo la verdad", s: 10 }]}
-  ], []);
-
-  const progress = (Object.keys(answers).length / 40) * 100;
-  const currentQuestions = questions.slice(currentStep * 5, (currentStep + 1) * 5);
-
-  useEffect(() => {
-    if (started) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }, [currentStep, started]);
-
-  const handleSubmit = async () => {
-    if (!nombre.trim() || !email.trim() || !email.includes('@')) return;
-    setSending(true);
-    const puntajeTotal = Object.values(answers).reduce((a, b) => a + b, 0);
-    const formData = new URLSearchParams();
-    formData.append('nombre', nombre);
-    formData.append('email', email);
-    formData.append('puntaje', puntajeTotal);
-    formData.append('respuestas', JSON.stringify(answers));
-
-    try {
-      if (SCRIPT_URL) {
-        await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: formData });
-      }
-      setSubmitted(true);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setSending(false);
-    }
-  };
-
-  const neuCard = "bg-[#0a0a0a] shadow-[10px_10px_20px_#050505,-10px_-10px_20px_#0f0f0f] border border-[#1a1a1a]";
-  const neuInner = "shadow-[inset_4px_4px_8px_#050505,inset_-4px_-4px_8px_#0f0f0f]";
-
-  if (submitted) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center p-6 text-white font-sans">
-        <div className={`max-w-2xl w-full p-12 rounded-[50px] ${neuCard} text-center relative overflow-hidden`}>
-          <div className="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-10 shadow-[0_0_40px_rgba(34,197,94,0.4)]">
-            <CheckCircle2 className="w-14 h-14 text-black stroke-[2.5]" />
-          </div>
-          <h1 className="text-4xl font-black mb-6 tracking-tighter italic uppercase">Análisis Recibido</h1>
-          <p className="text-slate-300 text-lg">Gracias <strong className="text-white">{nombre}</strong>. Los datos se han guardado correctamente.</p>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="min-h-screen bg-black text-white p-4 md:p-12 font-sans">
-      <div className="max-w-4xl mx-auto">
-        <header id="header-top" className="text-center mb-16 relative">
-          <div className="inline-block p-6 rounded-3xl mb-8 relative">
-             <h1 className="text-5xl md:text-7xl font-black tracking-tighter italic relative z-10 flex flex-col leading-none">
-                <span className="text-white">fórmula</span>
-                <span className="text-yellow-500 -mt-2 uppercase">momentum</span>
-             </h1>
-          </div>
-          
-          {!started && (
-            <div className={`p-8 md:p-12 rounded-[32px] ${neuCard} text-left space-y-8 leading-relaxed`}>
-              <div className="space-y-6">
-                <p className="text-slate-400">
-                  La <span className="text-white font-bold uppercase italic">FÓRMULA MOMENTUM</span> nace de una manera específica de entender cómo se construyen los resultados.
-                </p>
-                <p className="text-slate-400">
-                  Está diseñada exclusivamente para <span className="text-yellow-500 font-black italic">PROFESIONALES</span> y <span className="text-yellow-500 font-black italic">EMPRENDEDORES</span> que comprenden que avanzar no depende de impulsos aislados, sino de sostener decisiones en el tiempo.
-                </p>
-                <p className="text-slate-400">
-                  Personas con <span className="text-white font-bold">HAMBRE POR AVANZAR</span>, <span className="text-white font-bold">RESILIENCIA FRENTE A LOS OBSTÁCULOS</span> y <span className="text-white font-bold">COMPROMISO REAL PARA LLEVAR UN PROCESO HASTA EL FINAL</span>.
-                </p>
-                <p className="text-slate-400">
-                  Acá no se improvisa ni se persiguen efectos inmediatos.
-                </p>
-                <p className="text-slate-400">
-                  El avance se da cuando cada acción responde a un enfoque claro, una secuencia ordenada y una revisión constante que transforma la experiencia en mejora concreta.
-                </p>
-                <p className="text-slate-400">
-                  El único riesgo en este tipo de procesos no es equivocarse ni avanzar más lento de lo esperado — es <span className="text-white font-bold">INTERRUMPIR EL RECORRIDO</span> antes de comprender cómo se conectan las decisiones con los resultados.
-                </p>
-                <p className="text-slate-400">
-                  Cuando esa comprensión aparece, los resultados dejan de ser circunstanciales. Se vuelven <span className="text-white font-bold italic">PREVISIBLES, SOSTENIBLES</span> y directamente dependientes del criterio de quien ejecuta.
-                </p>
-                
-                {/* Recuadro de aclaración corregido */}
-                <div className="p-8 rounded-2xl border border-yellow-500/40 bg-zinc-900/50 space-y-4">
-                  <p className="text-slate-400">
-                    Esto no es una promesa ni una inscripción automática. Es una instancia de diagnóstico real, pensada para observar cómo tomás decisiones, cómo ejecutás y cómo sostenés un proceso cuando no hay atajos.
-                  </p>
-                  <p className="text-slate-400 italic">
-                    No busca validar ni descartar personas; expone con claridad si estás dispuesto a hacer lo que el proceso exige, con consistencia, responsabilidad y sin relatos mágicos.
-                  </p>
-                </div>
-              </div>
-
-              <div className="pt-8 flex justify-center">
-                <button onClick={() => setStarted(true)} className="px-12 py-6 bg-white text-black font-black italic text-xl rounded-2xl hover:bg-yellow-500 transition-all flex items-center gap-3 active:scale-95 shadow-[0_10px_30px_rgba(255,255,255,0.1)]">
-                  COMENZAR DIAGNÓSTICO <Play className="w-5 h-5 fill-current" />
-                </button>
-              </div>
+    <div class="max-w-4xl mx-auto">
+        <!-- Logo Centrado -->
+        <header class="text-center mb-10 md:mb-16">
+            <div class="inline-block p-4 md:p-6 rounded-3xl mb-4 md:mb-8 mx-auto">
+                <h1 class="text-4xl sm:text-5xl md:text-7xl font-black tracking-tighter italic flex flex-col leading-tight uppercase">
+                    <span class="text-white">fórmula</span>
+                    <span class="text-yellow-500 -mt-1 md:-mt-2">momentum</span>
+                </h1>
             </div>
-          )}
-        </header>
-
-        {started && (
-          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="mb-12 px-4">
-                <div className="flex justify-between items-end mb-4 text-xs font-black tracking-[0.3em] text-slate-500 uppercase">
-                    <span>Estado del Análisis</span>
-                    <span className="text-2xl italic text-yellow-500">{Math.round(progress)}%</span>
-                </div>
-                <div className={`h-3 w-full rounded-full ${neuInner} p-1 bg-black`}>
-                    <div className="h-full bg-yellow-500 rounded-full transition-all duration-700" style={{ width: `${progress}%` }}></div>
-                </div>
-            </div>
-
-            <div className="space-y-10">
-              {currentQuestions.map((q) => (
-                <div key={q.id} className={`p-8 md:p-10 rounded-[40px] ${neuCard}`}>
-                  <div className="flex flex-col md:flex-row gap-6">
-                      <div className="md:w-32 flex-shrink-0">
-                          <div className={`w-12 h-12 rounded-2xl ${neuInner} flex items-center justify-center text-xl font-black italic border border-white/5 text-yellow-500`}>
-                              {q.id}
-                          </div>
-                      </div>
-                      <div className="flex-1">
-                          <h3 className="text-xl md:text-2xl font-bold text-white mb-8 tracking-tight leading-tight">{q.q}</h3>
-                          <div className="grid grid-cols-1 gap-4">
-                              {q.opts.map((o, idx) => (
-                                  <button
-                                      key={idx}
-                                      onClick={() => setAnswers(p => ({ ...p, [q.id]: o.s }))}
-                                      className={`text-left p-6 rounded-2xl border transition-all duration-300 w-full ${
-                                          answers[q.id] === o.s 
-                                          ? 'bg-yellow-500 border-yellow-500 text-black shadow-[0_0_20px_rgba(234,179,8,0.3)]' 
-                                          : 'bg-black border-[#222] text-slate-400 hover:border-yellow-500/50 hover:text-white'
-                                      }`}
-                                  >
-                                      <span className="font-bold italic text-lg">{o.t}</span>
-                                  </button>
-                              ))}
-                          </div>
-                      </div>
-                  </div>
-                </div>
-              ))}
-
-              {currentStep === 7 && (
-                <div className={`p-10 md:p-12 rounded-[50px] ${neuCard} text-center space-y-8 animate-in zoom-in-95 duration-500`}>
-                    <h3 className="text-3xl font-black italic text-white uppercase tracking-tighter">Confirmar Identidad</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left max-w-2xl mx-auto">
-                        <div className="space-y-2">
-                            <label className="text-[10px] font-black text-slate-500 uppercase ml-2 flex items-center gap-2"><User className="w-3 h-3 text-yellow-500" /> Nombre Completo</label>
-                            <input type="text" placeholder="Tu nombre..." value={nombre} onChange={(e) => setNombre(e.target.value)} className={`w-full px-6 py-4 rounded-2xl ${neuInner} bg-black outline-none font-bold text-white border border-transparent focus:border-yellow-500/50 transition-all`} />
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-[10px] font-black text-slate-500 uppercase ml-2 flex items-center gap-2"><Mail className="w-3 h-3 text-yellow-500" /> Email de Contacto</label>
-                            <input type="email" placeholder="email@ejemplo.com" value={email} onChange={(e) => setEmail(e.target.value)} className={`w-full px-6 py-4 rounded-2xl ${neuInner} bg-black outline-none font-bold text-white border border-transparent focus:border-yellow-500/50 transition-all`} />
-                        </div>
+            
+            <!-- Bloque de Introducción -->
+            <div id="intro-block" class="p-6 md:p-12 rounded-[24px] md:rounded-[32px] neu-card text-left space-y-6 md:space-y-8 leading-relaxed text-sm md:text-base">
+                <div class="space-y-6">
+                    <p class="text-slate-400">
+                        la <span class="text-white font-bold italic uppercase">FÓRMULA MOMENTUM</span> nace de una manera específica de entender cómo se construyen los resultados.
+                    </p>
+                    <p class="text-slate-400">
+                        está diseñada exclusivamente para <span class="text-yellow-500 font-black italic uppercase">PROFESIONALES</span> y <span class="text-yellow-500 font-black italic uppercase">EMPRENDEDORES</span> que comprenden que avanzar no depende de impulsos aislados, sino de sostener decisiones en el tiempo.
+                    </p>
+                    <p class="text-slate-400">
+                        personas con <span class="text-white font-bold italic uppercase">HAMBRE POR AVANZAR</span>, <span class="text-white font-bold italic uppercase">RESILIENCIA FRENTE A LOS OBSTÁCULOS</span> y <span class="text-white font-bold italic uppercase">COMPROMISO REAL PARA LLEVAR UN PROCESO HASTA EL FINAL</span>.
+                    </p>
+                    <p class="text-slate-400">
+                        acá no se improvisa ni se persiguen efectos inmediatos.
+                    </p>
+                    <p class="text-slate-400">
+                        el avance se da cuando cada acción responde a un enfoque claro, una secuencia ordenada y una revisión constante que transforma la experiencia en mejora concreta.
+                    </p>
+                    <p class="text-slate-400">
+                        el único riesgo en este tipo de procesos no es equivocarse ni avanzar más lento de lo esperado — es <span class="text-white font-bold italic uppercase">INTERRUMPIR EL RECORRIDO</span> antes de comprender cómo se conectan las decisiones con los resultados.
+                    </p>
+                    <p class="text-slate-400">
+                        cuando esa comprensión aparece, los resultados dejan de ser circunstanciales. se vuelven <span class="text-white font-bold italic uppercase">PREVISIBLES, SOSTENIBLES</span> y directamente dependientes del criterio de quien ejecuta.
+                    </p>
+                    
+                    <div class="p-5 md:p-8 rounded-2xl border border-yellow-500/30 bg-zinc-900/40 space-y-4">
+                        <p class="text-slate-400">
+                            esto no es una promesa ni una inscripción automática. es una instancia de diagnóstico real, pensada para observar cómo tomás decisiones, cómo ejecutás y cómo sostenés un proceso cuando no hay atajos.
+                        </p>
+                        <p class="text-slate-400 italic">
+                            no busca validar ni descartar personas; expone con claridad si estás dispuesto a hacer lo que el proceso exige, con consistencia, responsabilidad y sin relatos mágicos.
+                        </p>
                     </div>
-                    <button onClick={handleSubmit} disabled={!nombre.trim() || !email.includes('@') || sending || Object.keys(answers).length < 40} className={`px-12 py-6 rounded-3xl font-black text-xl italic transition-all ${nombre.trim() && email.includes('@') && !sending && Object.keys(answers).length === 40 ? 'bg-yellow-500 text-black hover:scale-105 shadow-[0_0_40px_rgba(234,179,8,0.2)]' : 'bg-slate-900 text-slate-700 opacity-50 cursor-not-allowed'}`}>
-                        <span className="flex items-center gap-4">{sending ? <Loader2 className="animate-spin" /> : 'FINALIZAR Y ENVIAR'} </span>
+                </div>
+
+                <div class="pt-6 flex justify-center">
+                    <button onclick="startQuiz()" class="w-full md:w-auto px-8 md:px-12 py-5 md:py-6 bg-white text-black font-black italic text-lg md:text-xl rounded-2xl hover:bg-yellow-500 transition-all flex items-center justify-center gap-3 active:scale-95 shadow-[0_10px_30px_rgba(255,255,255,0.1)]">
+                        COMENZAR DIAGNÓSTICO
                     </button>
                 </div>
-              )}
-
-              <div className="flex items-center justify-between pt-10 pb-20">
-                  <button disabled={currentStep === 0} onClick={() => setCurrentStep(s => s - 1)} className={`px-8 py-4 rounded-2xl font-black uppercase text-xs tracking-widest transition-all ${currentStep === 0 ? 'opacity-0' : `${neuCard} text-slate-400 hover:text-white`}`}>
-                      <ChevronLeft className="w-4 h-4 inline mr-1" /> Anterior
-                  </button>
-                  {currentStep < 7 && (
-                      <button 
-                        disabled={Object.keys(answers).filter(id => {
-                            const qId = parseInt(id);
-                            return qId > currentStep * 5 && qId <= (currentStep + 1) * 5;
-                        }).length < 5} 
-                        onClick={() => setCurrentStep(s => s + 1)} 
-                        className={`px-8 py-4 rounded-2xl font-black uppercase text-xs tracking-widest transition-all ${Object.keys(answers).filter(id => {
-                            const qId = parseInt(id);
-                            return qId > currentStep * 5 && qId <= (currentStep + 1) * 5;
-                        }).length < 5 ? 'bg-slate-900 text-slate-700 opacity-50' : 'bg-white text-black hover:bg-yellow-500'}`}
-                      >
-                          Siguiente Bloque <ChevronRight className="w-4 h-4 inline ml-1" />
-                      </button>
-                  )}
-              </div>
             </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
+        </header>
 
-export default App;
+        <!-- Contenedor del Quiz -->
+        <main id="quiz-container" class="hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <!-- Barra de Progreso -->
+            <div class="mb-8 md:mb-12 px-2">
+                <div class="flex justify-between items-end mb-4 text-[10px] md:text-xs font-black tracking-[0.2em] md:tracking-[0.3em] text-slate-500 uppercase">
+                    <span>Estado del Análisis</span>
+                    <span id="progress-text" class="text-lg md:text-2xl italic text-yellow-500">0%</span>
+                </div>
+                <div class="h-2 md:h-3 w-full rounded-full neu-inner p-0.5 md:p-1 bg-black">
+                    <div id="progress-bar" class="h-full bg-yellow-500 rounded-full transition-all duration-700" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div id="questions-wrapper" class="space-y-6 md:space-y-10">
+                <!-- Las preguntas se inyectan mediante JS -->
+            </div>
+
+            <!-- Formulario Final -->
+            <div id="final-form" class="hidden mt-10 p-8 md:p-12 rounded-[32px] md:rounded-[50px] neu-card text-center space-y-6 md:space-y-8">
+                <h3 class="text-2xl md:text-3xl font-black italic text-white uppercase tracking-tighter">Confirmar Identidad</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 text-left max-w-2xl mx-auto">
+                    <div class="space-y-2">
+                        <label class="text-[9px] md:text-[10px] font-black text-slate-500 uppercase ml-2">Nombre Completo</label>
+                        <input id="userName" type="text" placeholder="Tu nombre..." class="w-full px-5 py-4 rounded-xl md:rounded-2xl neu-inner bg-black outline-none font-bold text-white border border-transparent focus:border-yellow-500/50 transition-all text-sm md:text-base">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[9px] md:text-[10px] font-black text-slate-500 uppercase ml-2">Email de Contacto</label>
+                        <input id="userEmail" type="email" placeholder="email@ejemplo.com" class="w-full px-5 py-4 rounded-xl md:rounded-2xl neu-inner bg-black outline-none font-bold text-white border border-transparent focus:border-yellow-500/50 transition-all text-sm md:text-base">
+                    </div>
+                </div>
+                <button onclick="submitQuiz()" class="w-full md:w-auto px-10 md:px-12 py-5 md:py-6 rounded-2xl md:rounded-3xl bg-yellow-500 text-black font-black text-lg md:text-xl italic hover:scale-105 transition-all shadow-[0_0_40px_rgba(234,179,8,0.2)]">
+                    FINALIZAR Y ENVIAR
+                </button>
+            </div>
+
+            <!-- Navegación -->
+            <div id="nav-btns" class="flex items-center justify-between pt-6 md:pt-10 pb-16 md:pb-20">
+                <button id="prevBtn" onclick="changeStep(-1)" class="invisible px-5 md:px-8 py-3 md:py-4 rounded-xl md:rounded-2xl font-black uppercase text-[10px] md:text-xs tracking-widest neu-card text-slate-400 hover:text-white transition-all">
+                    Anterior
+                </button>
+                <button id="nextBtn" onclick="changeStep(1)" class="px-5 md:px-8 py-3 md:py-4 rounded-xl md:rounded-2xl font-black uppercase text-[10px] md:text-xs tracking-widest bg-white text-black hover:bg-yellow-500 transition-all">
+                    Continuar
+                </button>
+            </div>
+        </main>
+
+        <!-- Mensaje de Éxito -->
+        <div id="success-screen" class="hidden min-h-[60vh] flex items-center justify-center p-6 text-white">
+            <div class="max-w-2xl w-full p-12 rounded-[50px] neu-card text-center">
+                <div class="w-20 h-20 md:w-24 md:h-24 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-10 shadow-[0_0_40px_rgba(34,197,94,0.4)]">
+                    <svg class="w-10 h-10 md:w-14 md:h-14 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+                <h1 class="text-3xl md:text-4xl font-black mb-6 tracking-tighter italic uppercase">Análisis Recibido</h1>
+                <p id="success-msg" class="text-slate-300 text-base md:text-lg">Los datos se han guardado correctamente.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            { id: 1, q: "¿Qué tanto te incomoda tu situación actual en una escala del 1 al 10?", opts: ["1-3: Estoy cómodo, solo busco curiosidad", "4-6: Podría mejorar, pero no es vital", "7-8: Necesito un cambio real pronto", "9-10: Es innegociable avanzar hoy mismo"] },
+            { id: 2, q: "Si el proceso requiere ajustar la estrategia tres veces antes del resultado, ¿qué haces?", opts: ["Abandono por falta de claridad", "Cuestiono el proceso", "Ajusto con dudas", "Acepto el ajuste como parte del aprendizaje real"] },
+            { id: 3, q: "¿Qué lugar ocupa este avance en tu lista de prioridades diarias?", opts: ["Es un pasatiempo", "Lo hago si tengo tiempo libre", "Es mi prioridad secundaria", "Es el eje central de mi ejecución profesional"] },
+            { id: 4, q: "¿Ves los obstáculos como errores del sistema o como datos para el ajuste?", opts: ["Los veo como errores personales", "Me frustran y me detienen", "Los analizo con inseguridad", "Son datos puros para la mejora continua"] },
+            { id: 5, q: "¿Cuánto tiempo estás dispuesto a invertir antes de ver el primer gran retorno?", opts: ["Necesito resultados en 15 días", "Máximo 2 meses", "6 meses con resultados parciales", "El tiempo que sea necesario para dominar el proceso"] },
+            { id: 6, q: "Si el método exige cambiar un hábito que consideras 'correcto', ¿cuál es tu reacción?", opts: ["Mantengo mi forma de actuar", "Lo cambio pero con resistencia", "Pido explicaciones constantes", "Ejecuto el cambio con confianza en el método"] },
+            { id: 7, q: "¿Cómo manejas la incertidumbre de un proceso que aún no comprendes del todo?", opts: ["Me genera ansiedad paralizante", "Busco atajos inmediatos", "Tolero la duda", "Confío en que la comprensión vendrá con la acción"] },
+            { id: 8, q: "¿Qué estás dispuesto a sacrificar para que la Fórmula Momentum funcione?", opts: ["Solo mi tiempo de ocio", "Mis fines de semana", "Mi zona de confort habitual", "Todo lo que no esté alineado con el resultado final"] },
+            { id: 9, q: "¿Qué tan frecuente es que interrumpas un proceso antes de terminarlo?", opts: ["Muy frecuente, me distraigo", "A veces, si se vuelve difícil", "Rara vez, suelo terminar", "Nunca interrumpo hasta que el resultado es previsible"] },
+            { id: 10, q: "¿Buscas una promesa mágica o un sistema de trabajo previsible?", opts: ["Quiero un truco rápido", "Busco facilidad de uso", "Busco una guía", "Busco un proceso profesional basado en resultados"] }
+            // ... Se pueden añadir las 40 preguntas siguiendo este esquema
+        ];
+
+        let currentStep = 0;
+        let answers = {};
+        const totalSteps = Math.ceil(questions.length / 5);
+
+        function startQuiz() {
+            document.getElementById('intro-block').classList.add('hidden');
+            document.getElementById('quiz-container').classList.remove('hidden');
+            renderQuestions();
+            updateProgress();
+        }
+
+        function renderQuestions() {
+            const wrapper = document.getElementById('questions-wrapper');
+            wrapper.innerHTML = '';
+            const start = currentStep * 5;
+            const end = start + 5;
+            const slice = questions.slice(start, end);
+
+            slice.forEach(q => {
+                const qDiv = document.createElement('div');
+                qDiv.className = 'p-6 md:p-10 rounded-[24px] md:rounded-[40px] neu-card animate-in fade-in duration-500';
+                qDiv.innerHTML = `
+                    <div class="flex flex-col md:flex-row gap-4 md:gap-6">
+                        <div class="flex items-center md:items-start md:w-20 lg:w-32 flex-shrink-0">
+                            <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl neu-inner flex items-center justify-center text-lg md:text-xl font-black italic border border-white/5 text-yellow-500">
+                                ${q.id}
+                            </div>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-lg md:text-2xl font-bold text-white mb-6 md:mb-8 tracking-tight">${q.q}</h3>
+                            <div class="grid grid-cols-1 gap-3 md:gap-4">
+                                ${q.opts.map((opt, i) => `
+                                    <button onclick="selectOption(${q.id}, ${i+1})" 
+                                            class="option-btn-${q.id} text-left p-4 md:p-6 rounded-xl md:rounded-2xl border border-[#222] bg-black text-slate-400 hover:border-yellow-500/50 hover:text-white transition-all text-sm md:text-base font-bold italic ${answers[q.id] === i+1 ? 'selected' : ''}"
+                                            id="opt-${q.id}-${i+1}">
+                                        ${opt}
+                                    </button>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                wrapper.appendChild(qDiv);
+            });
+            updateButtons();
+        }
+
+        function selectOption(qId, val) {
+            answers[qId] = val;
+            const buttons = document.querySelectorAll(`.option-btn-${qId}`);
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-yellow-500', 'border-yellow-500', 'text-black');
+                btn.classList.add('bg-black', 'border-[#222]', 'text-slate-400');
+            });
+            const selected = document.getElementById(`opt-${qId}-${val}`);
+            selected.classList.remove('bg-black', 'border-[#222]', 'text-slate-400');
+            selected.classList.add('bg-yellow-500', 'border-yellow-500', 'text-black');
+            updateProgress();
+            updateButtons();
+        }
+
+        function updateProgress() {
+            const count = Object.keys(answers).length;
+            const perc = (count / questions.length) * 100;
+            document.getElementById('progress-bar').style.width = perc + '%';
+            document.getElementById('progress-text').innerText = Math.round(perc) + '%';
+        }
+
+        function changeStep(dir) {
+            currentStep += dir;
+            if (currentStep < 0) currentStep = 0;
+            if (currentStep >= totalSteps) currentStep = totalSteps - 1;
+            
+            renderQuestions();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (currentStep === totalSteps - 1) {
+                document.getElementById('final-form').classList.remove('hidden');
+            } else {
+                document.getElementById('final-form').classList.add('hidden');
+            }
+        }
+
+        function updateButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            prevBtn.style.visibility = currentStep === 0 ? 'hidden' : 'visible';
+            
+            const start = currentStep * 5;
+            const end = start + 5;
+            const currentQuestions = questions.slice(start, end);
+            const answeredCount = currentQuestions.filter(q => answers[q.id]).length;
+
+            if (answeredCount < currentQuestions.length || currentStep === totalSteps - 1) {
+                nextBtn.classList.add('opacity-0', 'pointer-events-none');
+            } else {
+                nextBtn.classList.remove('opacity-0', 'pointer-events-none');
+            }
+        }
+
+        function submitQuiz() {
+            const name = document.getElementById('userName').value;
+            const email = document.getElementById('userEmail').value;
+
+            if (!name || !email.includes('@')) {
+                return;
+            }
+
+            document.getElementById('quiz-container').classList.add('hidden');
+            document.getElementById('success-screen').classList.remove('hidden');
+            document.getElementById('success-msg').innerHTML = `gracias <strong class="text-white">${name}</strong>. los datos se han guardado correctamente.`;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
