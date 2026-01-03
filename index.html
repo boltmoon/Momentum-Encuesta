@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 
 const App = () => {
-  // --- PEGA TU URL DE GOOGLE APPS SCRIPT AQUÍ ---
+  // --- INSTRUCCIONES: PEGA TU URL DE GOOGLE APPS SCRIPT AQUÍ ---
   const scriptURL = ""; 
 
   const [started, setStarted] = useState(false);
@@ -78,6 +78,12 @@ const App = () => {
     setSending(true);
 
     const totalScore = Object.values(answers).reduce((acc, curr) => acc + curr, 0);
+    
+    // Calcular calificación antes de enviar
+    let calificacion = "NO APTO";
+    if (totalScore >= 320) calificacion = "APTO / ALTA CALIFICACIÓN";
+    else if (totalScore >= 200) calificacion = "INTERMEDIO / REQUIERE EVALUACIÓN";
+
     const now = new Date();
     const fecha = now.toLocaleString('es-AR');
 
@@ -87,12 +93,13 @@ const App = () => {
     formData.append("email", email);
     formData.append("detalles", JSON.stringify(answers));
     formData.append("puntaje", totalScore);
+    formData.append("calificacion", calificacion);
 
     try {
       if (scriptURL) {
+        // Usamos 'no-cors' para evitar problemas de CORS con Google Script
         await fetch(scriptURL, { method: 'POST', body: formData, mode: 'no-cors' });
       } else {
-        // Simulación si no hay URL
         await new Promise(resolve => setTimeout(resolve, 2000));
       }
       setSubmitted(true);
@@ -143,40 +150,11 @@ const App = () => {
           {!started && (
             <div className={`p-10 md:p-14 rounded-[40px] ${neuCard} text-left relative overflow-hidden group animate-in`}>
               <div className="max-w-3xl space-y-8 text-slate-400 leading-relaxed text-lg relative z-10">
-                <p className="text-white">
+                <p className="text-white text-xl">
                   La <span className="text-yellow-500 font-bold italic uppercase">Fórmula Momentum</span> nace de una manera específica de entender cómo se construyen los resultados.
                 </p>
-
-                <p>
-                  Está diseñada exclusivamente para <span className="text-yellow-500 text-xl font-black italic uppercase">PROFESIONALES</span> y <span className="text-yellow-500 text-xl font-black italic uppercase">EMPRENDEDORES</span> que comprenden que avanzar no depende de impulsos aislados, sino de <span className="text-white font-bold">sostener decisiones en el tiempo</span>.
-                </p>
-
-                <p>
-                  Personas con <span className="text-white font-bold italic uppercase tracking-tight">Hambre por avanzar, Resiliencia frente a los obstáculos</span> y <span className="text-white font-bold italic uppercase tracking-tight">Compromiso Real</span> para llevar un proceso hasta el final.
-                </p>
-
-                <p className="text-slate-300">
-                  Acá <span className="text-white font-bold">no se improvisa</span> ni se persiguen efectos inmediatos. El avance se da cuando cada acción responde a un enfoque claro, una secuencia ordenada y una revisión constante que transforma la experiencia en <span className="text-yellow-500 font-bold">mejora concreta</span>.
-                </p>
-
-                <p>
-                  El único riesgo en este tipo de procesos no es equivocarse ni avanzar más lento de lo esperado — es <span className="text-white font-black uppercase border-b-2 border-red-600/30">Interrumpir el recorrido</span> antes de comprender cómo se conectan las decisiones con los resultados.
-                </p>
-
-                <p>
-                  Cuando esa comprensión aparece, los resultados dejan de ser circunstanciales. Se vuelven <span className="text-yellow-500 font-bold italic">PREVISIBLES, SOSTENIBLES</span> y directamente dependientes del criterio de quien ejecuta.
-                </p>
-
-                <div className="space-y-4 pt-6 border-t border-white/10">
-                  <p>
-                    Esto no es una promesa ni una inscripción automática. Es una instancia de <span className="text-white font-bold">diagnóstico real</span>, pensada para observar cómo tomás decisiones, cómo ejecutás y cómo sostenés un proceso cuando no hay atajos.
-                  </p>
-                  <p>
-                    No busca validar ni descartar personas; expone con claridad si estás dispuesto a hacer lo que el proceso exige, con <span className="text-white italic">consistencia, responsabilidad</span> y <span className="text-yellow-500 font-bold italic">sin relatos mágicos</span>.
-                  </p>
-                </div>
-
-                <div className="pt-8">
+                <p>Está diseñada para quienes comprenden que avanzar depende de <span className="text-white font-bold">sostener decisiones en el tiempo</span>.</p>
+                <div className="pt-8 text-center">
                   <button 
                     onClick={() => setStarted(true)}
                     className="w-full md:w-auto px-12 py-6 bg-white text-black font-black italic text-xl rounded-2xl hover:bg-yellow-500 transition-all hover:scale-105 shadow-xl shadow-yellow-500/10"
@@ -195,7 +173,7 @@ const App = () => {
               <div className="flex justify-between items-end mb-4 px-4">
                 <div className="flex items-center gap-3">
                   <Activity className={`w-5 h-5 text-yellow-500 ${progress > 0 ? 'animate-pulse' : ''}`} />
-                  <span className="text-xs font-black tracking-[0.3em] uppercase text-slate-500">Sincronización</span>
+                  <span className="text-xs font-black tracking-[0.3em] uppercase text-slate-500">Progreso</span>
                 </div>
                 <div className="text-right">
                   <span className="text-3xl font-black italic text-yellow-500 leading-none">{Math.round(progress)}%</span>
@@ -319,7 +297,7 @@ const App = () => {
 
         <footer className="text-center py-10 opacity-30">
           <p className="text-slate-700 text-[10px] font-black tracking-[0.6em] uppercase">
-            FÓRMULA MOMENTUM ©2024
+            FÓRMULA MOMENTUM ©2026
           </p>
         </footer>
       </div>
