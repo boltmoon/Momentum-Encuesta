@@ -12,13 +12,14 @@
         .neu-inner { box-shadow: inset 4px 4px 8px #050505, inset -4px -4px 8px #0f0f0f; }
         .loading-spinner { border: 3px solid rgba(255, 255, 255, 0.1); border-radius: 50%; border-top: 3px solid #eab308; width: 24px; height: 24px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        html { scroll-behavior: smooth; }
     </style>
 </head>
 <body class="p-4 md:p-8 lg:p-12">
 
     <div class="max-w-4xl mx-auto">
         <!-- Encabezado con Logo -->
-        <header class="text-center mb-10 md:mb-16">
+        <header id="main-header" class="text-center mb-10 md:mb-16">
             <h1 class="text-4xl sm:text-5xl md:text-7xl font-black tracking-tighter italic flex flex-col leading-tight uppercase mb-8">
                 <span class="text-white">fórmula</span>
                 <span class="text-yellow-500 -mt-1 md:-mt-2">momentum</span>
@@ -37,9 +38,14 @@
 
         <!-- Quiz -->
         <main id="quiz-container" class="hidden">
+            <!-- Mensaje Motivacional dinámico -->
+            <div id="motivation-box" class="mb-8 p-4 border-l-4 border-yellow-500 bg-white/5 italic text-yellow-500 font-bold uppercase tracking-tight text-sm">
+                "El primer paso es el más difícil, pero es el que rompe la inercia."
+            </div>
+
             <div class="mb-8 px-2">
                 <div class="flex justify-between items-end mb-4 text-xs font-black text-slate-500 uppercase">
-                    <span>Progreso</span>
+                    <span>Tu Progreso</span>
                     <span id="progress-text" class="text-2xl italic text-yellow-500">0%</span>
                 </div>
                 <div class="h-3 w-full rounded-full neu-inner bg-black">
@@ -51,7 +57,8 @@
 
             <!-- Formulario y Botón de Envío -->
             <div id="final-form" class="hidden mt-10 p-8 rounded-[32px] neu-card text-center space-y-6">
-                <h3 class="text-2xl font-black italic text-white uppercase">Validación de Perfil</h3>
+                <h3 class="text-2xl font-black italic text-white uppercase">Validación de Perfil Final</h3>
+                <p class="text-slate-400 text-sm">Estás a un paso de completar tu diagnóstico profesional.</p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-left max-w-2xl mx-auto">
                     <input id="userName" type="text" placeholder="NOMBRE COMPLETO" class="w-full px-5 py-4 rounded-xl neu-inner bg-black outline-none font-bold text-white border border-transparent focus:border-yellow-500/50">
                     <input id="userEmail" type="email" placeholder="EMAIL" class="w-full px-5 py-4 rounded-xl neu-inner bg-black outline-none font-bold text-white border border-transparent focus:border-yellow-500/50">
@@ -60,14 +67,18 @@
                 <div id="error-msg" class="text-red-500 font-bold hidden uppercase text-xs">Por favor completa todos los campos correctamente</div>
 
                 <button id="submitBtn" onclick="submitQuiz()" class="w-full md:w-auto px-12 py-6 rounded-3xl bg-yellow-500 text-black font-black text-xl italic hover:scale-105 transition-all flex items-center justify-center gap-4 mx-auto">
-                    <span>ENVIAR RESULTADOS</span>
+                    <span>ENVIAR DIAGNÓSTICO FINAL</span>
                     <div id="loader" class="loading-spinner hidden"></div>
                 </button>
             </div>
 
-            <div id="nav-btns" class="flex items-center justify-between pt-10 pb-20">
-                <button id="prevBtn" onclick="changeStep(-1)" class="invisible px-8 py-4 rounded-2xl font-black uppercase text-xs neu-card text-slate-400">Anterior</button>
-                <button id="nextBtn" onclick="changeStep(1)" class="px-8 py-4 rounded-2xl font-black uppercase text-xs bg-white text-black">Continuar</button>
+            <div id="nav-btns" class="flex items-center justify-between pt-10 pb-20 gap-4">
+                <button id="prevBtn" onclick="changeStep(-1)" class="invisible flex-1 md:flex-none px-8 py-4 rounded-2xl font-black uppercase text-xs neu-card text-slate-400 hover:text-white transition-colors">
+                    ← Volver atrás
+                </button>
+                <button id="nextBtn" onclick="changeStep(1)" class="flex-1 md:flex-none px-12 py-4 rounded-2xl font-black uppercase text-xs bg-white text-black hover:bg-yellow-500 transition-colors">
+                    Continuar →
+                </button>
             </div>
         </main>
 
@@ -76,24 +87,41 @@
             <div class="p-12 rounded-[50px] neu-card text-center max-w-lg">
                 <div class="text-green-500 text-6xl mb-6">✓</div>
                 <h1 class="text-3xl font-black uppercase italic mb-4">Análisis Completado</h1>
-                <p class="text-slate-400">Tus datos han sido sincronizados con la planilla profesional.</p>
+                <p class="text-slate-400">Tus datos han sido sincronizados con la planilla profesional. Nos pondremos en contacto pronto.</p>
             </div>
         </div>
     </div>
 
     <script>
-        // PEGA AQUÍ TU URL DE GOOGLE APPS SCRIPT
+        // URL DE GOOGLE APPS SCRIPT
         const GOOGLE_SCRIPT_URL = ""; 
+
+        const motivationPhrases = [
+            "El primer paso es el más difícil, pero es el que rompe la inercia.",
+            "Mantén el enfoque. La claridad mental es la base de la ejecución.",
+            "Estás profundizando en tu perfil. La honestidad aquí es clave.",
+            "Casi llegamos. Un profesional sabe que el diablo está en los detalles.",
+            "Última fase. Tu Momentum se construye con cada decisión correcta."
+        ];
 
         const questions = [
             { id: 1, q: "¿Qué tan comprometido estás con tu avance?", opts: ["Bajo", "Medio", "Alto", "Total"] },
             { id: 2, q: "¿Cómo manejas la presión profesional?", opts: ["Me paralizo", "Dudo mucho", "Actúo con cautela", "Ajusto y ejecuto"] },
-            // Agrega aquí todas tus preguntas (hasta las 40)
+            { id: 3, q: "¿Prefieres resultados inmediatos o sostenibilidad?", opts: ["Inmediatos", "Sostenibilidad", "Equilibrio", "Largo Plazo"] },
+            { id: 4, q: "¿Qué tanto delegas en tu proceso actual?", opts: ["Nada", "Poco", "Casi todo", "Estratégicamente"] },
+            { id: 5, q: "¿Cómo es tu disciplina diaria?", opts: ["Inconstante", "Regular", "Alta", "Inquebrantable"] },
+            { id: 6, q: "¿Analizas tus fallos anteriores?", opts: ["Nunca", "Rara vez", "Frecuentemente", "Siempre"] },
+            { id: 7, q: "¿Cuál es tu meta de facturación?", opts: ["Sobrevivir", "Crecimiento", "Escalar", "Dominar el mercado"] },
+            { id: 8, q: "¿Inviertes en formación?", opts: ["No", "Poco", "Regularmente", "Constantemente"] },
+            { id: 9, q: "¿Cómo te ves en 12 meses?", opts: ["Igual", "Crecido", "Liderando", "En la cima"] },
+            { id: 10, q: "¿Estás listo para el All-In?", opts: ["Tengo dudas", "Tal vez", "Sí", "Lo estoy haciendo ahora"] }
+            // Ampliar hasta las 40 según sea necesario
         ];
 
         let currentStep = 0;
         let answers = {};
-        const stepsCount = Math.ceil(questions.length / 5);
+        const questionsPerStep = 5;
+        const stepsCount = Math.ceil(questions.length / questionsPerStep);
 
         function startQuiz() {
             document.getElementById('intro-block').classList.add('hidden');
@@ -103,8 +131,14 @@
 
         function renderQuestions() {
             const wrapper = document.getElementById('questions-wrapper');
+            const motivationBox = document.getElementById('motivation-box');
             wrapper.innerHTML = '';
-            const slice = questions.slice(currentStep * 5, (currentStep + 1) * 5);
+            
+            // Actualizar motivación según el paso
+            const phraseIndex = Math.min(currentStep, motivationPhrases.length - 1);
+            motivationBox.innerText = `"${motivationPhrases[phraseIndex]}"`;
+
+            const slice = questions.slice(currentStep * questionsPerStep, (currentStep + 1) * questionsPerStep);
 
             slice.forEach(q => {
                 const qDiv = document.createElement('div');
@@ -141,8 +175,9 @@
 
         function changeStep(dir) {
             currentStep += dir;
+            // Asegurar que sube al encabezado en cada cambio
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             renderQuestions();
-            window.scrollTo(0,0);
         }
 
         function updateUI() {
@@ -174,22 +209,22 @@
             };
 
             try {
-                // Envío a Google Sheets mediante App Script
                 if (GOOGLE_SCRIPT_URL) {
                     await fetch(GOOGLE_SCRIPT_URL, {
                         method: 'POST',
-                        mode: 'no-cors', // Importante para Google Script
+                        mode: 'no-cors',
                         cache: 'no-cache',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(payload)
                     });
                 }
                 
+                window.scrollTo({ top: 0, behavior: 'smooth' });
                 document.getElementById('quiz-container').classList.add('hidden');
                 document.getElementById('success-screen').classList.remove('hidden');
             } catch (e) {
                 console.error(e);
-                alert("Error al sincronizar. Reintenta.");
+                alert("Error de conexión. Reintenta.");
             } finally {
                 loader.classList.add('hidden');
                 submitBtn.disabled = false;
