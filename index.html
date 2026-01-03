@@ -4,7 +4,7 @@ import {
   Send, 
   Compass, 
   Activity, 
-  ChevronRight,
+  ChevronRight, 
   ChevronLeft,
   CircleDot,
   User,
@@ -12,6 +12,9 @@ import {
 } from 'lucide-react';
 
 const App = () => {
+  // --- PEGA TU URL DE GOOGLE APPS SCRIPT AQUÍ ---
+  const scriptURL = ""; 
+
   const [started, setStarted] = useState(false);
   const [answers, setAnswers] = useState({});
   const [nombre, setNombre] = useState('');
@@ -73,9 +76,31 @@ const App = () => {
   const handleSubmit = async () => {
     if (!nombre.trim() || !email.trim()) return;
     setSending(true);
-    await new Promise(resolve => setTimeout(resolve, 2500));
-    setSubmitted(true);
-    setSending(false);
+
+    const totalScore = Object.values(answers).reduce((acc, curr) => acc + curr, 0);
+    const now = new Date();
+    const fecha = now.toLocaleString('es-AR');
+
+    const formData = new FormData();
+    formData.append("fecha", fecha);
+    formData.append("nombre", nombre);
+    formData.append("email", email);
+    formData.append("detalles", JSON.stringify(answers));
+    formData.append("puntaje", totalScore);
+
+    try {
+      if (scriptURL) {
+        await fetch(scriptURL, { method: 'POST', body: formData, mode: 'no-cors' });
+      } else {
+        // Simulación si no hay URL
+        await new Promise(resolve => setTimeout(resolve, 2000));
+      }
+      setSubmitted(true);
+    } catch (error) {
+      console.error("Error al enviar datos:", error);
+    } finally {
+      setSending(false);
+    }
   };
 
   const neuCard = "bg-[#0a0a0a] shadow-[10px_10px_20px_#050505,-10px_-10px_20px_#0f0f0f] border border-[#1a1a1a]";
@@ -89,7 +114,11 @@ const App = () => {
             <ShieldCheck className="w-12 h-12 text-black" />
           </div>
           <h1 className="text-4xl font-black mb-6 tracking-tighter italic uppercase">Análisis en Proceso</h1>
-          <p className="text-slate-400 mb-8 leading-relaxed text-lg">
+          <div className="bg-white/5 p-6 rounded-2xl border border-white/10 italic mb-8">
+            <p className="text-yellow-500 font-bold mb-2 uppercase tracking-widest">El avance real:</p>
+            <p className="text-slate-300">"La diferencia entre quienes logran resultados y quienes esperan 'magia' es la <span className="text-white underline">estructura comprobable</span>. Estás un paso más cerca de dominar tu propio Momentum."</p>
+          </div>
+          <p className="text-slate-400 leading-relaxed text-lg">
             Gracias, <strong className="text-white">{nombre}</strong>. <br/>
             Tus datos han sido enviados al experto. Recibirás tu evaluación en el email proporcionado.
           </p>
@@ -102,7 +131,6 @@ const App = () => {
     <div className="min-h-screen bg-black text-white p-4 md:p-12 font-sans selection:bg-yellow-500 selection:text-black">
       <div className="max-w-4xl mx-auto">
         
-        {/* LOGO REDISEÑADO: TODO MAYÚSCULAS Y SIN PUNTO */}
         <header className="text-center mb-16 relative">
           <div className="inline-block p-6 rounded-3xl mb-12 relative">
             <div className="absolute inset-0 bg-yellow-500/10 blur-3xl rounded-full"></div>
@@ -119,7 +147,6 @@ const App = () => {
                   La <span className="text-yellow-500 font-bold italic uppercase">Fórmula Momentum</span> nace de una manera específica de entender cómo se construyen los resultados.
                 </p>
 
-                {/* DESCRIPCIÓN CON PALABRAS RESALTADAS SEGÚN SOLICITUD */}
                 <p>
                   Está diseñada exclusivamente para <span className="text-yellow-500 text-xl font-black italic uppercase">PROFESIONALES</span> y <span className="text-yellow-500 text-xl font-black italic uppercase">EMPRENDEDORES</span> que comprenden que avanzar no depende de impulsos aislados, sino de <span className="text-white font-bold">sostener decisiones en el tiempo</span>.
                 </p>
@@ -218,33 +245,39 @@ const App = () => {
 
               {currentStep === 7 && (
                 <div className={`p-10 md:p-16 rounded-[50px] ${neuCard} text-center space-y-10 animate-in`}>
-                  <h3 className="text-3xl font-black italic text-white uppercase">Finalizar</h3>
+                  <h3 className="text-3xl font-black italic text-white uppercase">Finalizar Diagnóstico</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left max-w-3xl mx-auto">
-                    <input 
-                      type="text" 
-                      value={nombre} 
-                      onChange={(e) => setNombre(e.target.value)}
-                      placeholder="Nombre Completo"
-                      className={`w-full px-8 py-5 rounded-3xl ${neuInner} bg-black outline-none font-bold text-white border border-transparent focus:border-yellow-500/50 transition-all`}
-                    />
-                    <input 
-                      type="email" 
-                      value={email} 
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="Email de contacto"
-                      className={`w-full px-8 py-5 rounded-3xl ${neuInner} bg-black outline-none font-bold text-white border border-transparent focus:border-yellow-500/50 transition-all`}
-                    />
+                    <div className="space-y-2">
+                        <label className="text-[10px] uppercase font-black tracking-widest text-slate-500 px-4">Nombre Completo</label>
+                        <input 
+                        type="text" 
+                        value={nombre} 
+                        onChange={(e) => setNombre(e.target.value)}
+                        placeholder="Ej: Juan Pérez"
+                        className={`w-full px-8 py-5 rounded-3xl ${neuInner} bg-black outline-none font-bold text-white border border-transparent focus:border-yellow-500/50 transition-all`}
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-[10px] uppercase font-black tracking-widest text-slate-500 px-4">Email de contacto</label>
+                        <input 
+                        type="email" 
+                        value={email} 
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="tu@email.com"
+                        className={`w-full px-8 py-5 rounded-3xl ${neuInner} bg-black outline-none font-bold text-white border border-transparent focus:border-yellow-500/50 transition-all`}
+                        />
+                    </div>
                   </div>
                   <button 
                     onClick={handleSubmit}
                     disabled={!nombre.trim() || !email.includes('@') || sending || Object.keys(answers).length < 40}
                     className={`px-16 py-8 rounded-[35px] font-black text-2xl italic transition-all ${
                       nombre.trim() && email.includes('@') && !sending && Object.keys(answers).length === 40
-                      ? 'bg-yellow-500 text-black hover:scale-105'
+                      ? 'bg-yellow-500 text-black hover:scale-105 shadow-[0_0_30px_rgba(234,179,8,0.3)]'
                       : 'bg-slate-900 text-slate-700 opacity-50 cursor-not-allowed'
                     }`}
                   >
-                    {sending ? 'ENVIANDO...' : 'ENVIAR EVALUACIÓN'}
+                    {sending ? 'SINCRONIZANDO...' : 'ENVIAR EVALUACIÓN'}
                   </button>
                 </div>
               )}
