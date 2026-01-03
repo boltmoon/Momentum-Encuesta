@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FÓRMULA MOMENTUM | DIAGNÓSTICO</title>
     
-    <!-- Librerías Externas -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -17,11 +16,15 @@
         
         body { 
             font-family: 'Inter', sans-serif; 
-            background-color: black; 
+            background-color: #000000; 
             color: white;
             margin: 0;
             overflow-x: hidden;
         }
+
+        .text-gris { color: #94a3b8; } /* Gris para minúsculas */
+        .text-blanco { color: #ffffff; } /* Blanco para MAYÚSCULAS */
+        .text-amarillo-digital { color: #FACC15; } /* Amarillo digital (Tailwind yellow-400) */
 
         @keyframes fade-up {
             from { opacity: 0; transform: translateY(20px); }
@@ -31,19 +34,14 @@
         .animate-in {
             animation: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
-
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: #000; }
-        ::-webkit-scrollbar-thumb { background: #333; }
     </style>
 </head>
-<body class="selection:bg-[#EAB308] selection:text-black">
+<body>
     <div id="root"></div>
 
     <script type="text/babel">
         const { useState, useMemo, useEffect } = React;
 
-        // Componente de icono para Lucide
         const Icon = ({ name, className = "w-6 h-6" }) => {
             useEffect(() => {
                 if (window.lucide) window.lucide.createIcons();
@@ -99,78 +97,78 @@
             const handleSubmit = async () => {
                 if (!nombre.trim() || !email.trim()) return;
                 setSending(true);
-                
                 const totalScore = Object.values(answers).reduce((acc, curr) => acc + curr, 0);
-                
-                let calificacion = "NO APTO";
-                if (totalScore >= 320) calificacion = "APTO / ALTA CALIFICACIÓN";
-                else if (totalScore >= 200) calificacion = "INTERMEDIO / REQUIERE EVALUACIÓN";
-
+                const calificacion = totalScore >= 320 ? "APTO" : "EN EVALUACIÓN";
                 const params = new URLSearchParams();
                 params.append("fecha", new Date().toLocaleString());
                 params.append("nombre", nombre.toUpperCase());
                 params.append("email", email.toLowerCase());
-                params.append("detalles", "Diagnóstico Fórmula Momentum - 40 Factores evaluados.");
                 params.append("puntaje", totalScore);
                 params.append("calificacion", calificacion);
 
                 try {
                     await fetch(scriptURL, { method: 'POST', body: params, mode: 'no-cors' });
                     setSubmitted(true);
-                } catch (error) { 
-                    console.error("Error en envío:", error); 
-                } finally { 
-                    setSending(false); 
-                }
+                } catch (error) { console.error(error); } finally { setSending(false); }
             };
 
             if (submitted) {
                 return (
-                    <div className="min-h-screen bg-black flex items-center justify-center p-6 text-white overflow-y-auto animate-in">
-                        <div className="max-w-2xl w-full p-10 md:p-16 rounded-[40px] bg-[#0a0a0a] border border-white/5 text-center shadow-2xl">
-                            <div className="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-10 shadow-[0_0_50px_rgba(34,197,94,0.3)]">
-                                <Icon name="check-circle-2" className="w-14 h-14 text-black" />
+                    <div className="min-h-screen bg-black flex items-center justify-center p-6 text-white animate-in">
+                        <div className="max-w-2xl w-full p-10 rounded-[40px] bg-[#0a0a0a] border border-white/5 text-center shadow-2xl">
+                            <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-[0_0_40px_rgba(34,197,94,0.3)]">
+                                <Icon name="check" className="w-12 h-12 text-black" />
                             </div>
-                            <h1 className="text-4xl font-black mb-6 tracking-tighter italic uppercase">Diagnóstico Procesado</h1>
-                            <div className="space-y-6 text-lg text-slate-300">
-                                <p>Has dado un paso decisivo. Tu capacidad de llegar hasta aquí demuestra una determinación superior.</p>
-                                <p className="text-sm border-t border-white/10 pt-6 font-bold uppercase tracking-widest text-[#EAB308]">Veredicto enviado a la planilla central.</p>
-                            </div>
+                            <h1 className="text-3xl font-black mb-4 tracking-tighter italic uppercase">Diagnóstico Procesado</h1>
+                            <p className="text-[#FACC15] font-bold uppercase tracking-widest text-sm py-4 border-t border-white/10 mt-6">Veredicto enviado a la planilla central.</p>
                         </div>
                     </div>
                 );
             }
 
             return (
-                <div className="min-h-screen bg-black text-white p-4 md:p-12 font-sans selection:bg-[#EAB308] selection:text-black">
+                <div className="min-h-screen bg-black text-white p-6 md:p-12 font-sans selection:bg-[#FACC15] selection:text-black">
                     <div className="max-w-4xl mx-auto">
-                        <header className="text-center mb-16">
-                            <h1 className="text-6xl md:text-8xl font-black tracking-tighter uppercase italic flex flex-col leading-none mb-12 drop-shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+                        <header className="text-center mb-12">
+                            <h1 className="text-6xl md:text-7xl font-black tracking-tighter uppercase italic flex flex-col leading-none mb-12">
                                 <span className="text-white">FÓRMULA</span>
-                                <span className="text-[#EAB308] -mt-2">MOMENTUM</span>
+                                <span className="text-amarillo-digital -mt-2">MOMENTUM</span>
                             </h1>
 
                             {!started && (
-                                <div className="animate-in space-y-10 max-w-3xl mx-auto text-left">
-                                    <div className="space-y-6 leading-relaxed">
-                                        <p className="text-xl text-slate-400">
-                                            La <span className="text-white uppercase font-black italic">FÓRMULA MOMENTUM</span> nace de una manera específica de entender cómo se construyen los resultados.
+                                <div className="animate-in text-left space-y-6 max-w-3xl mx-auto text-lg leading-relaxed">
+                                    <p>
+                                        <span className="text-gris">La</span> <span className="text-blanco font-black italic">FÓRMULA MOMENTUM</span> <span className="text-gris">nace de una manera específica de entender cómo se construyen los resultados.</span>
+                                    </p>
+                                    <p>
+                                        <span className="text-gris">Está diseñada exclusivamente para</span> <span className="text-amarillo-digital font-black italic">PROFESIONALES</span> <span className="text-gris">y</span> <span className="text-amarillo-digital font-black italic">EMPRENDEDORES</span> <span className="text-gris">que comprenden que avanzar no depende de impulsos aislados, sino de sostener decisiones en el tiempo.</span>
+                                    </p>
+                                    <p>
+                                        <span className="text-gris">Personas con</span> <span className="text-blanco font-black italic">HAMBRE POR AVANZAR</span>, <span className="text-blanco font-black italic">RESILIENCIA FRENTE A LOS OBSTÁCULOS</span> <span className="text-gris">y</span> <span className="text-blanco font-black italic">COMPROMISO REAL PARA LLEVAR UN PROCESO HASTA EL FINAL</span>.
+                                    </p>
+                                    <p>
+                                        <span className="text-gris">Acá no se improvisa ni se persiguen efectos inmediatos. El avance se da cuando cada acción responde a un enfoque claro, una secuencia ordenada y una revisión constante que transforma la experiencia en mejora concreta.</span>
+                                    </p>
+                                    <p>
+                                        <span className="text-gris">El único riesgo en este tipo de procesos no es equivocarse ni avanzar más lento de lo esperado — es</span> <span className="text-blanco font-black italic">INTERRUMPIR EL RECORRIDO</span> <span className="text-gris">antes de comprender cómo se conectan las decisiones con los resultados.</span>
+                                    </p>
+                                    <p>
+                                        <span className="text-gris">Cuando esa comprensión aparece, los resultados dejan de ser circunstanciales. Se vuelven</span> <span className="text-blanco font-black italic">PREVISIBLES, SOSTENIBLES</span> <span className="text-gris">y directamente dependientes del criterio de quien ejecuta.</span>
+                                    </p>
+                                    
+                                    {/* Recuadro resaltado solicitado */}
+                                    <div className="p-8 md:p-10 rounded-[40px] border border-[#FACC15]/30 bg-[#121212] mt-10 space-y-4">
+                                        <p className="text-gris">
+                                            <span className="text-blanco font-bold">Esto no es una promesa ni una inscripción automática.</span> Es una instancia de diagnóstico real, pensada para observar cómo tomás decisiones, cómo ejecutás y cómo sostenés un proceso cuando no hay atajos.
                                         </p>
-                                        <p className="text-xl text-slate-400">
-                                            Está diseñada para <span className="text-[#EAB308] uppercase font-black italic">PROFESIONALES</span> que comprenden que el éxito depende de sostener decisiones en el tiempo.
+                                        <p className="text-gris uppercase font-bold text-sm tracking-wide">
+                                            No busca validar ni descartar personas; expone con claridad si estás dispuesto a hacer lo que el proceso exige, con <span className="text-blanco">consistencia, responsabilidad y sin relatos mágicos.</span>
                                         </p>
-                                        <p className="text-white text-2xl font-black italic tracking-tight uppercase leading-snug">
-                                            MÉRITO, DETERMINACIÓN Y RIGOR ESTRATÉGICO.
-                                        </p>
-                                        <div className="p-8 md:p-10 rounded-[40px] border border-white/10 bg-white/[0.02] mt-12 relative overflow-hidden group">
-                                            <p className="text-white text-xs md:text-sm font-bold italic leading-relaxed uppercase tracking-[0.15em] opacity-90 text-justify">
-                                                ESTO NO ES UNA PROMESA NI UNA INSCRIPCIÓN AUTOMÁTICA. ES UNA INSTANCIA DE DIAGNÓSTICO REAL PARA OBSERVAR CÓMO TOMÁS DECISIONES Y CÓMO SOSTENÉS UN PROCESO.
-                                            </p>
-                                        </div>
                                     </div>
-                                    <div className="pt-12 text-center">
-                                        <button onClick={() => setStarted(true)} className="w-full md:w-auto px-16 py-8 bg-white text-black font-black italic text-2xl rounded-3xl hover:bg-[#EAB308] transition-all hover:scale-105 shadow-xl flex items-center justify-center gap-4 mx-auto">
-                                            COMENZAR DIAGNÓSTICO <Icon name="zap" className="w-6 h-6" />
+
+                                    <div className="pt-10 text-center">
+                                        <button onClick={() => setStarted(true)} className="w-full md:w-auto px-12 py-6 bg-white text-black font-black italic text-xl rounded-2xl hover:bg-[#FACC15] transition-all hover:scale-105 shadow-xl">
+                                            COMENZAR DIAGNÓSTICO
                                         </button>
                                     </div>
                                 </div>
@@ -179,100 +177,69 @@
 
                         {started && (
                             <div className="animate-in">
-                                <div className="mb-12 p-8 rounded-[30px] bg-[#EAB308]/5 border border-[#EAB308]/20 shadow-[0_0_30px_rgba(234,179,8,0.05)]">
+                                <div className="mb-12 p-8 rounded-[30px] bg-white/[0.03] border border-[#FACC15]/20">
                                     <div className="flex items-start gap-4">
-                                        <Icon name="award" className="w-8 h-8 text-[#EAB308] shrink-0 mt-1" />
+                                        <Icon name="target" className="w-6 h-6 text-amarillo-digital mt-1" />
                                         <div>
-                                            <h4 className="text-[#EAB308] font-black italic tracking-widest text-[10px] mb-2">{stepMessages[currentStep].title}</h4>
+                                            <h4 className="text-amarillo-digital font-black italic tracking-widest text-[10px] mb-1">{stepMessages[currentStep].title}</h4>
                                             <p className="text-white font-bold italic text-lg leading-tight uppercase">{stepMessages[currentStep].text}</p>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div className="mb-12 px-2">
-                                    <div className="flex justify-between items-center mb-4 text-[10px] font-black tracking-widest uppercase text-slate-600">
-                                        <span>Progreso del Análisis</span>
-                                        <span className="text-xl text-[#EAB308]">{Math.round(progress)}%</span>
-                                    </div>
-                                    <div className="h-1 w-full rounded-full bg-white/5 overflow-hidden">
-                                        <div className="h-full bg-[#EAB308] transition-all duration-700 shadow-[0_0_15px_#EAB308]" style={{ width: `${progress}%` }}></div>
-                                    </div>
+                                <div className="mb-10 h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                                    <div className="h-full bg-amarillo-digital transition-all duration-700" style={{ width: `${progress}%` }}></div>
                                 </div>
 
-                                <div className="space-y-8">
+                                <div className="space-y-6">
                                     {questions.slice(currentStep * 5, (currentStep + 1) * 5).map((q) => (
-                                        <div key={q.id} className="p-8 md:p-10 rounded-[40px] bg-[#0a0a0a] border border-white/5 hover:border-white/10 transition-colors">
-                                            <div className="flex flex-col md:flex-row gap-8">
-                                                <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-sm font-black italic text-[#EAB308] shrink-0 border border-white/5">
-                                                    {q.id}
-                                                </div>
-                                                <div className="flex-1">
-                                                    <h3 className="text-2xl font-bold text-white mb-8 tracking-tight italic">{q.q}</h3>
-                                                    <div className="grid grid-cols-1 gap-3">
-                                                        {q.opts.map((o, idx) => (
-                                                            <button 
-                                                                key={idx}
-                                                                onClick={() => setAnswers(p => ({ ...p, [q.id]: o.s }))}
-                                                                className={`text-left p-6 rounded-2xl border-2 transition-all ${
-                                                                    answers[q.id] === o.s 
-                                                                    ? 'bg-[#EAB308] border-[#EAB308] text-black' 
-                                                                    : 'bg-black border-white/5 text-slate-400 hover:border-[#EAB308]/30'
-                                                                }`}
-                                                            >
-                                                                <span className="text-base font-bold italic uppercase">{o.t}</span>
-                                                            </button>
-                                                        ))}
-                                                    </div>
-                                                </div>
+                                        <div key={q.id} className="p-8 rounded-[30px] bg-[#080808] border border-white/5">
+                                            <h3 className="text-xl font-bold mb-6 italic">{q.q}</h3>
+                                            <div className="grid gap-2">
+                                                {q.opts.map((o, idx) => (
+                                                    <button 
+                                                        key={idx}
+                                                        onClick={() => setAnswers(p => ({ ...p, [q.id]: o.s }))}
+                                                        className={`text-left p-5 rounded-xl border-2 transition-all ${
+                                                            answers[q.id] === o.s 
+                                                            ? 'bg-amarillo-digital border-amarillo-digital text-black' 
+                                                            : 'bg-black border-white/5 text-slate-500 hover:border-white/10'
+                                                        }`}
+                                                    >
+                                                        <span className="text-sm font-black uppercase italic">{o.t}</span>
+                                                    </button>
+                                                ))}
                                             </div>
                                         </div>
                                     ))}
 
                                     {currentStep === 7 && (
-                                        <div className="p-10 md:p-16 rounded-[50px] bg-[#0a0a0a] border border-[#EAB308]/30 text-center space-y-10 animate-in">
-                                            <div className="max-w-xl mx-auto space-y-4">
-                                                <h3 className="text-3xl font-black italic text-white uppercase tracking-tighter">Veredicto Final</h3>
-                                                <p className="text-white text-[10px] font-bold uppercase tracking-[0.2em] leading-relaxed">
-                                                    EL SISTEMA HA RECOPILADO TU PATRÓN DE DECISIÓN. RELLENA TUS DATOS PARA VINCULAR EL RESULTADO A TU PERFIL PROFESIONAL.
-                                                </p>
+                                        <div className="p-10 rounded-[40px] bg-[#0a0a0a] border border-amarillo-digital/30 text-center space-y-8 mt-10">
+                                            <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Vincula tus datos para el veredicto</p>
+                                            <div className="grid md:grid-cols-2 gap-4">
+                                                <input type="text" value={nombre} onChange={e => setNombre(e.target.value)} placeholder="NOMBRE COMPLETO" className="bg-white/5 border border-white/10 p-4 rounded-xl outline-none focus:border-amarillo-digital font-bold text-xs" />
+                                                <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="EMAIL" className="bg-white/5 border border-white/10 p-4 rounded-xl outline-none focus:border-amarillo-digital font-bold text-xs" />
                                             </div>
-                                            
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
-                                                <input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="NOMBRE COMPLETO" className="bg-white/5 border border-white/10 p-5 rounded-2xl outline-none focus:border-[#EAB308] font-black uppercase text-xs text-white" />
-                                                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="EMAIL PROFESIONAL" className="bg-white/5 border border-white/10 p-5 rounded-2xl outline-none focus:border-[#EAB308] font-black uppercase text-xs text-white" />
-                                            </div>
-
-                                            <button 
-                                                onClick={handleSubmit}
-                                                disabled={!nombre.trim() || !email.includes('@') || sending || Object.keys(answers).length < 40}
-                                                className="px-16 py-8 rounded-3xl bg-[#EAB308] text-black font-black text-2xl italic transition-all hover:scale-105 shadow-2xl disabled:opacity-20"
-                                            >
-                                                {sending ? <Icon name="loader-2" className="animate-spin mx-auto" /> : 'OBTENER MI VEREDICTO'}
+                                            <button onClick={handleSubmit} disabled={!nombre || !email || sending || Object.keys(answers).length < 40} className="w-full py-6 bg-amarillo-digital text-black font-black text-xl rounded-2xl hover:scale-105 transition-all disabled:opacity-20">
+                                                {sending ? 'ENVIANDO...' : 'FINALIZAR Y ENVIAR'}
                                             </button>
                                         </div>
                                     )}
 
-                                    <div className="flex flex-col md:flex-row items-center justify-between gap-8 pt-10 pb-20">
-                                        <button onClick={() => setCurrentStep(s => s - 1)} className={`px-8 py-4 rounded-xl font-black uppercase text-[10px] tracking-widest transition-all ${currentStep === 0 ? 'opacity-0 pointer-events-none' : 'text-slate-500 hover:text-white'}`}>
-                                            <Icon name="chevron-left" className="inline mr-1 w-4 h-4" /> Anterior
-                                        </button>
-                                        
+                                    <div className="flex justify-between items-center py-10">
+                                        <button onClick={() => setCurrentStep(s => s - 1)} className={`text-slate-500 font-black text-xs uppercase ${currentStep === 0 ? 'invisible' : ''}`}>Anterior</button>
                                         <div className="flex gap-2">
                                             {[...Array(8)].map((_, i) => (
-                                                <div key={i} className={`h-1 rounded-full transition-all duration-500 ${currentStep === i ? 'bg-[#EAB308] w-10' : 'bg-white/5 w-3'}`}></div>
+                                                <div key={i} className={`h-1 rounded-full transition-all ${currentStep === i ? 'bg-amarillo-digital w-8' : 'bg-white/10 w-2'}`}></div>
                                             ))}
                                         </div>
-                                        
                                         {currentStep < 7 && (
                                             <button 
-                                                disabled={Object.keys(answers).filter(id => {
-                                                    const idInt = parseInt(id);
-                                                    return idInt > currentStep * 5 && idInt <= (currentStep + 1) * 5;
-                                                }).length < 5}
-                                                onClick={() => setCurrentStep(s => s + 1)}
-                                                className="px-10 py-4 rounded-xl bg-white text-black font-black uppercase text-[10px] tracking-widest hover:bg-[#EAB308] transition-all disabled:opacity-10"
+                                                disabled={Object.keys(answers).filter(id => id > currentStep*5 && id <= (currentStep+1)*5).length < 5}
+                                                onClick={() => setCurrentStep(s => s + 1)} 
+                                                className="bg-white text-black px-6 py-3 rounded-xl font-black text-xs uppercase hover:bg-amarillo-digital transition-all disabled:opacity-20"
                                             >
-                                                Siguiente Bloque <Icon name="chevron-right" className="inline ml-1 w-4 h-4" />
+                                                Siguiente
                                             </button>
                                         )}
                                     </div>
