@@ -8,12 +8,13 @@
         /* --- COLORES DIGITALES CLAVE --- */
         :root {
             --color-fondo: #000000;
-            --color-texto-min: #aaaaaa; /* Grisáceo */
-            --color-texto-may: #ffffff; /* Blanco */
-            --color-momentum: #FFD700; /* Amarillo dorado/llamativo */
-            --color-combo-secundario: #FFA500; /* Naranja/Ámbar */
-            --color-seleccionado: #1a1a1a; /* Gris oscuro sutil para selección */
+            --color-texto-min: #aaaaaa; 
+            --color-texto-may: #ffffff; 
+            --color-momentum: #FFD700; /* Amarillo Llamativo */
+            --color-combo-secundario: #FFA500; /* Naranja/Ámbar para acentos */
+            --color-seleccionado-bg: #2c2c00; /* Fondo amarillo oscuro para selección */
             --color-borde-amarillo: #FFD700;
+            --color-progress-bg: #111111;
         }
 
         /* --- FONT ESTILIZADO PARA AGRADECIMIENTO --- */
@@ -25,13 +26,13 @@
             text-align: center;
         }
 
-        /* --- ESTILOS GENERALES --- */
+        /* --- ESTILOS GENERALES Y CONTENEDOR --- */
         body {
             background-color: var(--color-fondo);
             color: var(--color-texto-min);
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', Arial, sans-serif; /* Roboto para un look más digital moderno */
             margin: 0;
-            padding: 20px;
+            padding: 0;
             display: flex;
             justify-content: center;
             min-height: 100vh;
@@ -39,77 +40,125 @@
 
         .container {
             width: 100%;
-            max-width: 800px;
+            max-width: 850px;
             padding: 20px;
         }
 
         .bloque {
-            margin-bottom: 40px;
-            padding: 20px;
-            border-radius: 8px;
+            margin-bottom: 50px;
+            padding: 30px;
+            border-radius: 10px;
+            background: #030303; /* Fondo ligeramente diferente para contraste */
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
         }
 
-        /* --- TÍTULO DE BLOQUE MOTIVACIONAL --- */
-        .titulo-bloque {
-            font-size: 1.5em;
-            color: var(--color-texto-may);
-            text-align: center;
-            margin-bottom: 20px;
-            padding: 10px;
-            border-bottom: 1px solid var(--color-combo-secundario);
+        /* --- INDICADOR DE PROGRESO (Progress Bar) --- */
+        #barra-progreso-contenedor {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: var(--color-fondo);
+            padding: 15px 0;
+            border-bottom: 1px solid var(--color-borde-amarillo);
         }
-
-        /* --- PREGUNTAS --- */
-        .pregunta-item {
-            margin-bottom: 15px;
-            padding: 10px;
+        #barra-progreso {
+            height: 8px;
+            width: 0%;
+            background-color: var(--color-momentum);
             border-radius: 5px;
+            transition: width 0.5s ease-in-out;
+        }
+        #progreso-texto {
+            text-align: right;
+            font-size: 0.85em;
+            color: var(--color-momentum);
+            margin-bottom: 5px;
+        }
+
+        /* --- LOGO Y DESCRIPCIÓN INICIAL (HEADER) --- */
+        #header-logo {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px 0;
+        }
+        #header-logo h1 {
+            font-size: 3.5em;
+            line-height: 1;
+            margin: 0;
+        }
+        #formula {
+            color: var(--color-texto-may);
+            display: block;
+        }
+        #momentum {
+            color: var(--color-momentum);
+            display: block;
+            letter-spacing: 2px;
+        }
+        .desc-logo {
+            margin-top: 15px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.7;
+            font-size: 1.05em;
+        }
+
+        /* --- FORMATO DE PREGUNTAS --- */
+        .pregunta-container {
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed var(--color-texto-min);
+        }
+
+        /* Título de Pregunta Grande */
+        .pregunta-container h3 {
+            font-size: 1.4em;
+            color: var(--color-texto-may);
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .pregunta-item {
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 6px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, border 0.3s;
+            border: 1px solid transparent; /* Borde base para efecto hover/seleccionado */
         }
         
         .pregunta-item:hover {
-            background-color: #0f0f0f;
+            background-color: #0a0a0a;
         }
 
         .seleccionada {
-            background-color: var(--color-seleccionado) !important; 
-            color: var(--color-texto-may); 
+            background-color: var(--color-seleccionado-bg) !important; /* AMARILLO OSCURO para selección */
             border: 1px solid var(--color-momentum);
+            color: var(--color-texto-may);
         }
 
         .opcion-radio {
-            margin-right: 10px;
-            color: var(--color-momentum);
-            font-size: 1.2em;
-        }
-
-        .opcion-texto {
-            display: inline-block;
-            width: calc(100% - 30px); 
+            font-size: 1.4em;
+            margin-right: 15px;
         }
         
-        /* Color especial para la frase clave en descripción */
-        .color-combo-secundario {
-            color: var(--color-combo-secundario);
-        }
-
         /* --- FORMATO DE TEXTO EN DESCRIPCIÓN (Bloque 5) --- */
         .descripcion-texto p {
-            line-height: 1.6;
+            line-height: 1.7;
             text-align: justify;
+            font-size: 1.05em;
         }
 
-        /* --- RECUADRO DE REMARQUE --- */
         .recuadro-remarque {
             border: 1px solid var(--color-borde-amarillo);
-            background-color: #080808; /* Fondo ligeramente diferente al negro puro */
+            background-color: #080808; 
             padding: 15px;
-            margin: 20px 0;
+            margin: 25px 0;
             border-radius: 4px;
         }
 
-        /* --- BOTONES --- */
+        /* --- BOTONES Y ESTADO --- */
         .boton-avanzar, .boton-enviar {
             display: block;
             width: 100%;
@@ -118,58 +167,52 @@
             background-color: var(--color-combo-secundario);
             color: var(--color-fondo);
             border: none;
-            border-radius: 5px;
-            font-size: 1.1em;
+            border-radius: 8px;
+            font-size: 1.2em;
             font-weight: bold;
-            cursor: pointer;
-            text-transform: uppercase;
-            transition: background-color 0.3s;
+            cursor: not-allowed; /* Por defecto desactivado */
+            opacity: 0.5;
+            transition: all 0.3s;
         }
 
-        .boton-avanzar:hover, .boton-enviar:hover {
+        .boton-activo {
+            cursor: pointer !important;
+            opacity: 1 !important;
+        }
+
+        .boton-avanzar:hover.boton-activo, .boton-enviar:hover {
             background-color: var(--color-momentum);
+            color: var(--color-fondo);
         }
         
         /* --- FORMULARIO FINAL --- */
-        .form-final-item {
-            margin-bottom: 20px;
-        }
-        .form-final-item label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
+        /* (Estilos heredados, ajustados ligeramente para modernidad) */
         .form-final-item input {
-            width: 100%;
-            padding: 12px;
             background-color: #111111;
-            border: 1px solid var(--color-borde-amarillo);
-            color: var(--color-texto-may);
-            border-radius: 4px;
-            box-sizing: border-box;
+            border: 1px solid var(--color-texto-min);
+        }
+        .form-final-item input:focus {
+            border-color: var(--color-momentum);
+            outline: none;
         }
 
         /* --- PÁGINA DE AGRADECIMIENTO --- */
         .pagina-gracias {
-            display: none; /* Oculta por defecto */
+            display: none; 
             text-align: center;
-            padding: 40px 20px;
+            padding: 60px 20px;
         }
         .simbolo-aprobacion {
-            font-size: 4em;
-            color: #4CAF50; /* Verde de éxito */
+            font-size: 5em;
+            color: #4CAF50; 
             margin-bottom: 20px;
         }
         .mensaje-final-motivacional {
             margin-top: 40px;
-            padding: 20px;
-            background-color: #0a0a0a;
-            border-radius: 8px;
-        }
-
-        /* Ocultar/Mostrar */
-        .ocultar {
-            display: none;
+            padding: 30px;
+            background-color: #050505;
+            border: 1px solid var(--color-texto-min);
+            border-radius: 10px;
         }
     </style>
 </head>
@@ -177,44 +220,61 @@
 
     <div class="container">
         
-        <!-- --- SECCIÓN PRINCIPAL DE CUESTIONARIO (Se gestiona por JS) --- -->
+        <!-- INDICADOR DE PROGRESO GLOBAL -->
+        <div id="barra-progreso-contenedor">
+            <div id="progreso-texto">0% Completado</div>
+            <div id="barra-progreso"></div>
+        </div>
+
+        <!-- SECCIÓN DE CUESTIONARIO -->
         <div id="seccion-cuestionario">
 
-            <!-- BLOQUE 1 – MENTALIDAD Y POSICIÓN INTERNA (VISIBLE POR DEFECTO) -->
+            <!-- HEADER DEL LOGO Y DESCRIPCIÓN FIJA -->
+            <div id="header-logo">
+                <h1>
+                    <span id="formula">FÓRMULA</span>
+                    <span id="momentum">MOMENTUM</span>
+                </h1>
+                <div class="desc-logo">
+                    la FÓRMULA MOMENTUM nace de una manera específica de entender cómo se construyen los resultados.
+                    <br>
+                    está diseñada exclusivamente para <strong>PROFESIONALES y EMPRENDEDORES</strong> que comprenden que avanzar no depende de impulsos aislados, sino de sostener decisiones en el tiempo.
+                </div>
+            </div>
+
+            <!-- Bloques dinámicos (1 a 5) -->
             <div id="bloque-1" class="bloque">
                 <div class="titulo-bloque">✔ BLOQUE 1: MENTALIDAD Y POSICIÓN INTERNA (El Fundamento)</div>
                 <!-- Contenido generado por JS -->
             </div>
-            <div id="boton-bloque-1" class="boton-avanzar">Avanzar al Bloque 2</div>
+            <button id="boton-bloque-1" class="boton-avanzar" disabled>Continuar con Bloque 2</button>
 
-            <!-- BLOQUE 2 al 4 (OCULTOS) -->
             <div id="bloque-2" class="bloque ocultar">
                 <div class="titulo-bloque">⏱️ BLOQUE 2: COMPROMISO, TIEMPO Y EJECUCIÓN REAL</div>
             </div>
-            <div id="boton-bloque-2" class="boton-avanzar ocultar">Avanzar al Bloque 3</div>
+            <button id="boton-bloque-2" class="boton-avanzar" disabled>Continuar con Bloque 3</button>
 
             <div id="bloque-3" class="bloque ocultar">
                 <div class="titulo-bloque">💰 BLOQUE 3: INVERSIÓN, RIESGO Y RELACIÓN CON EL CRECIMIENTO</div>
             </div>
-            <div id="boton-bloque-3" class="boton-avanzar ocultar">Avanzar al Bloque 4</div>
+            <button id="boton-bloque-3" class="boton-avanzar" disabled>Continuar con Bloque 4</button>
 
             <div id="bloque-4" class="bloque ocultar">
                 <div class="titulo-bloque">🧩 BLOQUE 4: EXPERIENCIA, ESTRUCTURA Y MADUREZ ESTRATÉGICA</div>
             </div>
-            <div id="boton-bloque-4" class="boton-avanzar ocultar">Avanzar al Bloque 5</div>
+            <button id="boton-bloque-4" class="boton-avanzar" disabled>Continuar con Bloque 5</button>
 
-            <!-- BLOQUE 5 (OCULTO INICIALMENTE, SE CARGA SU TEXTO FIJO) -->
             <div id="bloque-5" class="bloque ocultar">
                 <div class="titulo-bloque">🚀 BLOQUE 5: AUDIENCIA, POSICIONAMIENTO Y ESCALABILIDAD</div>
                 <!-- Contenido fijo del Bloque 5 se insertará aquí por JS -->
             </div>
-            <div id="boton-bloque-5" class="boton-avanzar ocultar">Finalizar y Enviar Respuestas</div>
+            <button id="boton-bloque-5" class="boton-avanzar" disabled>Finalizar y Ver Evaluación</button>
 
         </div>
         
         <!-- --- SECCIÓN DE FORMULARIO FINAL (Oculta) --- -->
         <div id="seccion-formulario-final" class="ocultar">
-            <div class="titulo-bloque">✍️ ÚLTIMO PASO: DATOS DE CONTACTO</div>
+            <div class="titulo-bloque">✍️ ÚLTIMO PASO: DATOS PARA LA EVALUACIÓN</div>
             
             <form id="formulario-contacto">
                 <div class="form-final-item">
@@ -230,7 +290,7 @@
                     <input type="email" id="email" name="email" required>
                 </div>
                 
-                <button type="submit" class="boton-enviar">ENVIAR RESPUESTAS</button>
+                <button type="submit" class="boton-enviar boton-activo">ENVIAR RESPUESTAS</button>
             </form>
         </div>
 
@@ -242,7 +302,7 @@
             <p>Pronto recibirás una comunicación del experto con la <strong>evaluación detallada de tu resultado</strong> y el nivel de compromiso que expusiste en el formulario.</p>
 
             <div class="mensaje-final-motivacional">
-                <p class="caligrafico" style="font-size: 1.8em;">¡Felicitaciones!</p>
+                <p class="caligrafico" style="font-size: 1.8em;">¡Felicitaciones por tu Compromiso!</p>
                 <p>El simple hecho de tomarte el tiempo para completar este diagnóstico demuestra que estás en el camino correcto. Este es el <strong>primer paso crucial</strong> para quienes buscan <strong>mejorar los resultados</strong> que hoy tienen y están dispuestos a <strong>evaluar su situación con honestidad</strong>.</p>
                 <p>Tu búsqueda de respuestas sinceras, sin relatos mágicos ni promesas de resultados inmediatos, ya te coloca por delante.</p>
             </div>
@@ -253,86 +313,93 @@
     <script>
         // --- DATOS DEL CUESTIONARIO ---
         const cuestionarioData = [
-            {
-                bloque: 1,
-                preguntas: [
-                    { id: 1, texto: "Cuando un proyecto no avanza como esperabas, lo primero que suele pasar por tu cabeza es:", opciones: ["Analizar qué parte del contexto externo influyó negativamente", "Revisar qué podría haber hecho diferente", "Evaluar tanto mis decisiones como los factores externos", "Detenerme, recalibrar y ajustar el sistema sin dramatizar"], trampa: "MEDIA" },
-                    { id: 2, texto: "¿Qué tan cómodo/a te sentís cuando alguien con más experiencia cuestiona tu forma de hacer las cosas?", opciones: ["Me incomoda bastante, suelo justificar mis decisiones", "Me incomoda, pero escucho", "Me interesa entender el punto del otro", "Lo busco activamente para mejorar más rápido"], trampa: "MEDIA" },
-                    { id: 3, texto: "Cuando algo no funciona después de varios intentos, tu reacción más habitual es:", opciones: ["Cambiar de enfoque rápidamente", "Insistir un poco más esperando que se acomode", "Analizar datos y ajustar", "Profundizar en el proceso aunque sea incómodo"], trampa: "MEDIA" },
-                    { id: 4, texto: "¿Cuál de estas frases se acerca más a tu forma real de pensar? (TRAMPA FUERTE)", opciones: ["El contexto influye más de lo que se admite", "Hago lo mejor que puedo con lo que tengo", "Siempre hay algo que puedo mejorar", "Si no obtengo resultados, asumo que todavía no ejecuté bien"], trampa: "FUERTE" },
-                    { id: 5, texto: "¿Cómo reaccionás ante la crítica pública o el juicio de terceros?", opciones: ["Evito exponerme", "Me afecta más de lo que admito", "Aprendo a gestionar con el tiempo", "Lo considero parte natural del crecimiento"], trampa: "MEDIA" },
-                    { id: 6, texto: "En procesos de aprendizaje exigentes, tu actitud suele ser:", opciones: ["Consumo contenido cuando tengo ganas", "Aprendo, pero solo lo que me resulta cómodo", "Ejecuto incluso cuando no tengo motivación", "Me comprometo con el proceso completo"], trampa: "MEDIA" },
-                    { id: 7, texto: "¿Cuál de estas afirmaciones te representa mejor hoy?", opciones: ["Sé bastante, solo necesito una oportunidad", "Tengo experiencia, pero todavía me falta estructura", "Estoy dispuesto a desaprender para crecer", "Busco sistemas exigentes que me lleven al siguiente nivel"], trampa: "MEDIA" }
-                ]
-            },
-            {
-                bloque: 2,
-                fraseMotivacional: "Aquí se separa a quien solo quiere el destino, de quien está dispuesto a recorrer el camino, kilómetro a kilómetro.",
-                preguntas: [
-                    { id: 8, texto: "¿Actualmente, cuánto tiempo semanal podrías dedicar de forma constante a un proceso estratégico como este?", opciones: ["Menos de 3 horas", "Entre 3 y 5 horas", "Entre 5 y 10 horas", "Más de 10 horas semanales"], trampa: "MEDIA" },
-                    { id: 9, texto: "Cuando tu agenda se complica, normalmente: (TRAMPA FUERTE)", opciones: ["Pauso el proceso hasta tener más tiempo", "Reduzco el ritmo", "Reorganizo prioridades", "Protejo el proceso y ajusto el resto"], trampa: "FUERTE" },
-                    { id: 10, texto: "En proyectos anteriores, tu nivel de constancia fue:", opciones: ["Alto al inicio, bajo con el tiempo", "Irregular", "Estable cuando había estructura", "Sostenido incluso en momentos difíciles"], trampa: "MEDIA" },
-                    { id: 11, texto: "¿Qué sucede cuando un proceso no muestra resultados inmediatos?", opciones: ["Me replanteo si vale la pena", "Me frustro, pero sigo", "Analizo indicadores", "Confío en el proceso si hay lógica detrás"], trampa: "MEDIA" },
-                    { id: 12, texto: "Elegí la frase que más se acerque a tu realidad: (TRAMPA FUERTE)", opciones: ["Necesito ver resultados para comprometerme", "Me comprometo mientras me sienta cómodo", "Me comprometo si entiendo el sistema", "El compromiso viene antes del resultado"], trampa: "FUERTE" },
-                    { id: 13, texto: "¿Qué tan dispuesto/a estás a sostener un proceso exigente durante meses?", opciones: ["Poco", "Moderadamente", "Bastante", "Totalmente, si el sistema tiene sentido"], trampa: "MEDIA" },
-                    { id: 14, texto: "Cuando aparece cansancio mental:", opciones: ["Suelo frenar", "Bajo intensidad", "Ajusto, pero continúo", "Uso estructura para sostenerme"], trampa: "MEDIA" }
-                ]
-            },
-            {
-                bloque: 3,
-                fraseMotivacional: "Acá aparece la verdad sin maquillaje: no se mide cuánto tienes, sino cómo piensas el crecimiento estratégico.",
-                preguntas: [
-                    { id: 15, texto: "¿Cuando pensás en invertir en tu propio crecimiento profesional, sentís principalmente:", opciones: ["Incomodidad o tensión", "Dudas y miedo a equivocarte", "Análisis y cautela", "Responsabilidad estratégica"], trampa: "MEDIA" },
-                    { id: 16, texto: "¿Cuál de estas afirmaciones refleja mejor tu postura? (TRAMPA FUERTE)", opciones: ["Prefiero avanzar solo/a y sin gastar", "Primero quiero resultados, después invierto", "Invierto cuando entiendo el retorno", "Invertir es parte del proceso de crecer"], trampa: "FUERTE" },
-                    { id: 17, texto: "Hoy, ¿cómo describirías tu situación respecto a inversión mensual en tu proyecto?", opciones: ["No puedo invertir nada", "Podría invertir muy poco", "Podría invertir de forma moderada", "Puedo invertir de manera sostenida"], trampa: "SUAVE" },
-                    { id: 18, texto: "Cuando una inversión no da resultados inmediatos:", opciones: ["La considero un error", "Me genera frustración", "Evalúo qué ajustar", "Analizo el proceso completo"], trampa: "MEDIA" },
-                    { id: 19, texto: "¿Con cuál de estas ideas estás más de acuerdo? (TRAMPA FUERTE)", opciones: ["Si es bueno, debería funcionar solo", "Depende del momento", "Depende de la ejecución", "Depende del sistema y la consistencia"], trampa: "FUERTE" },
-                    { id: 20, texto: "Invertir en tu imagen profesional te parece:", opciones: ["Un gasto", "Un riesgo", "Una apuesta", "Un activo"], trampa: "MEDIA" },
-                    { id: 21, texto: "Si un proceso requiere inversión durante varios meses antes de escalar:", opciones: ["No me resulta viable", "Me incomoda", "Lo evaluaría con cuidado", "Lo considero parte del juego"], trampa: "MEDIA" }
-                ]
-            },
-            {
-                bloque: 4,
-                fraseMotivacional: "Donde se ve quién juega a largo plazo: la diferencia entre consumir información y construir un sistema.",
-                preguntas: [
-                    { id: 22, texto: "En relación a la venta de productos o servicios digitales, tu experiencia es:", opciones: ["Nula", "Inicial, con intentos aislados", "Intermedia, con aprendizajes claros", "Avanzada, con estructura definida"], trampa: "SUAVE" },
-                    { id: 23, texto: "¿Cuál fue el mayor desafío que enfrentaste al intentar vender online?", opciones: ["No sabía por dónde empezar", "Falta de constancia", "Falta de estructura", "Optimización del sistema"], trampa: "MEDIA" },
-                    { id: 24, texto: "Cuando algo no funciona en tu negocio, normalmente pensás que: (TRAMPA FUERTE)", opciones: ["El método no sirve", "El mercado está saturado", "Falta ajustar la estrategia", "Falta profundidad en el sistema"], trampa: "FUERTE" },
-                    { id: 25, texto: "¿Cómo tomás decisiones estratégicas hoy?", opciones: ["Por intuición", "Por lo que veo que funciona en otros", "Analizando datos básicos", "Siguiendo una estructura clara"], trampa: "MEDIA" },
-                    { id: 26, texto: "Tu relación con los procesos largos es:", opciones: ["Me cuesta sostenerlos", "Los empiezo con entusiasmo", "Los sostengo con guía", "Me siento cómodo/a en ellos"], trampa: "MEDIA" },
-                    { id: 27, texto: "Elegí la frase que más te represente: (TRAMPA FUERTE)", opciones: ["Siempre estoy buscando algo mejor", "Aún no encontré lo que funcione para mí", "Necesito una estructura clara", "Estoy dispuesto/a a profundizar y sostener"], trampa: "FUERTE" },
-                    { id: 28, texto: "¿Qué tan claro tenés hoy tu camino de crecimiento?", opciones: ["Nada claro", "Parcialmente claro", "Bastante claro", "Muy claro y estructurado"], trampa: "MEDIA" }
-                ]
-            },
-            {
-                bloque: 5,
-                fraseMotivacional: "El último filtro: ¿Estás pensando en la próxima semana o en el próximo ciclo de crecimiento?",
-                preguntas: [
-                    { id: 29, texto: "Tu relación con tu audiencia hoy es:", opciones: ["Publico sin saber quién me sigue", "Tengo una idea general", "Entiendo intereses y problemas", "Conozco patrones claros"], trampa: "SUAVE" },
-                    { id: 30, texto: "¿Qué buscás principalmente al crear contenido?", opciones: ["Alcance y likes", "Visibilidad", "Conexión", "Conversión"], trampa: "MEDIA" },
-                    { id: 31, texto: "¿Cómo definirías tu posicionamiento actual?", opciones: ["Incierto", "En construcción", "Bastante claro", "Diferenciado y coherente"], trampa: "MEDIA" },
-                    { id: 32, texto: "Cuando pensás en escalar, imaginás:", opciones: ["Publicar más", "Trabajar más horas", "Optimizar procesos", "Construir sistemas"], trampa: "MEDIA" },
-                    { id: 33, texto: "¿Qué tan preparado/a te sentís para sostener crecimiento sin perder calidad?", opciones: ["Poco", "Medianamente", "Bastante", "Totalmente"], trampa: "SUAVE" },
-                    { id: 34, texto: "Tu visión de negocio es:", opciones: ["Corto plazo", "Resolver ingresos actuales", "Mediano plazo", "Largo plazo y escalable"], trampa: "MEDIA" },
-                    { id: 35, texto: "Si tu audiencia creciera 10x, tu estructura actual:", opciones: ["Colapsaría", "Tendría dificultades", "Podría adaptarse", "Está pensada para eso"], trampa: "MEDIA" },
-                    /* Preguntas añadidas para completar el flujo de 5 bloques */
-                    { id: 36, texto: "Si tuvieras que describir el \"motor\" de tu negocio en una palabra, sería:", opciones: ["Producto", "Marketing", "Sistema", "Cliente"], trampa: "MEDIA" },
-                    { id: 37, texto: "¿Qué tan seguido ajustás tu estrategia principal por un \"resultado de la semana\"?", opciones: ["Constantemente", "Frecuentemente", "Raramente", "Casi nunca"], trampa: "MEDIA" },
-                    { id: 38, texto: "En términos de crecimiento, tu meta principal es:", opciones: ["Tener más ingresos hoy", "Tener un negocio sólido", "Tener impacto a largo plazo", "Crear un activo valioso"], trampa: "MEDIA" }
-                ]
-            }
+            { bloque: 1, preguntas: [ /* 7 preguntas */
+                { id: 1, texto: "Cuando un proyecto no avanza como esperabas, lo primero que suele pasar por tu cabeza es:", opciones: ["Analizar qué parte del contexto externo influyó negativamente", "Revisar qué podría haber hecho diferente", "Evaluar tanto mis decisiones como los factores externos", "Detenerme, recalibrar y ajustar el sistema sin dramatizar"], trampa: "MEDIA" },
+                { id: 2, texto: "¿Qué tan cómodo/a te sentís cuando alguien con más experiencia cuestiona tu forma de hacer las cosas?", opciones: ["Me incomoda bastante, suelo justificar mis decisiones", "Me incomoda, pero escucho", "Me interesa entender el punto del otro", "Lo busco activamente para mejorar más rápido"], trampa: "MEDIA" },
+                { id: 3, texto: "Cuando algo no funciona después de varios intentos, tu reacción más habitual es:", opciones: ["Cambiar de enfoque rápidamente", "Insistir un poco más esperando que se acomode", "Analizar datos y ajustar", "Profundizar en el proceso aunque sea incómodo"], trampa: "MEDIA" },
+                { id: 4, texto: "¿Cuál de estas frases se acerca más a tu forma real de pensar? (TRAMPA FUERTE)", opciones: ["El contexto influye más de lo que se admite", "Hago lo mejor que puedo con lo que tengo", "Siempre hay algo que puedo mejorar", "Si no obtengo resultados, asumo que todavía no ejecuté bien"], trampa: "FUERTE" },
+                { id: 5, texto: "¿Cómo reaccionás ante la crítica pública o el juicio de terceros?", opciones: ["Evito exponerme", "Me afecta más de lo que admito", "Aprendo a gestionar con el tiempo", "Lo considero parte natural del crecimiento"], trampa: "MEDIA" },
+                { id: 6, texto: "En procesos de aprendizaje exigentes, tu actitud suele ser:", opciones: ["Consumo contenido cuando tengo ganas", "Aprendo, pero solo lo que me resulta cómodo", "Ejecuto incluso cuando no tengo motivación", "Me comprometo con el proceso completo"], trampa: "MEDIA" },
+                { id: 7, texto: "¿Cuál de estas afirmaciones te representa mejor hoy?", opciones: ["Sé bastante, solo necesito una oportunidad", "Tengo experiencia, pero todavía me falta estructura", "Estoy dispuesto a desaprender para crecer", "Busco sistemas exigentes que me lleven al siguiente nivel"], trampa: "MEDIA" }
+            ]},
+            { bloque: 2, fraseMotivacional: "Aquí se separa a quien solo quiere el destino, de quien está dispuesto a recorrer el camino, kilómetro a kilómetro.", preguntas: [ /* 7 preguntas */
+                { id: 8, texto: "¿Actualmente, cuánto tiempo semanal podrías dedicar de forma constante a un proceso estratégico como este?", opciones: ["Menos de 3 horas", "Entre 3 y 5 horas", "Entre 5 y 10 horas", "Más de 10 horas semanales"], trampa: "MEDIA" },
+                { id: 9, texto: "Cuando tu agenda se complica, normalmente: (TRAMPA FUERTE)", opciones: ["Pauso el proceso hasta tener más tiempo", "Reduzco el ritmo", "Reorganizo prioridades", "Protejo el proceso y ajusto el resto"], trampa: "FUERTE" },
+                { id: 10, texto: "En proyectos anteriores, tu nivel de constancia fue:", opciones: ["Alto al inicio, bajo con el tiempo", "Irregular", "Estable cuando había estructura", "Sostenido incluso en momentos difíciles"], trampa: "MEDIA" },
+                { id: 11, texto: "¿Qué sucede cuando un proceso no muestra resultados inmediatos?", opciones: ["Me replanteo si vale la pena", "Me frustro, pero sigo", "Analizo indicadores", "Confío en el proceso si hay lógica detrás"], trampa: "MEDIA" },
+                { id: 12, texto: "Elegí la frase que más se acerque a tu realidad: (TRAMPA FUERTE)", opciones: ["Necesito ver resultados para comprometerme", "Me comprometo mientras me sienta cómodo", "Me comprometo si entiendo el sistema", "El compromiso viene antes del resultado"], trampa: "FUERTE" },
+                { id: 13, texto: "¿Qué tan dispuesto/a estás a sostener un proceso exigente durante meses?", opciones: ["Poco", "Moderadamente", "Bastante", "Totalmente, si el sistema tiene sentido"], trampa: "MEDIA" },
+                { id: 14, texto: "Cuando aparece cansancio mental:", opciones: ["Suelo frenar", "Bajo intensidad", "Ajusto, pero continúo", "Uso estructura para sostenerme"], trampa: "MEDIA" }
+            ]},
+            { bloque: 3, fraseMotivacional: "Acá aparece la verdad sin maquillaje: no se mide cuánto tienes, sino cómo piensas el crecimiento estratégico.", preguntas: [ /* 7 preguntas */
+                { id: 15, texto: "¿Cuando pensás en invertir en tu propio crecimiento profesional, sentís principalmente:", opciones: ["Incomodidad o tensión", "Dudas y miedo a equivocarte", "Análisis y cautela", "Responsabilidad estratégica"], trampa: "MEDIA" },
+                { id: 16, texto: "¿Cuál de estas afirmaciones refleja mejor tu postura? (TRAMPA FUERTE)", opciones: ["Prefiero avanzar solo/a y sin gastar", "Primero quiero resultados, después invierto", "Invierto cuando entiendo el retorno", "Invertir es parte del proceso de crecer"], trampa: "FUERTE" },
+                { id: 17, texto: "Hoy, ¿cómo describirías tu situación respecto a inversión mensual en tu proyecto?", opciones: ["No puedo invertir nada", "Podría invertir muy poco", "Podría invertir de forma moderada", "Puedo invertir de manera sostenida"], trampa: "SUAVE" },
+                { id: 18, texto: "Cuando una inversión no da resultados inmediatos:", opciones: ["La considero un error", "Me genera frustración", "Evalúo qué ajustar", "Analizo el proceso completo"], trampa: "MEDIA" },
+                { id: 19, texto: "¿Con cuál de estas ideas estás más de acuerdo? (TRAMPA FUERTE)", opciones: ["Si es bueno, debería funcionar solo", "Depende del momento", "Depende de la ejecución", "Depende del sistema y la consistencia"], trampa: "FUERTE" },
+                { id: 20, texto: "Invertir en tu imagen profesional te parece:", opciones: ["Un gasto", "Un riesgo", "Una apuesta", "Un activo"], trampa: "MEDIA" },
+                { id: 21, texto: "Si un proceso requiere inversión durante varios meses antes de escalar:", opciones: ["No me resulta viable", "Me incomoda", "Lo evaluaría con cuidado", "Lo considero parte del juego"], trampa: "MEDIA" }
+            ]},
+            { bloque: 4, fraseMotivacional: "Donde se ve quién juega a largo plazo: la diferencia entre consumir información y construir un sistema.", preguntas: [ /* 7 preguntas */
+                { id: 22, texto: "En relación a la venta de productos o servicios digitales, tu experiencia es:", opciones: ["Nula", "Inicial, con intentos aislados", "Intermedia, con aprendizajes claros", "Avanzada, con estructura definida"], trampa: "SUAVE" },
+                { id: 23, texto: "¿Cuál fue el mayor desafío que enfrentaste al intentar vender online?", opciones: ["No sabía por dónde empezar", "Falta de constancia", "Falta de estructura", "Optimización del sistema"], trampa: "MEDIA" },
+                { id: 24, texto: "Cuando algo no funciona en tu negocio, normalmente pensás que: (TRAMPA FUERTE)", opciones: ["El método no sirve", "El mercado está saturado", "Falta ajustar la estrategia", "Falta profundidad en el sistema"], trampa: "FUERTE" },
+                { id: 25, texto: "¿Cómo tomás decisiones estratégicas hoy?", opciones: ["Por intuición", "Por lo que veo que funciona en otros", "Analizando datos básicos", "Siguiendo una estructura clara"], trampa: "MEDIA" },
+                { id: 26, texto: "Tu relación con los procesos largos es:", opciones: ["Me cuesta sostenerlos", "Los empiezo con entusiasmo", "Los sostengo con guía", "Me siento cómodo/a en ellos"], trampa: "MEDIA" },
+                { id: 27, texto: "Elegí la frase que más te represente: (TRAMPA FUERTE)", opciones: ["Siempre estoy buscando algo mejor", "Aún no encontré lo que funcione para mí", "Necesito una estructura clara", "Estoy dispuesto/a a profundizar y sostener"], trampa: "FUERTE" },
+                { id: 28, texto: "¿Qué tan claro tenés hoy tu camino de crecimiento?", opciones: ["Nada claro", "Parcialmente claro", "Bastante claro", "Muy claro y estructurado"], trampa: "MEDIA" }
+            ]},
+            { bloque: 5, fraseMotivacional: "El último filtro: ¿Estás pensando en la próxima semana o en el próximo ciclo de crecimiento?", preguntas: [ /* 9 preguntas */
+                { id: 29, texto: "Tu relación con tu audiencia hoy es:", opciones: ["Publico sin saber quién me sigue", "Tengo una idea general", "Entiendo intereses y problemas", "Conozco patrones claros"], trampa: "SUAVE" },
+                { id: 30, texto: "¿Qué buscás principalmente al crear contenido?", opciones: ["Alcance y likes", "Visibilidad", "Conexión", "Conversión"], trampa: "MEDIA" },
+                { id: 31, texto: "¿Cómo definirías tu posicionamiento actual?", opciones: ["Incierto", "En construcción", "Bastante claro", "Diferenciado y coherente"], trampa: "MEDIA" },
+                { id: 32, texto: "Cuando pensás en escalar, imaginás:", opciones: ["Publicar más", "Trabajar más horas", "Optimizar procesos", "Construir sistemas"], trampa: "MEDIA" },
+                { id: 33, texto: "¿Qué tan preparado/a te sentís para sostener crecimiento sin perder calidad?", opciones: ["Poco", "Medianamente", "Bastante", "Totalmente"], trampa: "SUAVE" },
+                { id: 34, texto: "Tu visión de negocio es:", opciones: ["Corto plazo", "Resolver ingresos actuales", "Mediano plazo", "Largo plazo y escalable"], trampa: "MEDIA" },
+                { id: 35, texto: "Si tu audiencia creciera 10x, tu estructura actual:", opciones: ["Colapsaría", "Tendría dificultades", "Podría adaptarse", "Está pensada para eso"], trampa: "MEDIA" },
+                { id: 36, texto: "Si tuvieras que describir el \"motor\" de tu negocio en una palabra, sería:", opciones: ["Producto", "Marketing", "Sistema", "Cliente"], trampa: "MEDIA" },
+                { id: 37, texto: "¿Qué tan seguido ajustás tu estrategia principal por un \"resultado de la semana\"?", opciones: ["Constantemente", "Frecuentemente", "Raramente", "Casi nunca"], trampa: "MEDIA" },
+                { id: 38, texto: "En términos de crecimiento, tu meta principal es:", opciones: ["Tener más ingresos hoy", "Tener un negocio sólido", "Tener impacto a largo plazo", "Crear un activo valioso"], trampa: "MEDIA" }
+            ]}
         ];
 
         let respuestasUsuario = {};
         let bloqueActual = 1;
-        const totalBloques = cuestionarioData.length;
-        let preguntasRenderizadas = 0;
+        let totalPreguntas = 0;
+
+        // Calcular el total de preguntas al inicio
+        cuestionarioData.forEach(b => totalPreguntas += b.preguntas.length);
+        let preguntasCompletadas = 0;
+
+        // --- FUNCIÓN DE ACTUALIZACIÓN DE PROGRESO ---
+        function actualizarProgreso() {
+            const porcentaje = Math.round((preguntasCompletadas / totalPreguntas) * 100);
+            document.getElementById('progreso-texto').textContent = `${porcentaje}% Completado`;
+            document.getElementById('barra-progreso').style.width = `${porcentaje}%`;
+
+            // Lógica para activar el botón de avance
+            const boton = document.getElementById(`boton-bloque-${bloqueActual}`);
+            const preguntasEnBloque = cuestionarioData.find(b => b.bloque === bloqueActual).preguntas.length;
+            
+            const respuestasBloqueActual = Object.keys(respuestasUsuario).filter(qId => {
+                const qIdNum = parseInt(qId);
+                const data = cuestionarioData.find(b => b.bloque === bloqueActual);
+                return data && data.preguntas.some(p => p.id === qIdNum);
+            }).length;
+            
+            if (respuestasBloqueActual === preguntasEnBloque) {
+                boton.disabled = false;
+                boton.classList.add('boton-activo');
+            } else {
+                boton.disabled = true;
+                boton.classList.remove('boton-activo');
+            }
+        }
 
         // --- FUNCIÓN PARA GENERAR CONTENIDO DE PREGUNTAS ---
         function generarPreguntasHTML(data, numeroBloque) {
             let htmlPreguntas = '';
             data.preguntas.forEach(p => {
-                preguntasRenderizadas++;
                 let opcionesHtml = p.opciones.map((opcion) => `
                     <div class="pregunta-item" data-q="${p.id}" data-a="${opcion}">
                         <span class="opcion-radio">&#9675;</span>
@@ -341,8 +408,8 @@
                 `).join('');
 
                 htmlPreguntas += `
-                    <div id="q-container-${p.id}">
-                        <h4>Pregunta ${p.id}</h4>
+                    <div class="pregunta-container" id="q-container-${p.id}">
+                        <h3>Pregunta ${p.id}</h3>
                         <p>${p.texto}</p>
                         ${opcionesHtml}
                     </div>
@@ -371,19 +438,26 @@
                         no busca validar ni descartar personas; expone con claridad si estás dispuesto a hacer lo que el proceso exige, con consistencia, <span class="color-combo-secundario">RESPONSABILIDAD</span> y sin relatos mágicos.
                     </div>
                 </div>
-                <h4 style="margin-top: 25px;">Preguntas del Bloque 5:</h4>
+                <h4 style="margin-top: 25px; border-top: 1px solid var(--color-texto-min); padding-top: 15px;">Preguntas del Bloque 5:</h4>
                 ${generarPreguntasHTML(data, 5)}
             `;
             return textoHTML;
         }
 
-        // --- FUNCIÓN DE RENDERIZADO PRINCIPAL ---
+
+        // --- FUNCIÓN DE RENDERIZADO ---
         function renderBloque(numeroBloque) {
             const data = cuestionarioData.find(b => b.bloque === numeroBloque);
             if (!data) return;
 
             const divBloque = document.getElementById(`bloque-${numeroBloque}`);
             const botonAvance = document.getElementById(`boton-bloque-${numeroBloque}`);
+            
+            // Resetear contenido previo si volvemos a él (aunque en este flujo lineal no debería pasar)
+            divBloque.innerHTML = `<div class="titulo-bloque">
+                ${numeroBloque === 1 ? '✔' : (numeroBloque === 2 ? '⏱️' : (numeroBloque === 3 ? '💰' : (numeroBloque === 4 ? '🧩' : '🚀')))} 
+                BLOQUE ${numeroBloque}: ${numeroBloque === 1 ? 'MENTALIDAD Y POSICIÓN INTERNA' : (numeroBloque === 2 ? 'COMPROMISO, TIEMPO Y EJECUCIÓN REAL' : (numeroBloque === 3 ? 'INVERSIÓN, RIESGO Y RELACIÓN CON EL CRECIMIENTO' : (numeroBloque === 4 ? 'EXPERIENCIA, ESTRUCTURA Y MADUREZ ESTRATÉGICA' : 'AUDIENCIA, POSICIONAMIENTO Y ESCALABILIDAD')))}
+            </div>`;
             
             // 1. Definir el contenido del bloque
             let contenido = '';
@@ -392,19 +466,20 @@
             }
 
             if (numeroBloque === 5) {
-                // Contenido especial para Bloque 5 (Texto fijo + Preguntas)
                 contenido += contenidoFijoBloque5();
             } else {
-                // Contenido estándar para Bloques 1-4 (Solo preguntas)
                 contenido += generarPreguntasHTML(data, numeroBloque);
             }
             
-            // 2. Aplicar el contenido al contenedor
+            // 2. Aplicar el contenido
             divBloque.innerHTML += contenido;
             
-            // 3. Mostrar el bloque y su botón de avance
+            // 3. Mostrar el bloque
             divBloque.classList.remove('ocultar');
-            if (botonAvance) botonAvance.classList.remove('ocultar');
+            
+            // 4. Actualizar el estado del botón de avance (desactivado por defecto hasta que se respondan todas)
+            actualizarProgreso(); // Esto desactivará el botón si aún no se han respondido preguntas
+            botonAvance.classList.remove('ocultar');
         }
         
         // --- FUNCIÓN DE INTERACCIÓN (Event Listeners) ---
@@ -418,15 +493,6 @@
                 const qId = parseInt(item.dataset.q);
                 const respuesta = item.dataset.a;
                 
-                // Identificar a qué bloque pertenece esta pregunta (Busca el contenedor padre visible)
-                let bloqueId = 1;
-                for(let i = 1; i <= totalBloques; i++) {
-                    if (!document.getElementById(`bloque-${i}`).classList.contains('ocultar')) {
-                        bloqueId = i;
-                        break;
-                    }
-                }
-                
                 // 1. Deseleccionar todo en esa pregunta
                 document.querySelectorAll(`.pregunta-item[data-q="${qId}"]`).forEach(el => {
                     el.classList.remove('seleccionada');
@@ -439,11 +505,17 @@
 
                 // 3. Guardar respuesta
                 respuestasUsuario[qId] = respuesta;
+                
+                // 4. Actualizar progreso y estado del botón de avance
+                preguntasCompletadas = Object.keys(respuestasUsuario).length;
+                actualizarProgreso();
             });
 
             // --- MANEJO DE AVANCE ENTRE BLOQUES ---
             document.querySelectorAll('.boton-avanzar').forEach(boton => {
                 boton.addEventListener('click', function() {
+                    if (this.disabled) return; // No hacer nada si está deshabilitado
+
                     const actualId = parseInt(this.id.split('-')[2]);
                     const siguienteBloque = actualId + 1;
 
@@ -453,11 +525,14 @@
                     
                     if (siguienteBloque <= totalBloques) {
                         // Mostrar y renderizar el siguiente bloque
+                        bloqueActual = siguienteBloque;
                         renderBloque(siguienteBloque);
                     } else if (siguienteBloque === totalBloques + 1) {
                         // Ir a formulario final
                         document.getElementById('seccion-cuestionario').classList.add('ocultar');
                         document.getElementById('seccion-formulario-final').classList.remove('ocultar');
+                        // Desactivar el botón de progreso global, ya que salimos del cuestionario
+                        document.getElementById('barra-progreso-contenedor').classList.add('ocultar');
                     }
                 });
             });
@@ -471,8 +546,11 @@
                 const nombre = document.getElementById('nombre').value.trim();
                 const email = document.getElementById('email').value.trim();
                 
-                // **Simulación de envío exitoso**
-                console.log("Datos enviados:", { respuestas: respuestasUsuario, contacto: { instagram, nombre, email } });
+                // SIMULACIÓN DE ENVÍO (reemplazar con tu endpoint real)
+                console.log("Datos finales enviados:", { 
+                    respuestas: respuestasUsuario, 
+                    contacto: { instagram, nombre, email } 
+                });
 
                 // Mostrar página de agradecimiento
                 document.getElementById('seccion-formulario-final').classList.add('ocultar');
@@ -482,11 +560,17 @@
 
         // --- INICIALIZACIÓN ---
         document.addEventListener('DOMContentLoaded', () => {
-            // Renderizar el contenido del Bloque 1
+            // Inicialización de estado
+            bloqueActual = 1;
+            
+            // Renderizar el primer bloque
             renderBloque(1);
             
-            // Configurar todos los listeners para la interactividad
+            // Configurar listeners
             setupEventListeners();
+            
+            // Asegurar que el botón del bloque 1 comience desactivado (ya está en HTML, pero se refuerza)
+            document.getElementById('boton-bloque-1').disabled = true;
         });
     </script>
 </body>
