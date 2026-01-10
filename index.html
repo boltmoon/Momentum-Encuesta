@@ -10,8 +10,8 @@
             --color-fondo: #000000;
             --color-texto-min: #aaaaaa; /* Grisáceo */
             --color-texto-may: #ffffff; /* Blanco */
-            --color-momentum: #FFD700; /* Amarillo dorado/llamativo (similar a Gold) */
-            --color-combo-secundario: #FFA500; /* Naranja para combinar (como el texto "profesionales y emprendedores") */
+            --color-momentum: #FFD700; /* Amarillo dorado/llamativo */
+            --color-combo-secundario: #FFA500; /* Naranja/Ámbar */
             --color-seleccionado: #1a1a1a; /* Gris oscuro sutil para selección */
             --color-borde-amarillo: #FFD700;
         }
@@ -20,7 +20,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
         .caligrafico {
             font-family: 'Great Vibes', cursive;
-            color: var(--color-combo-secundario); /* Naranja/dorado */
+            color: var(--color-combo-secundario); 
             font-size: 2.5em;
             text-align: center;
         }
@@ -73,19 +73,20 @@
         }
 
         .seleccionada {
-            background-color: var(--color-seleccionado) !important; /* Color de fondo para seleccionado */
-            color: var(--color-texto-may); /* Asegurar que el texto sea visible */
+            background-color: var(--color-seleccionado) !important; 
+            color: var(--color-texto-may); 
             border: 1px solid var(--color-momentum);
         }
 
         .opcion-radio {
             margin-right: 10px;
             color: var(--color-momentum);
+            font-size: 1.2em;
         }
 
         .opcion-texto {
             display: inline-block;
-            width: calc(100% - 30px); /* Espacio para el círculo y el margen */
+            width: calc(100% - 30px); 
         }
         
         /* Color especial para la frase clave en descripción */
@@ -93,8 +94,8 @@
             color: var(--color-combo-secundario);
         }
 
-        /* --- FORMATO DE TEXTO EN DESCRIPCIÓN (Pregunta 36+) --- */
-        .descripcion-texto {
+        /* --- FORMATO DE TEXTO EN DESCRIPCIÓN (Bloque 5) --- */
+        .descripcion-texto p {
             line-height: 1.6;
             text-align: justify;
         }
@@ -176,47 +177,42 @@
 
     <div class="container">
         
-        <!-- --- SECCIÓN PRINCIPAL DE CUESTIONARIO (Visible por defecto) --- -->
+        <!-- --- SECCIÓN PRINCIPAL DE CUESTIONARIO (Se gestiona por JS) --- -->
         <div id="seccion-cuestionario">
 
-            <!-- BLOQUE 1 – MENTALIDAD Y POSICIÓN INTERNA -->
+            <!-- BLOQUE 1 – MENTALIDAD Y POSICIÓN INTERNA (VISIBLE POR DEFECTO) -->
             <div id="bloque-1" class="bloque">
                 <div class="titulo-bloque">✔ BLOQUE 1: MENTALIDAD Y POSICIÓN INTERNA (El Fundamento)</div>
-                <!-- Las 7 preguntas se renderizarán aquí con JS -->
+                <!-- Contenido generado por JS -->
             </div>
-            <div id="boton-bloque-1" class="boton-avanzar ocultar">Avanzar al Bloque 2</div>
+            <div id="boton-bloque-1" class="boton-avanzar">Avanzar al Bloque 2</div>
 
-            <!-- BLOQUE 2 – COMPROMISO, TIEMPO Y EJECUCIÓN REAL -->
+            <!-- BLOQUE 2 al 4 (OCULTOS) -->
             <div id="bloque-2" class="bloque ocultar">
                 <div class="titulo-bloque">⏱️ BLOQUE 2: COMPROMISO, TIEMPO Y EJECUCIÓN REAL</div>
-                <!-- Las 7 preguntas se renderizarán aquí con JS -->
             </div>
             <div id="boton-bloque-2" class="boton-avanzar ocultar">Avanzar al Bloque 3</div>
 
-            <!-- BLOQUE 3 – INVERSIÓN, RIESGO Y RELACIÓN CON EL DINERO -->
             <div id="bloque-3" class="bloque ocultar">
                 <div class="titulo-bloque">💰 BLOQUE 3: INVERSIÓN, RIESGO Y RELACIÓN CON EL CRECIMIENTO</div>
-                <!-- Las 7 preguntas se renderizarán aquí con JS -->
             </div>
             <div id="boton-bloque-3" class="boton-avanzar ocultar">Avanzar al Bloque 4</div>
 
-            <!-- BLOQUE 4 – EXPERIENCIA, ESTRUCTURA Y MADUREZ ESTRATÉGICA -->
             <div id="bloque-4" class="bloque ocultar">
                 <div class="titulo-bloque">🧩 BLOQUE 4: EXPERIENCIA, ESTRUCTURA Y MADUREZ ESTRATÉGICA</div>
-                <!-- Las 7 preguntas se renderizarán aquí con JS -->
             </div>
             <div id="boton-bloque-4" class="boton-avanzar ocultar">Avanzar al Bloque 5</div>
 
-            <!-- BLOQUE 5 – AUDIENCIA, POSICIONAMIENTO Y ESCALABILIDAD -->
+            <!-- BLOQUE 5 (OCULTO INICIALMENTE, SE CARGA SU TEXTO FIJO) -->
             <div id="bloque-5" class="bloque ocultar">
                 <div class="titulo-bloque">🚀 BLOQUE 5: AUDIENCIA, POSICIONAMIENTO Y ESCALABILIDAD</div>
-                <!-- Las 9 preguntas se renderizarán aquí con JS -->
+                <!-- Contenido fijo del Bloque 5 se insertará aquí por JS -->
             </div>
             <div id="boton-bloque-5" class="boton-avanzar ocultar">Finalizar y Enviar Respuestas</div>
 
         </div>
         
-        <!-- --- SECCIÓN DE FORMULARIO FINAL (Oculta hasta el final) --- -->
+        <!-- --- SECCIÓN DE FORMULARIO FINAL (Oculta) --- -->
         <div id="seccion-formulario-final" class="ocultar">
             <div class="titulo-bloque">✍️ ÚLTIMO PASO: DATOS DE CONTACTO</div>
             
@@ -238,16 +234,16 @@
             </form>
         </div>
 
-        <!-- --- PÁGINA DE AGRADECIMIENTO (Oculta hasta el envío) --- -->
+        <!-- --- PÁGINA DE AGRADECIMIENTO (Oculta) --- -->
         <div id="pagina-gracias" class="pagina-gracias">
-            <div class="simbolo-aprobacion">&#10004;</div> <!-- Símbolo de aprobación (Checkmark) -->
+            <div class="simbolo-aprobacion">&#10004;</div> 
             <h1 class="caligrafico">Respuestas Enviadas con Éxito</h1>
             
-            <p>Pronto recibirás una comunicación del experto con la **evaluación detallada de tu resultado** y el nivel de compromiso que expusiste en el formulario.</p>
+            <p>Pronto recibirás una comunicación del experto con la <strong>evaluación detallada de tu resultado</strong> y el nivel de compromiso que expusiste en el formulario.</p>
 
             <div class="mensaje-final-motivacional">
                 <p class="caligrafico" style="font-size: 1.8em;">¡Felicitaciones!</p>
-                <p>El simple hecho de tomarte el tiempo para completar este diagnóstico demuestra que estás en el camino correcto. Este es el **primer paso crucial** para quienes buscan **mejorar los resultados** que hoy tienen y están dispuestos a **evaluar su situación con honestidad**.</p>
+                <p>El simple hecho de tomarte el tiempo para completar este diagnóstico demuestra que estás en el camino correcto. Este es el <strong>primer paso crucial</strong> para quienes buscan <strong>mejorar los resultados</strong> que hoy tienen y están dispuestos a <strong>evaluar su situación con honestidad</strong>.</p>
                 <p>Tu búsqueda de respuestas sinceras, sin relatos mágicos ni promesas de resultados inmediatos, ya te coloca por delante.</p>
             </div>
         </div>
@@ -259,20 +255,18 @@
         const cuestionarioData = [
             {
                 bloque: 1,
-                titulo: "BLOQUE 1 – MENTALIDAD Y POSICIÓN INTERNA",
                 preguntas: [
-                    { id: 1, texto: "¿Cuando un proyecto no avanza como esperabas, lo primero que suele pasar por tu cabeza es:", opciones: ["Analizar qué parte del contexto externo influyó negativamente", "Revisar qué podría haber hecho diferente", "Evaluar tanto mis decisiones como los factores externos", "Detenerme, recalibrar y ajustar el sistema sin dramatizar"], trampa: "MEDIA" },
+                    { id: 1, texto: "Cuando un proyecto no avanza como esperabas, lo primero que suele pasar por tu cabeza es:", opciones: ["Analizar qué parte del contexto externo influyó negativamente", "Revisar qué podría haber hecho diferente", "Evaluar tanto mis decisiones como los factores externos", "Detenerme, recalibrar y ajustar el sistema sin dramatizar"], trampa: "MEDIA" },
                     { id: 2, texto: "¿Qué tan cómodo/a te sentís cuando alguien con más experiencia cuestiona tu forma de hacer las cosas?", opciones: ["Me incomoda bastante, suelo justificar mis decisiones", "Me incomoda, pero escucho", "Me interesa entender el punto del otro", "Lo busco activamente para mejorar más rápido"], trampa: "MEDIA" },
                     { id: 3, texto: "Cuando algo no funciona después de varios intentos, tu reacción más habitual es:", opciones: ["Cambiar de enfoque rápidamente", "Insistir un poco más esperando que se acomode", "Analizar datos y ajustar", "Profundizar en el proceso aunque sea incómodo"], trampa: "MEDIA" },
                     { id: 4, texto: "¿Cuál de estas frases se acerca más a tu forma real de pensar? (TRAMPA FUERTE)", opciones: ["El contexto influye más de lo que se admite", "Hago lo mejor que puedo con lo que tengo", "Siempre hay algo que puedo mejorar", "Si no obtengo resultados, asumo que todavía no ejecuté bien"], trampa: "FUERTE" },
-                    { id: 5, texto: "¿Cómo reaccionás ante la crítica pública o el juicio de terceros?", opciones: ["Evito exponerme", "Me afecta más de lo que admito", "Aprendo a gestionarlo con el tiempo", "Lo considero parte natural del crecimiento"], trampa: "MEDIA" },
+                    { id: 5, texto: "¿Cómo reaccionás ante la crítica pública o el juicio de terceros?", opciones: ["Evito exponerme", "Me afecta más de lo que admito", "Aprendo a gestionar con el tiempo", "Lo considero parte natural del crecimiento"], trampa: "MEDIA" },
                     { id: 6, texto: "En procesos de aprendizaje exigentes, tu actitud suele ser:", opciones: ["Consumo contenido cuando tengo ganas", "Aprendo, pero solo lo que me resulta cómodo", "Ejecuto incluso cuando no tengo motivación", "Me comprometo con el proceso completo"], trampa: "MEDIA" },
                     { id: 7, texto: "¿Cuál de estas afirmaciones te representa mejor hoy?", opciones: ["Sé bastante, solo necesito una oportunidad", "Tengo experiencia, pero todavía me falta estructura", "Estoy dispuesto a desaprender para crecer", "Busco sistemas exigentes que me lleven al siguiente nivel"], trampa: "MEDIA" }
                 ]
             },
             {
                 bloque: 2,
-                titulo: "BLOQUE 2 – COMPROMISO, TIEMPO Y EJECUCIÓN REAL",
                 fraseMotivacional: "Aquí se separa a quien solo quiere el destino, de quien está dispuesto a recorrer el camino, kilómetro a kilómetro.",
                 preguntas: [
                     { id: 8, texto: "¿Actualmente, cuánto tiempo semanal podrías dedicar de forma constante a un proceso estratégico como este?", opciones: ["Menos de 3 horas", "Entre 3 y 5 horas", "Entre 5 y 10 horas", "Más de 10 horas semanales"], trampa: "MEDIA" },
@@ -286,7 +280,6 @@
             },
             {
                 bloque: 3,
-                titulo: "BLOQUE 3 – INVERSIÓN, RIESGO Y RELACIÓN CON EL DINERO",
                 fraseMotivacional: "Acá aparece la verdad sin maquillaje: no se mide cuánto tienes, sino cómo piensas el crecimiento estratégico.",
                 preguntas: [
                     { id: 15, texto: "¿Cuando pensás en invertir en tu propio crecimiento profesional, sentís principalmente:", opciones: ["Incomodidad o tensión", "Dudas y miedo a equivocarte", "Análisis y cautela", "Responsabilidad estratégica"], trampa: "MEDIA" },
@@ -300,7 +293,6 @@
             },
             {
                 bloque: 4,
-                titulo: "BLOQUE 4 – EXPERIENCIA, ESTRUCTURA Y MADUREZ ESTRATÉGICA",
                 fraseMotivacional: "Donde se ve quién juega a largo plazo: la diferencia entre consumir información y construir un sistema.",
                 preguntas: [
                     { id: 22, texto: "En relación a la venta de productos o servicios digitales, tu experiencia es:", opciones: ["Nula", "Inicial, con intentos aislados", "Intermedia, con aprendizajes claros", "Avanzada, con estructura definida"], trampa: "SUAVE" },
@@ -314,7 +306,6 @@
             },
             {
                 bloque: 5,
-                titulo: "BLOQUE 5 – AUDIENCIA, POSICIONAMIENTO Y ESCALABILIDAD",
                 fraseMotivacional: "El último filtro: ¿Estás pensando en la próxima semana o en el próximo ciclo de crecimiento?",
                 preguntas: [
                     { id: 29, texto: "Tu relación con tu audiencia hoy es:", opciones: ["Publico sin saber quién me sigue", "Tengo una idea general", "Entiendo intereses y problemas", "Conozco patrones claros"], trampa: "SUAVE" },
@@ -324,7 +315,7 @@
                     { id: 33, texto: "¿Qué tan preparado/a te sentís para sostener crecimiento sin perder calidad?", opciones: ["Poco", "Medianamente", "Bastante", "Totalmente"], trampa: "SUAVE" },
                     { id: 34, texto: "Tu visión de negocio es:", opciones: ["Corto plazo", "Resolver ingresos actuales", "Mediano plazo", "Largo plazo y escalable"], trampa: "MEDIA" },
                     { id: 35, texto: "Si tu audiencia creciera 10x, tu estructura actual:", opciones: ["Colapsaría", "Tendría dificultades", "Podría adaptarse", "Está pensada para eso"], trampa: "MEDIA" },
-                    /* Se añaden las preguntas 36, 37 y 38 para completar la estructura de flujo */
+                    /* Preguntas añadidas para completar el flujo de 5 bloques */
                     { id: 36, texto: "Si tuvieras que describir el \"motor\" de tu negocio en una palabra, sería:", opciones: ["Producto", "Marketing", "Sistema", "Cliente"], trampa: "MEDIA" },
                     { id: 37, texto: "¿Qué tan seguido ajustás tu estrategia principal por un \"resultado de la semana\"?", opciones: ["Constantemente", "Frecuentemente", "Raramente", "Casi nunca"], trampa: "MEDIA" },
                     { id: 38, texto: "En términos de crecimiento, tu meta principal es:", opciones: ["Tener más ingresos hoy", "Tener un negocio sólido", "Tener impacto a largo plazo", "Crear un activo valioso"], trampa: "MEDIA" }
@@ -335,8 +326,58 @@
         let respuestasUsuario = {};
         let bloqueActual = 1;
         const totalBloques = cuestionarioData.length;
+        let preguntasRenderizadas = 0;
 
-        // --- FUNCIÓN DE RENDERIZADO ---
+        // --- FUNCIÓN PARA GENERAR CONTENIDO DE PREGUNTAS ---
+        function generarPreguntasHTML(data, numeroBloque) {
+            let htmlPreguntas = '';
+            data.preguntas.forEach(p => {
+                preguntasRenderizadas++;
+                let opcionesHtml = p.opciones.map((opcion) => `
+                    <div class="pregunta-item" data-q="${p.id}" data-a="${opcion}">
+                        <span class="opcion-radio">&#9675;</span>
+                        <span class="opcion-texto">${opcion}</span>
+                    </div>
+                `).join('');
+
+                htmlPreguntas += `
+                    <div id="q-container-${p.id}">
+                        <h4>Pregunta ${p.id}</h4>
+                        <p>${p.texto}</p>
+                        ${opcionesHtml}
+                    </div>
+                `;
+            });
+            return htmlPreguntas;
+        }
+
+        // --- FUNCIÓN PARA GENERAR CONTENIDO FIJO DEL BLOQUE 5 ---
+        function contenidoFijoBloque5() {
+            const data = cuestionarioData.find(b => b.bloque === 5);
+            const textoHTML = `
+                <div class="descripcion-texto">
+                    <p>
+                        la FÓRMULA MOMENTUM nace de una manera específica de entender cómo se construyen los resultados.
+                        está diseñada exclusivamente para <span class="color-combo-secundario">PROFESIONALES y EMPRENDEDORES</span> que comprenden que avanzar no depende de impulsos aislados, sino de sostener decisiones en el tiempo.
+                        personas con <span class="color-combo-secundario">HAMBRE POR AVANZAR</span> , <span class="color-combo-secundario">RESILIENCIA FRENTE A LOS OBSTÁCULOS</span> y <span class="color-combo-secundario">COMPROMISO REAL PARA LLEVAR UN PROCESO HASTA EL FINAL</span> .
+                        acá no se improvisa ni se persiguen efectos inmediatos.
+                        el avance se da cuando cada acción responde a un enfoque claro, una secuencia ordenada y una revisión constante que transforma la experiencia en mejora concreta.
+                        el único riesgo en este tipo de procesos no es equivocarse ni avanzar más lento de lo esperado — es <span class="color-combo-secundario">INTERRUMPIR EL RECORRIDO</span> antes de comprender cómo se conectan las decisiones con los resultados.
+                        cuando esa comprensión aparece, los resultados dejan de ser circunstanciales. se vuelven <span class="color-combo-secundario">PREVISIBLES</span>, <span class="color-combo-secundario">SOSTENIBLES</span> y directamente dependientes del criterio de quien ejecuta.
+                    </p>
+                    
+                    <div class="recuadro-remarque">
+                        esto no es una promesa ni una inscripción automática. es una instancia de diagnóstico real, pensada para observar cómo tomás decisiones, cómo ejecutás y cómo sostenés un proceso cuando no hay atajos.
+                        no busca validar ni descartar personas; expone con claridad si estás dispuesto a hacer lo que el proceso exige, con consistencia, <span class="color-combo-secundario">RESPONSABILIDAD</span> y sin relatos mágicos.
+                    </div>
+                </div>
+                <h4 style="margin-top: 25px;">Preguntas del Bloque 5:</h4>
+                ${generarPreguntasHTML(data, 5)}
+            `;
+            return textoHTML;
+        }
+
+        // --- FUNCIÓN DE RENDERIZADO PRINCIPAL ---
         function renderBloque(numeroBloque) {
             const data = cuestionarioData.find(b => b.bloque === numeroBloque);
             if (!data) return;
@@ -344,44 +385,48 @@
             const divBloque = document.getElementById(`bloque-${numeroBloque}`);
             const botonAvance = document.getElementById(`boton-bloque-${numeroBloque}`);
             
-            // Generar HTML de preguntas
-            let htmlPreguntas = '';
-            data.preguntas.forEach(p => {
-                let opcionesHtml = p.opciones.map((opcion, index) => `
-                    <div class="pregunta-item" data-q="${p.id}" data-a="${opcion}">
-                        <span class="opcion-radio">&#9675;</span>
-                        <span class="opcion-texto">${opcion}</span>
-                    </div>
-                `).join('');
+            // 1. Definir el contenido del bloque
+            let contenido = '';
+            if (data.fraseMotivacional) {
+                contenido += `<div class="titulo-bloque" style="font-size: 1.2em; border: none; margin-top: -10px;">${data.fraseMotivacional}</div>`;
+            }
 
-                // Añadir frase motivacional si existe
-                let motivacionalHtml = data.fraseMotivacional ? `<div class="titulo-bloque" style="font-size: 1.2em; border: none;">${data.fraseMotivacional}</div>` : '';
-
-                htmlPreguntas += `
-                    <h4>Pregunta ${p.id}</h4>
-                    <p>${p.texto}</p>
-                    ${opcionesHtml}
-                `;
-            });
+            if (numeroBloque === 5) {
+                // Contenido especial para Bloque 5 (Texto fijo + Preguntas)
+                contenido += contenidoFijoBloque5();
+            } else {
+                // Contenido estándar para Bloques 1-4 (Solo preguntas)
+                contenido += generarPreguntasHTML(data, numeroBloque);
+            }
             
-            // Aplicar el contenido al contenedor
-            divBloque.innerHTML = `${motivacionalHtml} ${htmlPreguntas}`;
+            // 2. Aplicar el contenido al contenedor
+            divBloque.innerHTML += contenido;
             
-            // Mostrar el bloque actual y su botón de avance
+            // 3. Mostrar el bloque y su botón de avance
             divBloque.classList.remove('ocultar');
             if (botonAvance) botonAvance.classList.remove('ocultar');
         }
-
-        // --- FUNCIÓN DE INTERACCIÓN ---
+        
+        // --- FUNCIÓN DE INTERACCIÓN (Event Listeners) ---
         function setupEventListeners() {
+            
+            // Lógica de selección Multiple Choice
             document.getElementById('seccion-cuestionario').addEventListener('click', function(e) {
                 const item = e.target.closest('.pregunta-item');
                 if (!item) return;
 
                 const qId = parseInt(item.dataset.q);
                 const respuesta = item.dataset.a;
-                const bloque = parseInt(document.querySelector('.bloque:not(.ocultar)').id.split('-')[1]);
-
+                
+                // Identificar a qué bloque pertenece esta pregunta (Busca el contenedor padre visible)
+                let bloqueId = 1;
+                for(let i = 1; i <= totalBloques; i++) {
+                    if (!document.getElementById(`bloque-${i}`).classList.contains('ocultar')) {
+                        bloqueId = i;
+                        break;
+                    }
+                }
+                
                 // 1. Deseleccionar todo en esa pregunta
                 document.querySelectorAll(`.pregunta-item[data-q="${qId}"]`).forEach(el => {
                     el.classList.remove('seleccionada');
@@ -390,30 +435,24 @@
 
                 // 2. Seleccionar la nueva respuesta
                 item.classList.add('seleccionada');
-                item.querySelector('.opcion-radio').innerHTML = '&#10003;'; // Checkmark seleccionado
+                item.querySelector('.opcion-radio').innerHTML = '&#10003;'; 
 
                 // 3. Guardar respuesta
                 respuestasUsuario[qId] = respuesta;
-                
-                // Mostrar botón de avance si estamos en un bloque renderizado
-                const botonActual = document.getElementById(`boton-bloque-${bloque}`);
-                if (botonActual && !botonActual.classList.contains('ocultar')) {
-                    // Para esta demo, el botón siempre se muestra, pero en una app real podrías activarlo al completar.
-                }
             });
 
-            // --- MANEJO DE AVANCE ---
+            // --- MANEJO DE AVANCE ENTRE BLOQUES ---
             document.querySelectorAll('.boton-avanzar').forEach(boton => {
                 boton.addEventListener('click', function() {
                     const actualId = parseInt(this.id.split('-')[2]);
                     const siguienteBloque = actualId + 1;
 
+                    // Ocultar el bloque y botón actual
+                    document.getElementById(`bloque-${actualId}`).classList.add('ocultar');
+                    this.classList.add('ocultar');
+                    
                     if (siguienteBloque <= totalBloques) {
-                        // Ocultar todo lo anterior
-                        document.getElementById(`bloque-${actualId}`).classList.add('ocultar');
-                        this.classList.add('ocultar');
-                        
-                        // Mostrar el siguiente
+                        // Mostrar y renderizar el siguiente bloque
                         renderBloque(siguienteBloque);
                     } else if (siguienteBloque === totalBloques + 1) {
                         // Ir a formulario final
@@ -427,19 +466,15 @@
             document.getElementById('formulario-contacto').addEventListener('submit', function(e) {
                 e.preventDefault();
                 
-                // 1. Recopilar datos finales (y simular envío a un servidor)
-                const instagram = document.getElementById('instagram').value;
-                const nombre = document.getElementById('nombre').value;
-                const email = document.getElementById('email').value;
+                // Recopilar datos finales
+                const instagram = document.getElementById('instagram').value.trim();
+                const nombre = document.getElementById('nombre').value.trim();
+                const email = document.getElementById('email').value.trim();
                 
-                // **SIMULACIÓN DE ENVÍO REAL**
-                // En una aplicación real, aquí iría un 'fetch' o AJAX para enviar 'respuestasUsuario', instagram, nombre, email a tu backend.
-                console.log("Respuestas enviadas:", {
-                    respuestas: respuestasUsuario,
-                    contacto: { instagram, nombre, email }
-                });
+                // **Simulación de envío exitoso**
+                console.log("Datos enviados:", { respuestas: respuestasUsuario, contacto: { instagram, nombre, email } });
 
-                // 2. Mostrar página de agradecimiento
+                // Mostrar página de agradecimiento
                 document.getElementById('seccion-formulario-final').classList.add('ocultar');
                 document.getElementById('pagina-gracias').style.display = 'block';
             });
@@ -447,51 +482,12 @@
 
         // --- INICIALIZACIÓN ---
         document.addEventListener('DOMContentLoaded', () => {
-            // Renderizar el primer bloque al cargar
+            // Renderizar el contenido del Bloque 1
             renderBloque(1);
-            // Configurar todos los listeners
+            
+            // Configurar todos los listeners para la interactividad
             setupEventListeners();
         });
-
-        /* --- LÓGICA DEL TEXTO DESCRIPTIVO (Simulación de renderizado del Bloque 5) --- */
-        /* Esta parte se inserta manualmente en el contenido del bloque 5,
-           ya que no es una pregunta de selección sino un bloque de texto con formato específico. */
-        document.addEventListener('DOMContentLoaded', () => {
-            const bloque5 = cuestionarioData.find(b => b.bloque === 5);
-            if (bloque5) {
-                const divBloque5 = document.getElementById('bloque-5');
-                
-                // Contenido del texto descriptivo (Formato solicitado)
-                const textoHTML = `
-                    <div class="titulo-bloque" style="font-size: 1.2em; border: none;">${bloque5.fraseMotivacional}</div>
-                    
-                    <div class="descripcion-texto">
-                        <p>
-                            la FÓRMULA MOMENTUM nace de una manera específica de entender cómo se construyen los resultados.
-                            está diseñada exclusivamente para <span class="color-combo-secundario">PROFESIONALES y EMPRENDEDORES</span> que comprenden que avanzar no depende de impulsos aislados, sino de sostener decisiones en el tiempo.
-                            personas con <span class="color-combo-secundario">HAMBRE POR AVANZAR</span> , <span class="color-combo-secundario">RESILIENCIA FRENTE A LOS OBSTÁCULOS</span> y <span class="color-combo-secundario">COMPROMISO REAL PARA LLEVAR UN PROCESO HASTA EL FINAL</span> .
-                            acá no se improvisa ni se persiguen efectos inmediatos.
-                            el avance se da cuando cada acción responde a un enfoque claro, una secuencia ordenada y una revisión constante que transforma la experiencia en mejora concreta.
-                            el único riesgo en este tipo de procesos no es equivocarse ni avanzar más lento de lo esperado — es <span class="color-combo-secundario">INTERRUMPIR EL RECORRIDO</span> antes de comprender cómo se conectan las decisiones con los resultados.
-                            cuando esa comprensión aparece, los resultados dejan de ser circunstanciales. se vuelven <span class="color-combo-secundario">PREVISIBLES</span>, <span class="color-combo-secundario">SOSTENIBLES</span> y directamente dependientes del criterio de quien ejecuta.
-                        </p>
-                        
-                        <div class="recuadro-remarque">
-                            esto no es una promesa ni una inscripción automática. es una instancia de diagnóstico real, pensada para observar cómo tomás decisiones, cómo ejecutás y cómo sostenés un proceso cuando no hay atajos.
-                            no busca validar ni descartar personas; expone con claridad si estás dispuesto a hacer lo que el proceso exige, con consistencia, <span class="color-combo-secundario">RESPONSABILIDAD</span> y sin relatos mágicos.
-                        </div>
-                    </div>
-                    
-                    <h4 style="margin-top: 25px;">Preguntas del Bloque 5:</h4>
-                    <!-- El resto de las preguntas se renderizará por el flujo general -->
-                `;
-                
-                // Para simplificar el renderizado general, solo se insertan las preguntas al final.
-                // Si se quisiera integrar el texto fijo aquí, habría que modificar la lógica de renderizado.
-                // Por ahora, nos enfocamos en que el flujo general llame a renderizar las preguntas 29 a 38.
-            }
-        });
-
     </script>
 </body>
 </html>
