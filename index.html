@@ -14,12 +14,13 @@
             color: white;
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
+            scroll-behavior: smooth;
         }
         .momentum-yellow { color: #EAB308; }
         .bg-momentum-yellow { background-color: #EAB308; }
         
         .fade-in {
-            animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         @keyframes fadeUp {
@@ -39,7 +40,7 @@
             font-weight: 900;
         }
         
-        .hidden { display: none; }
+        .hidden { display: none !important; }
 
         input::placeholder { color: #444; }
     </style>
@@ -80,7 +81,7 @@
                     cuando esa comprensión aparece, los resultados dejan de ser circunstanciales. se vuelven <span class="text-white font-black italic uppercase">PREVISIBLES, SOSTENIBLES</span> y directamente dependientes del criterio de quien ejecuta.
                 </p>
 
-                <!-- BLOQUE ADVERTENCIA (MINÚSCULAS Y GRUESA) -->
+                <!-- BLOQUE ADVERTENCIA -->
                 <div class="p-8 md:p-10 rounded-[32px] border border-[#EAB308]/30 bg-[#111] mt-12 shadow-2xl">
                     <div class="text-base font-black italic leading-relaxed text-justify space-y-4 lowercase tracking-tight text-white">
                         <p>
@@ -125,7 +126,7 @@
 
             <!-- Botón de Navegación -->
             <div id="nav-container" class="py-16 text-center hidden">
-                <button id="btn-next-step" onclick="nextStep()" class="w-full md:w-auto px-12 py-6 bg-momentum-yellow text-black font-black italic text-xl rounded-2xl transition-all hover:scale-105 shadow-2xl uppercase">
+                <button id="btn-next-step" onclick="nextStep()" class="hidden w-full md:w-auto px-12 py-6 bg-momentum-yellow text-black font-black italic text-xl rounded-2xl transition-all hover:scale-105 shadow-2xl uppercase">
                     Continuar al Bloque <span id="next-block-num"></span>
                 </button>
                 
@@ -159,7 +160,7 @@
     </div>
 
     <script>
-        // Los 7 bloques con 35 preguntas únicas
+        // Los 7 bloques con 35 preguntas únicas y fijas
         const blocks = [
             { title: "MÉRITO Y DETERMINACIÓN", desc: "Bloque 1 de 7", questions: [
                 { id: 1, q: "¿Qué tan dispuesto estás a sacrificar gratificación inmediata por resultados a largo plazo?", opts: ["Nada dispuesto", "Poco dispuesto", "Dispuesto con esfuerzo", "Es mi única forma de operar"] },
@@ -218,12 +219,16 @@
         function startDiagnostic() {
             document.getElementById('header-screen').classList.add('hidden');
             document.getElementById('diagnostic-screen').classList.remove('hidden');
+            window.scrollTo(0,0);
             renderBlock();
         }
 
         function renderBlock() {
             const block = blocks[currentStep];
             if (!block) return;
+
+            // Siempre al inicio al cargar bloque
+            window.scrollTo(0,0);
 
             document.getElementById('block-title').innerText = block.title;
             document.getElementById('block-desc').innerText = block.desc;
@@ -257,13 +262,12 @@
 
             checkBlockCompletion();
             updateProgress();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function selectOption(qId, val, idx) {
             answers[qId] = val;
             
-            // UI Feedback: Desmarcar otros y marcar este
+            // UI Feedback
             const block = blocks[currentStep];
             const q = block.questions.find(item => item.id === qId);
             q.opts.forEach((_, i) => {
@@ -278,7 +282,7 @@
 
         function checkBlockCompletion() {
             const block = blocks[currentStep];
-            const completed = block.questions.every(q => answers[q.id]);
+            const completed = block.questions.every(q => answers[q.id] !== undefined && answers[q.id] !== "");
 
             const nav = document.getElementById('nav-container');
             const btnNext = document.getElementById('btn-next-step');
@@ -286,7 +290,7 @@
 
             if(completed) {
                 nav.classList.remove('hidden');
-                if(currentStep < blocks.length - 1) {
+                if(currentStep < (blocks.length - 1)) {
                     btnNext.classList.remove('hidden');
                     btnFinish.classList.add('hidden');
                     document.getElementById('next-block-num').innerText = `${currentStep + 2} de ${blocks.length}`;
@@ -300,18 +304,21 @@
         }
 
         function nextStep() {
-            currentStep++;
-            renderBlock();
-            document.getElementById('nav-container').classList.add('hidden');
+            if(currentStep < blocks.length - 1) {
+                currentStep++;
+                renderBlock();
+                // Aseguramos el scroll arriba
+                window.scrollTo(0,0);
+            }
         }
 
         function showFinalForm() {
+            window.scrollTo(0,0);
             document.getElementById('questions-container').classList.add('hidden');
             document.getElementById('nav-container').classList.add('hidden');
             document.getElementById('block-title').innerText = "VINCULACIÓN FINAL";
             document.getElementById('block-desc').innerText = "PASO FINAL";
             document.getElementById('final-form').classList.remove('hidden');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function updateProgress() {
@@ -335,11 +342,10 @@
             btn.disabled = true;
             txt.innerText = "PROCESANDO MOMENTUM...";
 
-            // Simulación de envío a Google Sheets (AQUÍ IRÍA EL FETCH)
             setTimeout(() => {
+                window.scrollTo(0,0);
                 document.getElementById('diagnostic-screen').classList.add('hidden');
                 document.getElementById('success-screen').classList.remove('hidden');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
             }, 2000);
         }
     </script>
