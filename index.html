@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fórmula Momentum | Diagnóstico</title>
+    <title>Fórmula Momentum | Diagnóstico de Alto Rendimiento</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,7 +17,6 @@
         }
         .momentum-yellow { color: #EAB308; }
         .bg-momentum-yellow { background-color: #EAB308; }
-        .border-momentum-yellow { border-color: #EAB308; }
         
         .fade-in {
             animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -28,348 +27,320 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .selection-yellow::selection {
-            background: #EAB308;
-            color: black;
-        }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #000; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
 
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
+        .option-selected {
+            background-color: #EAB308 !important;
+            color: black !important;
+            border-color: #EAB308 !important;
+            transform: scale(1.02);
+            font-weight: 900;
         }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #000;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #333;
-            border-radius: 10px;
-        }
-
-        input::placeholder { color: #555; }
         
         .hidden { display: none; }
+
+        input::placeholder { color: #444; }
     </style>
 </head>
-<body class="selection-yellow custom-scrollbar">
+<body class="custom-scrollbar">
 
     <div id="app" class="max-w-4xl mx-auto px-4 py-12 md:py-24">
         
-        <!-- PANTALLA DE INICIO (HEADER) -->
+        <!-- PANTALLA DE INICIO -->
         <header id="header-screen" class="text-center mb-16 fade-in">
-            <h1 class="text-6xl md:text-8xl font-black tracking-tighter uppercase italic flex flex-col leading-none mb-12 drop-shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+            <h1 class="text-6xl md:text-8xl font-black tracking-tighter uppercase italic flex flex-col leading-none mb-12">
                 <span class="text-white">FÓRMULA</span>
                 <span class="momentum-yellow -mt-2">MOMENTUM</span>
             </h1>
 
-            <div class="space-y-6 leading-relaxed text-base md:text-lg font-medium text-slate-400 text-left">
+            <div class="space-y-6 leading-relaxed text-left text-lg font-medium text-slate-400">
                 <p>
-                    <span>la </span>
-                    <span class="text-white font-black italic uppercase">FÓRMULA MOMENTUM </span>
-                    <span>nace de una manera específica de entender cómo se construyen los resultados.</span>
+                    <span class="text-white font-black italic uppercase">la FÓRMULA MOMENTUM</span> nace de una manera específica de entender cómo se construyen los resultados.
                 </p>
 
                 <p>
-                    <span>está diseñada exclusivamente para </span>
-                    <span class="momentum-yellow font-black italic uppercase">PROFESIONALES </span>
-                    <span>y </span>
-                    <span class="momentum-yellow font-black italic uppercase">EMPRENDEDORES </span>
-                    <span>que comprenden que avanzar no depende de impulsos aislados, sino de sostener decisiones en el tiempo.</span>
+                    está diseñada exclusivamente para <span class="momentum-yellow font-black italic uppercase">PROFESIONALES</span> y <span class="momentum-yellow font-black italic uppercase">EMPRENDEDORES</span> que comprenden que avanzar no depende de impulsos aislados, sino de sostener decisiones en el tiempo.
                 </p>
 
                 <p>
-                    <span>personas con </span>
-                    <span class="momentum-yellow font-black italic uppercase">HAMBRE POR AVANZAR</span>
-                    <span>, </span>
-                    <span class="momentum-yellow font-black italic uppercase">RESILIENCIA FRENTE A LOS OBSTÁCULOS </span>
-                    <span>y </span>
-                    <span class="momentum-yellow font-black italic uppercase">COMPROMISO REAL PARA LLEVAR UN PROCESO HASTA EL FINAL</span>
-                    <span>.</span>
+                    personas con <span class="momentum-yellow font-black italic uppercase">HAMBRE POR AVANZAR</span>, <span class="momentum-yellow font-black italic uppercase">RESILIENCIA FRENTE A LOS OBSTÁCULOS</span> y <span class="momentum-yellow font-black italic uppercase">COMPROMISO REAL PARA LLEVAR UN PROCESO HASTA EL FINAL</span>.
                 </p>
 
-                <p><span>acá no se improvisa ni se persiguen efectos inmediatos.</span></p>
+                <p>acá no se improvisa ni se persiguen efectos inmediatos.</p>
 
-                <p><span>el avance se da cuando cada acción responde a un enfoque claro, una secuencia ordenada y una revisión constante que transforma la experiencia en mejora concreta.</span></p>
+                <p>el avance se da cuando cada acción responde a un enfoque claro, una secuencia ordenada y una revisión constante que transforma la experiencia en mejora concreta.</p>
 
                 <p>
-                    <span>el único riesgo en este tipo de procesos no es equivocarse ni avanzar más lento de lo esperado — es </span>
-                    <span class="momentum-yellow font-black italic uppercase underline decoration-2 underline-offset-4">INTERRUMPIR EL RECORRIDO </span>
-                    <span>antes de comprender cómo se conectan las decisiones con los resultados.</span>
+                    el único riesgo en este tipo de procesos no es equivocarse ni avanzar más lento de lo esperado — es <span class="momentum-yellow font-black italic uppercase underline decoration-2 underline-offset-4">INTERRUMPIR EL RECORRIDO</span> antes de comprender cómo se conectan las decisiones con los resultados.
                 </p>
 
                 <p>
-                    <span>cuando esa comprensión aparece, los resultados dejan de ser circunstanciales. se vuelven </span>
-                    <span class="text-white font-black italic uppercase">PREVISIBLES, SOSTENIBLES </span>
-                    <span>y directamente dependientes del criterio de quien ejecuta.</span>
+                    cuando esa comprensión aparece, los resultados dejan de ser circunstanciales. se vuelven <span class="text-white font-black italic uppercase">PREVISIBLES, SOSTENIBLES</span> y directamente dependientes del criterio de quien ejecuta.
                 </p>
 
-                <!-- BLOQUE DE ADVERTENCIA ACTUALIZADO A MINÚSCULAS -->
-                <div class="p-8 md:p-10 rounded-[32px] border border-[#EAB308]/30 bg-[#1a1a1a] mt-12 shadow-[0_20px_40px_rgba(0,0,0,0.5)]">
-                    <div class="text-sm md:text-base font-bold italic leading-relaxed text-justify space-y-5 lowercase tracking-tight">
-                        <p class="text-white">
+                <!-- BLOQUE ADVERTENCIA (MINÚSCULAS Y GRUESA) -->
+                <div class="p-8 md:p-10 rounded-[32px] border border-[#EAB308]/30 bg-[#111] mt-12 shadow-2xl">
+                    <div class="text-base font-black italic leading-relaxed text-justify space-y-4 lowercase tracking-tight text-white">
+                        <p>
                             esto no es una promesa ni una inscripción automática. es una instancia de diagnóstico real, pensada para observar cómo tomás decisiones, cómo ejecutás y cómo sostenés un proceso cuando no hay atajos.
                         </p>
-                        <p class="text-white">
+                        <p>
                             no busca validar ni descartar personas; expone con claridad si estás dispuesto a hacer lo que el proceso exige, con consistencia, responsabilidad y sin relatos mágicos.
                         </p>
                     </div>
                 </div>
             </div>
             
-            <div class="pt-12 text-center">
-                <button onclick="startDiagnostic()" class="w-full md:w-auto px-16 py-8 bg-white text-black font-black italic text-2xl rounded-3xl hover:bg-[#EAB308] transition-all hover:scale-105 shadow-xl flex items-center justify-center gap-4 mx-auto uppercase">
+            <div class="pt-16">
+                <button onclick="startDiagnostic()" class="w-full md:w-auto px-12 py-6 bg-white text-black font-black italic text-xl rounded-2xl hover:bg-[#EAB308] transition-all hover:scale-105 shadow-xl flex items-center justify-center gap-4 mx-auto uppercase">
                     COMENZAR DIAGNÓSTICO
-                    <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M13 10V3L4 14H11V21L20 10H13Z"/></svg>
+                    <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24" width="24" height="24"><path d="M13 10V3L4 14H11V21L20 10H13Z"/></svg>
                 </button>
             </div>
         </header>
 
-        <!-- CONTENEDOR DE PREGUNTAS -->
+        <!-- CONTENEDOR DE DIAGNÓSTICO -->
         <main id="diagnostic-screen" class="hidden fade-in">
-            <!-- Info del bloque -->
-            <div class="mb-12 p-8 rounded-[30px] bg-[#EAB308]/5 border border-[#EAB308]/20 shadow-[0_0_30px_rgba(234,179,8,0.05)]">
-                <div class="flex items-start gap-4">
-                    <svg class="w-8 h-8 momentum-yellow shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-7.714 2.143L11 21l-2.143-7.714L1 12l7.714-2.143L11 3z"></path></svg>
-                    <div>
-                        <h4 id="step-title" class="momentum-yellow font-black italic tracking-widest text-[10px] mb-2 uppercase"></h4>
-                        <p id="step-text" class="text-white font-bold italic text-lg leading-tight uppercase"></p>
-                    </div>
+            <!-- Título del Bloque Actual -->
+            <div class="mb-8 border-b border-white/10 pb-6">
+                <h2 id="block-title" class="text-3xl md:text-4xl font-black italic text-white uppercase mb-2"></h2>
+                <p id="block-desc" class="momentum-yellow font-bold uppercase text-xs tracking-[0.2em]"></p>
+            </div>
+
+            <!-- Barra de Progreso -->
+            <div class="mb-12">
+                <div class="flex justify-between items-end mb-2">
+                    <span class="text-[10px] font-black tracking-widest uppercase text-slate-500">Estado del Análisis</span>
+                    <span id="progress-text" class="text-xl font-black momentum-yellow">0%</span>
+                </div>
+                <div class="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                    <div id="progress-bar" class="h-full bg-momentum-yellow transition-all duration-500" style="width: 0%"></div>
                 </div>
             </div>
 
-            <!-- Barra de progreso -->
-            <div class="mb-12 px-2">
-                <div class="flex justify-between items-center mb-4 text-[10px] font-black tracking-widest uppercase text-slate-600">
-                    <span>Progreso del Análisis</span>
-                    <span id="progress-text" class="text-xl momentum-yellow">0%</span>
-                </div>
-                <div class="h-1 w-full rounded-full bg-white/5 overflow-hidden">
-                    <div id="progress-bar" class="h-full bg-momentum-yellow transition-all duration-700 shadow-[0_0_15px_#EAB308]" style="width: 0%"></div>
-                </div>
-            </div>
+            <!-- Preguntas -->
+            <div id="questions-container" class="space-y-10"></div>
 
-            <!-- Contenedor de preguntas inyectadas -->
-            <div id="questions-container" class="space-y-8"></div>
+            <!-- Botón de Navegación -->
+            <div id="nav-container" class="py-16 text-center hidden">
+                <button id="btn-next-step" onclick="nextStep()" class="w-full md:w-auto px-12 py-6 bg-momentum-yellow text-black font-black italic text-xl rounded-2xl transition-all hover:scale-105 shadow-2xl uppercase">
+                    Continuar al Bloque <span id="next-block-num"></span>
+                </button>
+                
+                <button id="btn-finish" onclick="showFinalForm()" class="hidden w-full md:w-auto px-12 py-6 bg-white text-black font-black italic text-xl rounded-2xl transition-all hover:scale-105 shadow-2xl uppercase">
+                    Finalizar y Ver Veredicto
+                </button>
+            </div>
 
             <!-- Formulario Final -->
-            <div id="final-form" class="hidden p-10 md:p-16 rounded-[50px] bg-[#0a0a0a] border border-[#EAB308]/30 text-center space-y-10 mt-12">
-                <div class="max-w-xl mx-auto space-y-4">
-                    <h3 class="text-3xl font-black italic text-white uppercase tracking-tighter">Veredicto Final</h3>
-                    <p class="text-white text-[10px] font-bold uppercase tracking-[0.2em] leading-relaxed">
-                        EL SISTEMA HA RECOPILADO TU PATRÓN DE DECISIÓN. RELLENA TUS DATOS PARA VINCULAR EL RESULTADO A TU PERFIL PROFESIONAL.
-                    </p>
+            <div id="final-form" class="hidden p-10 rounded-[40px] bg-[#111] border border-[#EAB308]/30 mt-12 space-y-8 text-center">
+                <h3 class="text-2xl font-black italic text-white uppercase">Vincular Resultados</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input id="input-nombre" type="text" placeholder="NOMBRE COMPLETO" class="bg-black border border-white/10 p-5 rounded-xl outline-none focus:border-[#EAB308] font-bold text-white uppercase text-sm">
+                    <input id="input-email" type="email" placeholder="EMAIL PROFESIONAL" class="bg-black border border-white/10 p-5 rounded-xl outline-none focus:border-[#EAB308] font-bold text-white uppercase text-sm">
                 </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
-                    <input id="input-nombre" type="text" placeholder="NOMBRE COMPLETO" class="bg-white/5 border border-white/10 p-5 rounded-2xl outline-none focus:border-[#EAB308] font-black uppercase text-xs text-white">
-                    <input id="input-email" type="email" placeholder="EMAIL PROFESIONAL" class="bg-white/5 border border-white/10 p-5 rounded-2xl outline-none focus:border-[#EAB308] font-black uppercase text-xs text-white">
-                </div>
-
-                <button id="btn-submit" onclick="submitDiagnostic()" class="px-16 py-8 rounded-3xl bg-momentum-yellow text-black font-black text-2xl italic transition-all hover:scale-105 shadow-2xl disabled:opacity-20 uppercase">
-                    OBTENER MI VEREDICTO
-                </button>
-            </div>
-
-            <!-- Navegación -->
-            <div class="flex flex-col md:flex-row items-center justify-between gap-8 pt-10 pb-20">
-                <button id="btn-prev" onclick="changeStep(-1)" class="px-8 py-4 rounded-xl font-black uppercase text-[10px] tracking-widest text-slate-500 hover:text-white transition-all">
-                    ← Anterior
-                </button>
-                
-                <div id="step-indicators" class="flex gap-2"></div>
-                
-                <button id="btn-next" onclick="changeStep(1)" class="px-10 py-4 bg-white text-black font-black uppercase text-[10px] tracking-widest hover:bg-momentum-yellow transition-all disabled:opacity-10">
-                    Siguiente Bloque →
+                <button onclick="submitDiagnostic()" id="btn-submit" class="w-full py-6 bg-momentum-yellow text-black font-black italic text-xl rounded-2xl uppercase flex items-center justify-center gap-3">
+                    <span id="submit-text">Enviar Diagnóstico</span>
                 </button>
             </div>
         </main>
 
         <!-- PANTALLA DE ÉXITO -->
-        <div id="success-screen" class="hidden min-h-[60vh] flex items-center justify-center fade-in">
-            <div class="max-w-2xl w-full p-10 md:p-16 rounded-[40px] bg-[#0a0a0a] border border-white/5 text-center shadow-2xl">
-                <div class="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-10 shadow-[0_0_50px_rgba(34,197,94,0.3)]">
-                    <svg class="w-14 h-14 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"></path></svg>
-                </div>
-                <h1 class="text-4xl font-black mb-6 tracking-tighter italic uppercase text-white">Diagnóstico Procesado</h1>
-                <div class="space-y-6 text-lg text-slate-300">
-                    <p>Has dado un paso decisivo. Tu capacidad de llegar hasta aquí demuestra una determinación superior.</p>
-                    <p class="text-sm border-t border-white/10 pt-6 font-bold uppercase tracking-widest momentum-yellow">Veredicto enviado a la planilla central.</p>
-                </div>
+        <div id="success-screen" class="hidden text-center py-20 fade-in">
+            <div class="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-8">
+                <svg class="w-10 h-10 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"></path></svg>
             </div>
+            <h1 class="text-4xl font-black italic uppercase mb-4">Análisis Completado</h1>
+            <p class="text-slate-400">Tus datos han sido procesados. El veredicto de tu momentum será enviado a tu correo.</p>
         </div>
 
     </div>
 
     <script>
-        const scriptURL = "https://script.google.com/macros/s/AKfycbw98Taz29fd-3ud9Z1e-dfdN8d9CL4C1y2CtNIf1LU5CaG0pXgPDsZs_uUZcn_G-L9S/exec";
-        
+        // Los 7 bloques con 35 preguntas únicas
+        const blocks = [
+            { title: "MÉRITO Y DETERMINACIÓN", desc: "Bloque 1 de 7", questions: [
+                { id: 1, q: "¿Qué tan dispuesto estás a sacrificar gratificación inmediata por resultados a largo plazo?", opts: ["Nada dispuesto", "Poco dispuesto", "Dispuesto con esfuerzo", "Es mi única forma de operar"] },
+                { id: 2, q: "¿Cómo reaccionas cuando un proceso no entrega resultados en la primera semana?", opts: ["Abandono de inmediato", "Dudo del sistema", "Ajusto y sigo", "Entiendo la curva de aprendizaje"] },
+                { id: 3, q: "¿Cuántas horas semanales dedicas hoy a la mejora de tu criterio profesional?", opts: ["Menos de 2 horas", "Entre 3 y 5 horas", "6 a 10 horas", "Más de 10 horas constantes"] },
+                { id: 4, q: "¿Te guías por validación externa o por métricas de avance objetivas?", opts: ["Solo validación externa", "A veces métricas", "Métricas mayormente", "100% Decisiones por datos"] },
+                { id: 5, q: "¿Cuál es tu nivel de compromiso con este diagnóstico específico?", opts: ["Simple curiosidad", "Interés moderado", "Alto compromiso", "Compromiso total e innegociable"] }
+            ]},
+            { title: "EJECUCIÓN ESTRATÉGICA", desc: "Bloque 2 de 7", questions: [
+                { id: 6, q: "¿Tienes un sistema de revisión de tus decisiones semanales?", opts: ["No tengo sistema", "Lo hago a veces", "Mensualmente", "Sí, revisión técnica rigurosa"] },
+                { id: 7, q: "¿Qué tanto dependes de la 'motivación' para ejecutar tus tareas?", opts: ["Dependencia total", "Dependencia moderada", "Baja dependencia", "Ejecuto por disciplina pura"] },
+                { id: 8, q: "¿Cómo manejas un error operativo que te hace perder dinero?", opts: ["Como un fracaso personal", "Me frustro y me detengo", "Lo analizo como aprendizaje", "Como un dato necesario de optimización"] },
+                { id: 9, q: "¿Priorizas las tareas de alto impacto o las que parecen más urgentes?", opts: ["Solo lo urgente", "Urgente sobre importante", "Intento equilibrar", "Foco total en alto impacto"] },
+                { id: 10, q: "¿Delegas responsabilidades o intentas controlar cada detalle tú mismo?", opts: ["Controlo cada detalle", "Delego muy poco", "Delego lo técnico", "Sistematizo para delegar todo"] }
+            ]},
+            { title: "RESILIENCIA Y FRACASO", desc: "Bloque 3 de 7", questions: [
+                { id: 11, q: "¿Cuántas veces has reiniciado un proyecto después de un fallo total?", opts: ["Ninguna, abandono", "Una sola vez", "Varias veces", "Las veces que sean necesarias"] },
+                { id: 12, q: "¿Cuál es tu actitud frente a la incertidumbre del mercado?", opts: ["Miedo paralizante", "Inquietud constante", "Cautela analítica", "Aceptación y adaptabilidad rápida"] },
+                { id: 13, q: "¿Cuentas con un fondo de reserva para sostener procesos de aprendizaje?", opts: ["No tengo reserva", "Tengo para 1 mes", "Tengo para 3 meses", "Tengo estructura financiera sólida"] },
+                { id: 14, q: "¿Qué tan rápido te recuperas emocionalmente de una crítica negativa?", opts: ["Me afecta por días", "Me molesta bastante", "Me afecta pero sigo", "No me detiene en absoluto"] },
+                { id: 15, q: "¿Eres capaz de admitir un error de estrategia frente a tu equipo/clientes?", opts: ["Nunca", "Rara vez", "A veces", "Siempre que sea necesario para avanzar"] }
+            ]},
+            { title: "FOCO Y CONCENTRACIÓN", desc: "Bloque 4 de 7", questions: [
+                { id: 16, q: "¿Cuántos proyectos paralelos tienes activos ahora mismo?", opts: ["Más de 5", "De 3 a 4", "Dos proyectos", "Foco absoluto en uno solo"] },
+                { id: 17, q: "¿Cómo manejas las distracciones digitales durante tus horas de trabajo?", opts: ["Me distraigo siempre", "Intento evitarlas", "Uso bloqueadores", "Tengo rituales de foco profundo"] },
+                { id: 18, q: "¿Tienes claras tus 3 prioridades diarias antes de empezar el día?", opts: ["Nunca", "A veces", "Casi siempre", "Cada mañana sin excepción"] },
+                { id: 19, q: "¿Qué tan seguido cambias de estrategia porque viste algo nuevo en internet?", opts: ["Constantemente", "Seguido", "Rara vez", "Solo si los datos lo exigen"] },
+                { id: 20, q: "¿Tu entorno físico favorece tu capacidad de concentración?", opts: ["Es un caos", "Regular", "Bastante bien", "Está optimizado para el rendimiento"] }
+            ]},
+            { title: "AUTORIDAD Y LIDERAZGO", desc: "Bloque 5 de 7", questions: [
+                { id: 21, q: "¿Te consideras un referente en tu nicho actualmente?", opts: ["Para nada", "Estoy empezando", "Tengo algo de autoridad", "Soy un líder de opinión"] },
+                { id: 22, q: "¿Qué tanto inviertes en tu marca personal mensualmente?", opts: ["Nada", "Poco dinero", "Inversión regular", "Inversión estratégica constante"] },
+                { id: 23, q: "¿Estás cómodo comunicando tus ideas en video o conferencias?", opts: ["Pánico total", "Incomodidad alta", "Lo hago con esfuerzo", "Es mi entorno natural"] },
+                { id: 24, q: "¿Cómo reaccionas cuando alguien cuestiona tu autoridad profesional?", opts: ["Me enojo", "Trato de convencer", "Ignoro el ruido", "Respondo con resultados"] },
+                { id: 25, q: "¿Tu comunicación es clara, directa y sin rodeos?", opts: ["Doy muchas vueltas", "A veces soy confuso", "Generalmente claro", "Directo y con propósito"] }
+            ]},
+            { title: "MINDSET FINANCIERO", desc: "Bloque 6 de 7", questions: [
+                { id: 26, q: "¿Ves el gasto en herramientas como un costo o una inversión?", opts: ["Como un costo molesto", "Como algo necesario", "Como inversión", "Como palanca de crecimiento"] },
+                { id: 27, q: "¿Cuál es tu meta de facturación mensual para este año?", opts: ["Solo sobrevivir", "Pagar mis gastos", "Crecer un 50%", "Escalar masivamente"] },
+                { id: 28, q: "¿Tienes el hábito de ahorrar e reinvertir el 20% de tus ingresos?", opts: ["No puedo ahorrar", "Lo intento", "Lo hago a veces", "Es una regla innegociable"] },
+                { id: 29, q: "¿Le temes a las grandes cifras de inversión en publicidad?", opts: ["Pánico absoluto", "Mucho respeto/miedo", "Cautela", "Invierto con agresividad analítica"] },
+                { id: 30, q: "¿Entiendes la diferencia entre facturar y tener utilidad real?", opts: ["No mucho", "Tengo una idea", "Lo entiendo bien", "Gestiono por márgenes netos"] }
+            ]},
+            { title: "MOMENTUM FINAL", desc: "Bloque 7 de 7", questions: [
+                { id: 31, q: "¿Qué tan rápido puedes implementar una idea nueva?", opts: ["Tardo semanas", "Tardo días", "En 24 horas", "Implementación inmediata"] },
+                { id: 32, q: "¿Estás dispuesto a dejar de ser quien eres para llegar a donde quieres?", opts: ["No quiero cambiar", "Me da miedo el cambio", "Estoy dispuesto", "Estoy en constante evolución"] },
+                { id: 33, q: "¿Crees que la suerte influye en tus resultados?", opts: ["Influye totalmente", "Influye bastante", "Influye poco", "Los resultados se construyen"] },
+                { id: 34, q: "¿Cuál es tu nivel de energía promedio durante el día?", opts: ["Bajo/Cansado", "Regular", "Bueno", "Alto rendimiento sostenido"] },
+                { id: 35, q: "¿Estás listo para recibir el veredicto de tu potencial hoy?", opts: ["Tengo dudas", "Estoy nervioso", "Con curiosidad", "Listo para la realidad"] }
+            ]}
+        ];
+
         let currentStep = 0;
         let answers = {};
-        const totalSteps = 8;
-        const questionsPerStep = 5;
-
-        const stepMessages = [
-            { title: "MÉRITO Y DETERMINACIÓN", text: "LO QUE TE DESMARCA DE QUIENES BUSCAN FÓRMULAS FÁCILES ES TU CAPACIDAD DE ENFRENTAR EL DIAGNÓSTICO CON VERDAD." },
-            { title: "EJECUCIÓN SOBRE DESEO", text: "EL DESEO ES COMÚN, LA DETERMINACIÓN DE SOSTENER EL PROCESO ES EL FILTRO QUE POCOS LOGRAN SUPERAR." },
-            { title: "CRITERIO ESTRATÉGICO", text: "AVANZAR NO ES CORRER, ES SABER POR QUÉ DAS CADA PASO. TU RIGOR AQUÍ DEFINE TU RESULTADO ALLÁ." },
-            { title: "RESILIENCIA OPERATIVA", text: "LOS OBSTÁCULOS NO SON ERRORES, SON DATOS. SIGUE ANALIZANDO CON PRECISIÓN QUIRÚRGICA." },
-            { title: "CONSISTENCIA TÉCNICA", text: "LA MAESTRÍA SE CONSTRUYE EN LA REPETICIÓN DE LO CORRECTO, NO EN LA BÚSQUEDA DE LO NUEVO." },
-            { title: "AUTORIDAD PROFESIONAL", text: "ESTÁS EN LA RECTA FINAL. CADA RESPUESTA DEBE ESTAR ALINEADA CON TU VISIÓN DE LARGO PLAZO." },
-            { title: "HONESTIDAD RADICAL", text: "TU VEREDICTO DEPENDE DE TU TRANSPARENCIA. EL SISTEMA NO PERDONA EL AUTOENGAÑO." },
-            { title: "COMPROMISO TOTAL", text: "HAS LOGRADO COMPLETAR EL RECORRIDO CON SERIEDAD. ANTES DEL PASO FINAL, REVISA SI TU EJECUCIÓN HA SIDO LÓGICA O EMOCIONAL." }
-        ];
-
-        // Generar 40 preguntas (5 iniciales + 35 generadas)
-        const baseQuestions = [
-            { id: 1, q:"¿Qué tanto te incomoda tu situación actual en una escala del 1 al 10?", opts: [{ t:"1-3: Estoy cómodo, solo busco curiosidad", s: 1}, { t: "4-6: Podría mejorar, pero no es vital", s: 4}, { t:"7-8: Necesito un cambio real pronto", s:7 },{ t:"9-10: Es innegociable avanzar hoy mismo", s:10 }]},
-            { id: 2, q:"Si el proceso requiere ajustar la estrategia tres veces antes del resultado, ¿qué haces?", opts:[ { t:"Abandono por falta de claridad", s:1 },{ t:"Cuestiono el proceso", s:4 }, { t:"Ajusto con dudas", s:7 },{ t:"Acepto el ajuste como parte del aprendizaje real", s:10 }]},
-            { id: 3, q:"¿Qué lugar ocupa este avance en tu lista de prioridades diarias?", opts: [ { t:"Es un pasatiempo", s:2 },{ t:"Lo hago si tengo tiempo libre", s:5 }, { t:"Es mi prioridad secundaria", s:8 },{ t:"Es el eje central de mi ejecución profesional", s: 10}]},
-            { id: 4, q:"¿Ves los obstáculos como errores del sistema o como datos para el ajuste?", opts: [ { t:"Los veo como errores personales", s:2 },{ t:"Me frustran y me detienen", s:4 }, { t:"Los analizo con inseguridad", s:7 },{ t:"Son datos puros para la mejora continua", s:10 }]},
-            { id: 5, q:"¿Cuánto tiempo estás dispuesto a invertir antes de ver el primer gran retorno?", opts: [ { t:"Necesito resultados en 15 días", s:1 },{ t:"Máximo 2 meses", s:4 }, { t:"6 meses con resultados parciales", s:7 },{ t:"El tiempo que sea necesario para dominar el proceso", s: 10}]}
-        ];
-
-        const questions = [...baseQuestions];
-        for(let i = 6; i <= 40; i++) {
-            questions.push({
-                id: i,
-                q: `Factor de Criterio ${i}: ¿Cómo priorizas la sostenibilidad frente al beneficio inmediato?`,
-                opts: [
-                    { t: "Elijo lo rápido siempre", s: 2 },
-                    { t: "Busco equilibrio", s: 5 },
-                    { t: "Sostengo el plan aunque no vea lucro hoy", s: 8 },
-                    { t: "La sostenibilidad es mi único indicador de éxito", s: 10 }
-                ]
-            });
-        }
 
         function startDiagnostic() {
             document.getElementById('header-screen').classList.add('hidden');
             document.getElementById('diagnostic-screen').classList.remove('hidden');
-            window.scrollTo(0, 0);
-            renderStep();
+            renderBlock();
         }
 
-        function renderStep() {
-            const container = document.getElementById('questions-container');
-            const indicators = document.getElementById('step-indicators');
-            container.innerHTML = '';
-            indicators.innerHTML = '';
+        function renderBlock() {
+            const block = blocks[currentStep];
+            if (!block) return;
 
-            // Mensaje del bloque
-            document.getElementById('step-title').innerText = stepMessages[currentStep].title;
-            document.getElementById('step-text').innerText = stepMessages[currentStep].text;
-
-            // Preguntas del bloque actual
-            const currentQuestions = questions.slice(currentStep * questionsPerStep, (currentStep + 1) * questionsPerStep);
+            document.getElementById('block-title').innerText = block.title;
+            document.getElementById('block-desc').innerText = block.desc;
             
-            currentQuestions.forEach(q => {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+
+            block.questions.forEach(q => {
                 const qDiv = document.createElement('div');
-                qDiv.className = 'p-8 md:p-10 rounded-[40px] bg-[#0a0a0a] border border-white/5 hover:border-white/10 transition-colors fade-in';
+                qDiv.className = 'p-8 rounded-[30px] bg-[#0a0a0a] border border-white/5 fade-in';
                 
-                let optionsHtml = q.opts.map(o => `
-                    <button 
-                        onclick="selectOption(${q.id}, ${o.s})"
-                        class="text-left p-6 rounded-2xl border-2 transition-all option-btn-${q.id} ${answers[q.id] === o.s ? 'bg-momentum-yellow border-momentum-yellow text-black' : 'bg-black border-white/5 text-slate-400 hover:border-[#EAB308]/30'}"
-                    >
-                        <span class="text-base font-bold italic uppercase">${o.t}</span>
-                    </button>
-                `).join('');
+                const optionsHtml = q.opts.map((opt, idx) => {
+                    const isSelected = answers[q.id] === opt;
+                    return `
+                        <button 
+                            id="opt-${q.id}-${idx}"
+                            onclick="selectOption(${q.id}, '${opt}', ${idx})"
+                            class="w-full text-left p-5 rounded-xl border border-white/5 bg-black transition-all hover:border-[#EAB308]/50 mb-3 ${isSelected ? 'option-selected' : ''}"
+                        >
+                            <span class="text-sm uppercase italic">${opt}</span>
+                        </button>
+                    `;
+                }).join('');
 
                 qDiv.innerHTML = `
-                    <div class="flex flex-col md:flex-row gap-8">
-                        <div class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-sm font-black italic momentum-yellow shrink-0 border border-white/5">
-                            ${q.id}
-                        </div>
-                        <div class="flex-1">
-                            <h3 class="text-2xl font-bold text-white mb-8 tracking-tight italic">${q.q}</h3>
-                            <div class="grid grid-cols-1 gap-3">${optionsHtml}</div>
-                        </div>
-                    </div>
+                    <p class="text-xl font-black italic text-white mb-6 uppercase tracking-tight">${q.id}. ${q.q}</p>
+                    <div class="space-y-2">${optionsHtml}</div>
                 `;
                 container.appendChild(qDiv);
             });
 
-            // Indicadores de paso
-            for(let i=0; i<totalSteps; i++) {
-                const dot = document.createElement('div');
-                dot.className = `h-1 rounded-full transition-all duration-500 ${currentStep === i ? 'bg-momentum-yellow w-10' : 'bg-white/5 w-3'}`;
-                indicators.appendChild(dot);
-            }
-
-            // Botones nav
-            document.getElementById('btn-prev').style.opacity = currentStep === 0 ? '0' : '1';
-            document.getElementById('btn-prev').style.pointerEvents = currentStep === 0 ? 'none' : 'auto';
-            
-            checkStepCompletion();
+            checkBlockCompletion();
             updateProgress();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function selectOption(qId, val, idx) {
+            answers[qId] = val;
             
-            // Mostrar form final si es el último paso
-            document.getElementById('final-form').classList.toggle('hidden', currentStep !== 7);
-            document.getElementById('btn-next').classList.toggle('hidden', currentStep === 7);
+            // UI Feedback: Desmarcar otros y marcar este
+            const block = blocks[currentStep];
+            const q = block.questions.find(item => item.id === qId);
+            q.opts.forEach((_, i) => {
+                const el = document.getElementById(`opt-${qId}-${i}`);
+                if(i === idx) el.classList.add('option-selected');
+                else el.classList.remove('option-selected');
+            });
+
+            checkBlockCompletion();
+            updateProgress();
         }
 
-        function selectOption(qId, score) {
-            answers[qId] = score;
-            renderStep();
-        }
+        function checkBlockCompletion() {
+            const block = blocks[currentStep];
+            const completed = block.questions.every(q => answers[q.id]);
 
-        function checkStepCompletion() {
-            const start = currentStep * questionsPerStep;
-            const end = (currentStep + 1) * questionsPerStep;
-            let count = 0;
-            for(let i = start + 1; i <= end; i++) {
-                if(answers[i]) count++;
+            const nav = document.getElementById('nav-container');
+            const btnNext = document.getElementById('btn-next-step');
+            const btnFinish = document.getElementById('btn-finish');
+
+            if(completed) {
+                nav.classList.remove('hidden');
+                if(currentStep < blocks.length - 1) {
+                    btnNext.classList.remove('hidden');
+                    btnFinish.classList.add('hidden');
+                    document.getElementById('next-block-num').innerText = `${currentStep + 2} de ${blocks.length}`;
+                } else {
+                    btnNext.classList.add('hidden');
+                    btnFinish.classList.remove('hidden');
+                }
+            } else {
+                nav.classList.add('hidden');
             }
-            document.getElementById('btn-next').disabled = count < 5;
-            
-            // Check submit btn
-            const totalAnswered = Object.keys(answers).length;
-            document.getElementById('btn-submit').disabled = totalAnswered < 40;
+        }
+
+        function nextStep() {
+            currentStep++;
+            renderBlock();
+            document.getElementById('nav-container').classList.add('hidden');
+        }
+
+        function showFinalForm() {
+            document.getElementById('questions-container').classList.add('hidden');
+            document.getElementById('nav-container').classList.add('hidden');
+            document.getElementById('block-title').innerText = "VINCULACIÓN FINAL";
+            document.getElementById('block-desc').innerText = "PASO FINAL";
+            document.getElementById('final-form').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function updateProgress() {
-            const perc = Math.round((Object.keys(answers).length / 40) * 100);
+            const totalQuestions = 35;
+            const answered = Object.keys(answers).length;
+            const perc = Math.round((answered / totalQuestions) * 100);
             document.getElementById('progress-text').innerText = `${perc}%`;
             document.getElementById('progress-bar').style.width = `${perc}%`;
         }
 
-        function changeStep(delta) {
-            currentStep += delta;
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            renderStep();
-        }
-
         async function submitDiagnostic() {
-            const nombre = document.getElementById('input-nombre').value.trim();
-            const email = document.getElementById('input-email').value.trim();
+            const nombre = document.getElementById('input-nombre').value;
+            const email = document.getElementById('input-email').value;
+            if(!nombre || !email) {
+                alert("Por favor completa tus datos para recibir el veredicto.");
+                return;
+            }
+
             const btn = document.getElementById('btn-submit');
-
-            if(!nombre || !email) return;
-            
+            const txt = document.getElementById('submit-text');
             btn.disabled = true;
-            btn.innerHTML = '<svg class="animate-spin h-6 w-6 mx-auto" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
+            txt.innerText = "PROCESANDO MOMENTUM...";
 
-            const totalScore = Object.values(answers).reduce((a, b) => a + b, 0);
-            let calificacion = "NO APTO";
-            if (totalScore >= 320) calificacion = "APTO / ALTA CALIFICACIÓN";
-            else if (totalScore >= 200) calificacion = "INTERMEDIO / REQUIERE EVALUACIÓN";
-
-            const formData = new URLSearchParams();
-            formData.append("fecha", new Date().toLocaleString());
-            formData.append("nombre", nombre.toUpperCase());
-            formData.append("email", email.toLowerCase());
-            formData.append("detalles", "Diagnóstico Fórmula Momentum - HTML Version - 40 Factores.");
-            formData.append("puntaje", totalScore);
-            formData.append("calificacion", calificacion);
-
-            try {
-                await fetch(scriptURL, { method: 'POST', body: formData, mode: 'no-cors' });
+            // Simulación de envío a Google Sheets (AQUÍ IRÍA EL FETCH)
+            setTimeout(() => {
                 document.getElementById('diagnostic-screen').classList.add('hidden');
                 document.getElementById('success-screen').classList.remove('hidden');
-                window.scrollTo(0, 0);
-            } catch (err) {
-                console.error(err);
-                btn.disabled = false;
-                btn.innerText = 'REINTENTAR ENVÍO';
-            }
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 2000);
         }
     </script>
 </body>
